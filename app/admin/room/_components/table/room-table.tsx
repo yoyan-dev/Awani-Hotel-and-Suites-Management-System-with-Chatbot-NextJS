@@ -11,7 +11,6 @@ export default function RoomTable() {
   const [visibleColumns, setVisibleColumns] = React.useState<any>(new Set(INITIAL_VISIBLE_COLUMNS));
   const [statusFilter, setStatusFilter] = React.useState<any>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [sortDescriptor, setSortDescriptor] = React.useState({ column: "age", direction: "ascending" as "ascending" | "descending" });
   const [page, setPage] = React.useState(1);
 
   const pages = Math.ceil(users.length / rowsPerPage);
@@ -38,14 +37,6 @@ export default function RoomTable() {
     return filteredItems.slice(start, start + rowsPerPage);
   }, [page, filteredItems, rowsPerPage]);
 
-  const sortedItems = React.useMemo(() => {
-    return [...items].sort((a, b) => {
-      const first = a[sortDescriptor.column as keyof typeof a];
-      const second = b[sortDescriptor.column as keyof typeof b];
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
-    });
-  }, [sortDescriptor, items]);
 
   const onRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
@@ -70,7 +61,6 @@ export default function RoomTable() {
       bottomContentPlacement="outside"
       selectedKeys={selectedKeys}
       selectionMode="multiple"
-      sortDescriptor={sortDescriptor}
       topContent={
         <TableTopContent
           filterValue={filterValue}
@@ -86,7 +76,6 @@ export default function RoomTable() {
       }
       topContentPlacement="outside"
       onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -95,7 +84,7 @@ export default function RoomTable() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent="No users found" items={sortedItems}>
+      <TableBody emptyContent="No users found" items={items}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => <TableCell>{RenderCell(item, columnKey as string)}</TableCell>}
