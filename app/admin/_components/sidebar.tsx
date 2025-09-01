@@ -1,7 +1,7 @@
 'use client'
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { ChartPie, Blinds, ShoppingCart, Notebook, Bookmark , ShieldUser, Settings, CircleArrowOutDownLeft } from 'lucide-react';
+import { ChartPie, Bed, ShoppingCart, Notebook, Bookmark , ShieldUser, Settings, CircleArrowOutDownLeft } from 'lucide-react';
 import {Listbox, ListboxItem, cn} from "@heroui/react";
 import { Logo } from "@/components/icons";
 
@@ -14,7 +14,7 @@ export const ListboxWrapper = ({children}: any) => {
 };
 
 export default function Sidebar() {
-   const pathname = usePathname();
+  const pathname = usePathname();
   const iconClasses = "text-xl text-default-500 pointer-events-none shrink-0";
   const boxClasses = pathname === '/admin' ? 'bg-gray-50 text-warning-800 dark:text-warning-600' : ''
 
@@ -29,7 +29,7 @@ export default function Sidebar() {
           <ListboxItem  className={boxClasses} as={NextLink} href="/admin" key="home" startContent={<ChartPie className={iconClasses} />}>
             Dashboard
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/room" key="room" startContent={<Blinds className={iconClasses} />}>
+          <ListboxItem  as={NextLink} href="/admin/room" key="room" startContent={<Bed className={iconClasses} />}>
             Rooms
           </ListboxItem>
           <ListboxItem  as={NextLink} href="/admin/inventory"
