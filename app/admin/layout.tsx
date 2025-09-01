@@ -15,7 +15,7 @@ export default function AdminLayout({
         <Sidebar />
         <main className="w-full min-h-screen space-y-4">
           <AdminNavbar />
-          <div className="p-6 bg-white dark:bg-gray-800 rounded">{children}</div>
+          <div className=" dark:bg-gray-800 rounded">{children}</div>
         </main> 
       </div>
     </Providers>
