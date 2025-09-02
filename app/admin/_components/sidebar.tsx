@@ -7,7 +7,7 @@ import { Logo } from "@/components/icons";
 
 export const ListboxWrapper = ({children}: any) => {
   return(
-    <div className="w-64 h-screen max-w-64 space-y-4 border-small px-2 py-4 rounded-small border-default-200 dark:border-default-100">
+    <div className="w-64 h-screen max-w-64 space-y-4 border-small px-2 py-4 text-white rounded-small border-default-200 dark:border-default-100">
       {children}
     </div>
   )
@@ -15,59 +15,62 @@ export const ListboxWrapper = ({children}: any) => {
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const iconClasses = "text-xl text-default-500 pointer-events-none shrink-0";
-  const boxClasses = pathname === '/admin' ? 'bg-gray-50 text-warning-800 dark:text-warning-600' : ''
 
   return (
-    <div className="bg-white dark:bg-gray-800">
+    <div className="bg-primary dark:bg-primary-100 hidden lg:block">
       <ListboxWrapper>
         <NextLink className="flex justify-start items-center gap-1" href="/admin">
           <Logo />
           <p className="font-bold text-inherit">Awani</p>
         </NextLink>
         <Listbox aria-label="Listbox menu with icons" variant="faded">
-          <ListboxItem  className={boxClasses} as={NextLink} href="/admin" key="home" startContent={<ChartPie className={iconClasses} />}>
+          <ListboxItem  className={pathname === '/admin' ? 'bg-primary-400 text-white dark:text-primary-300' : ''} as={NextLink} href="/admin" key="home" startContent={<ChartPie />}>
             Dashboard
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/room" key="room" startContent={<Bed className={iconClasses} />}>
+          <ListboxItem className={pathname === '/admin/room' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/room" key="room" startContent={<Bed />}>
             Rooms
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/inventory"
+          <ListboxItem  className={pathname === '/admin/inventory' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/inventory"
             key="inventory"
-            startContent={<ShoppingCart className={iconClasses} />}
+            startContent={<ShoppingCart />}
           >
             Inventory
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/booking"
+          <ListboxItem  className={pathname === '/admin/booking' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/booking"
             key="booking"
-            startContent={<Notebook className={iconClasses} />}
+            startContent={<Notebook />}
           >
             Bookings
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/feedback"
+          {/* <ListboxItem  as={NextLink} href="/admin/feedback"
             key="feedback"
-            startContent={<Bookmark className={iconClasses} />}
+            startContent={<Bookmark />}
           >
             Feedbacks
-          </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/users"
-            key="user"
-            startContent={<ShieldUser className={iconClasses} />}
+          </ListboxItem> */}
+          <ListboxItem  className={pathname === '/admin/guest' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/guest"
+            key="guest"
+            startContent={<ShieldUser />}
           >
-            Users
+            Guest
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/settings"
+          <ListboxItem  className={pathname === '/admin/housekeeping' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/housekeeping"
+            key="housekeeping"
+            startContent={<ShieldUser />}
+          >
+            Housekeeping
+          </ListboxItem>
+          <ListboxItem  className={pathname === '/admin/setting' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/settings"
             key="setting"
             showDivider
-            startContent={<Settings className={iconClasses} />}
+            startContent={<Settings />}
           >
             Settings
           </ListboxItem>
           <ListboxItem  as={NextLink} href="/admin"
             key="logout"
-            className="text-danger"
             color="danger"
-            startContent={<CircleArrowOutDownLeft className={cn(iconClasses, "text-danger")} />}
+            startContent={<CircleArrowOutDownLeft />}
           >
             Log out
           </ListboxItem>

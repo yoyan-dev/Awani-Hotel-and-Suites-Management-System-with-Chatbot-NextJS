@@ -1,40 +1,39 @@
-import { ColumnType, UserType } from "./types";
+import type { ColumnType } from "@/types/column";
 
 export const columns: ColumnType[] = [
   { name: "ID", uid: "id", sortable: true },
-  { name: "NAME", uid: "name", sortable: true },
-  { name: "AGE", uid: "age", sortable: true },
-  { name: "ROLE", uid: "role", sortable: true },
-  { name: "TEAM", uid: "team" },
-  { name: "EMAIL", uid: "email" },
-  { name: "STATUS", uid: "status", sortable: true },
+  { name: "Image", uid: "image",},
+  { name: "ROOM ID", uid: "room_id",  },
+  { name: "ROOM TYPE", uid: "room_type",  },
+  { name: "FLOOR", uid: "floor",  },
+  { name: "DESCRIPTION", uid: "description" },
+  { name: "MAX GUEST", uid: "max_guest" },
+  { name: "BASE PRICE", uid: "base_price" },
+  { name: "STATUS", uid: "status",  },
   { name: "ACTIONS", uid: "actions" },
 ];
 
 export const statusOptions = [
-  { name: "Active", uid: "active" },
-  { name: "Paused", uid: "paused" },
-  { name: "Vacation", uid: "vacation" },
+  { name: "Available", uid: "available" },
+  { name: "Cleaning", uid: "cleaning" },
+  { name: "Reserved", uid: "reserved" },
+  { name: "Occupied", uid: "occupied" },
+  { name: "Maintenance", uid: "maintenance" },
+  { name: "Out of Service", uid: "out_of_service" },
 ];
 
-export const statusColorMap: Record<string, "success" | "danger" | "warning"> = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
+export const statusColorMap: Record<
+  string,
+  "success" | "danger" | "warning" | "secondary" | "default"
+> = {
+  available: "success",
+  cleaning: "secondary",   
+  reserved: "warning",   
+  occupied: "warning",
+  maintenance: "danger",
+  out_of_service: "secondary",
 };
 
-export const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
 
-export const users: UserType[] = [
-  {
-    id: 1,
-    name: "Tony Reichert",
-    role: "CEO",
-    team: "Management",
-    status: "active",
-    age: "29",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    email: "tony.reichert@example.com",
-  },
-  // ... other users
-];
+export const INITIAL_VISIBLE_COLUMNS = ["id", "image", "room_id", "room_type", "max_guest", "base_price", "status", "actions"];
+

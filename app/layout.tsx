@@ -5,6 +5,10 @@ import clsx from "clsx";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 
+import { ToastProvider } from "@heroui/toast";
+
+import { ReduxProvider } from "./providers";
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -37,7 +41,10 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        {children}
+        <ToastProvider />
+         <ReduxProvider>
+          {children}
+         </ReduxProvider>
       </body>
     </html>
   );

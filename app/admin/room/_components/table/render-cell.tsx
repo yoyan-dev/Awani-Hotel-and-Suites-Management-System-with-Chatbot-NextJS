@@ -1,38 +1,30 @@
 import React from "react";
-import { User, Chip, Button, Dropdown, DropdownMenu, DropdownTrigger, DropdownItem } from "@heroui/react";
-import { UserType } from "./types";
+import { Image, Chip, Button, Dropdown, DropdownMenu, DropdownTrigger, DropdownItem } from "@heroui/react";
+import type { Room } from "@/types/room";
 import { statusColorMap } from "./constants";
 import { EllipsisVertical } from 'lucide-react';
 
-export const RenderCell = (user: UserType, columnKey: string) => {
-  const cellValue = user[columnKey as keyof UserType];
+export const RenderCell = (room: Room, columnKey: string) => {
+  const cellValue = room[columnKey as keyof Room];
 
   switch (columnKey) {
-    case "name":
+    case "image":
       return (
-        <User
-          avatarProps={{ radius: "full", size: "sm", src: user.avatar }}
-          classNames={{ description: "text-default-500" }}
-          description={user.email}
-          name={user.name}
+        <Image
+          alt="HeroUI hero Image"
+          src={room.image || "https://via.placeholder.com/100"}
+          width={100}
         />
-      );
-    case "role":
-      return (
-        <div className="flex flex-col">
-          <p className="text-bold text-small capitalize">{user.role}</p>
-          <p className="text-bold text-tiny capitalize text-default-500">{user.team}</p>
-        </div>
       );
     case "status":
       return (
         <Chip
           className="capitalize border-none gap-1 text-default-600"
-          color={statusColorMap[user.status]}
+          color={statusColorMap[room.status as keyof typeof statusColorMap] || "default"}
           size="sm"
           variant="dot"
         >
-          {user.status}
+          {room.status}
         </Chip>
       );
     case "actions":

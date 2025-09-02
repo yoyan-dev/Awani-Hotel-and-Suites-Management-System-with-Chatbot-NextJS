@@ -11,7 +11,7 @@ export default function AdminLayout({
 }) {
   return (
     <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-      <div className="flex gap-4 h-screen text-surface-600 bg-gray-50 dark:bg-gray-900">
+      <div className="flex gap-4 h-screen text-surface-600 bg-primary-50 dark:bg-gray-900">
         <Sidebar />
         <main className="w-full min-h-screen space-y-4">
           <AdminNavbar />
