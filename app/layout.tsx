@@ -5,6 +5,8 @@ import clsx from "clsx";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 
+import { ToastProvider } from "@heroui/toast";
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -37,6 +39,7 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
+        <ToastProvider />
         {children}
       </body>
     </html>

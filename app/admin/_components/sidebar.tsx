@@ -16,7 +16,6 @@ export const ListboxWrapper = ({children}: any) => {
 export default function Sidebar() {
   const pathname = usePathname();
   const iconClasses = "text-xl text-default-500 pointer-events-none shrink-0";
-  const boxClasses = pathname === '/admin' ? 'bg-gray-50 text-warning-800 dark:text-warning-600' : ''
 
   return (
     <div className="bg-white dark:bg-gray-800">
@@ -26,37 +25,43 @@ export default function Sidebar() {
           <p className="font-bold text-inherit">Awani</p>
         </NextLink>
         <Listbox aria-label="Listbox menu with icons" variant="faded">
-          <ListboxItem  className={boxClasses} as={NextLink} href="/admin" key="home" startContent={<ChartPie className={iconClasses} />}>
+          <ListboxItem  className={pathname === '/admin' ? 'bg-gray-50 text-primary dark:text-primary' : ''} as={NextLink} href="/admin" key="home" startContent={<ChartPie className={iconClasses} />}>
             Dashboard
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/room" key="room" startContent={<Bed className={iconClasses} />}>
+          <ListboxItem className={pathname === '/admin/room' ? 'bg-gray-50 text-primary dark:text-primary' : ''}  as={NextLink} href="/admin/room" key="room" startContent={<Bed className={iconClasses} />}>
             Rooms
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/inventory"
+          <ListboxItem  className={pathname === '/admin/inventory' ? 'bg-gray-50 text-primary dark:text-primary' : ''}  as={NextLink} href="/admin/inventory"
             key="inventory"
             startContent={<ShoppingCart className={iconClasses} />}
           >
             Inventory
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/booking"
+          <ListboxItem  className={pathname === '/admin/booking' ? 'bg-gray-50 text-primary dark:text-primary' : ''}  as={NextLink} href="/admin/booking"
             key="booking"
             startContent={<Notebook className={iconClasses} />}
           >
             Bookings
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/feedback"
+          {/* <ListboxItem  as={NextLink} href="/admin/feedback"
             key="feedback"
             startContent={<Bookmark className={iconClasses} />}
           >
             Feedbacks
-          </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/users"
-            key="user"
+          </ListboxItem> */}
+          <ListboxItem  className={pathname === '/admin/guest' ? 'bg-gray-50 text-primary dark:text-primary' : ''}  as={NextLink} href="/admin/guest"
+            key="guest"
             startContent={<ShieldUser className={iconClasses} />}
           >
-            Users
+            Guest
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin/settings"
+          <ListboxItem  className={pathname === '/admin/housekeeping' ? 'bg-gray-50 text-primary dark:text-primary' : ''}  as={NextLink} href="/admin/housekeeping"
+            key="housekeeping"
+            startContent={<ShieldUser className={iconClasses} />}
+          >
+            Housekeeping
+          </ListboxItem>
+          <ListboxItem  className={pathname === '/admin/setting' ? 'bg-gray-50 text-primary dark:text-primary' : ''}  as={NextLink} href="/admin/settings"
             key="setting"
             showDivider
             startContent={<Settings className={iconClasses} />}

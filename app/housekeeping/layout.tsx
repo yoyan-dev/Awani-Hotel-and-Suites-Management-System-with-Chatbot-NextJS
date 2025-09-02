@@ -1,10 +1,10 @@
 'use client'
 import { Providers } from "../providers";
-// import Sidebar from "./_components/sidebar";
-// import AdminNavbar from "./_components/navbar";
+import Sidebar from "./_components/sidebar";
+import Navbar from "./_components/navbar";
 
 
-export default function AdminLayout({
+export default function HousekeepingLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -12,9 +12,9 @@ export default function AdminLayout({
   return (
     <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
       <div className="flex gap-4 h-screen text-surface-600 bg-gray-50 dark:bg-gray-900">
-        Sidebar 
+        <Sidebar /> 
         <main className="w-full min-h-screen space-y-4">
-          AdminNavbar
+          <Navbar />
           <div className=" dark:bg-gray-800 rounded">{children}</div>
         </main> 
       </div>
