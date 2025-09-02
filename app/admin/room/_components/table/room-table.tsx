@@ -120,7 +120,7 @@ export default function RoomTable() {
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>{RenderCell(item, columnKey as string)}</TableCell>
+              <TableCell className="capitalize">{RenderCell(item, columnKey as string)}</TableCell>
             )}
           </TableRow>
         )}
