@@ -1,42 +1,70 @@
 import React from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
-import { users, columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Spinner
+} from "@heroui/react";
+import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
+import { useSelector, useDispatch } from "react-redux";
+import { getRooms } from "@/features/room/room-thunk";
+import type { RootState, AppDispatch } from "@/store/store";
 
 export default function RoomTable() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { rooms, isLoading} = useSelector((state: RootState) => state.room);
+
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState<any>(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [visibleColumns, setVisibleColumns] = React.useState<any>(
+    new Set(INITIAL_VISIBLE_COLUMNS)
+  );
   const [statusFilter, setStatusFilter] = React.useState<any>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(users.length / rowsPerPage);
+  React.useEffect(() => {
+    dispatch(getRooms());
+  }, [dispatch]);
+
+  const pages = Math.ceil(rooms.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
-    return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+    return columns.filter((column) =>
+      Array.from(visibleColumns).includes(column.uid)
+    );
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredRooms = [...rooms];
+
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) => user.name.toLowerCase().includes(filterValue.toLowerCase()));
+      filteredRooms = filteredRooms.filter((room) =>
+        room.room_type?.toLowerCase().includes(filterValue.toLowerCase())
+      );
     }
+
     if (statusFilter !== "all" && Array.from(statusFilter).length) {
-      filteredUsers = filteredUsers.filter((user) => Array.from(statusFilter).includes(user.status));
+      filteredRooms = filteredRooms.filter((room) =>
+        Array.from(statusFilter).includes(room.status)
+      );
     }
-    return filteredUsers;
-  }, [filterValue, statusFilter]);
+
+    return filteredRooms;
+  }, [rooms, filterValue, statusFilter, hasSearchFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     return filteredItems.slice(start, start + rowsPerPage);
   }, [page, filteredItems, rowsPerPage]);
-
 
   const onRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
@@ -47,7 +75,7 @@ export default function RoomTable() {
     <Table
       isCompact
       removeWrapper
-      aria-label="Users Table"
+      aria-label="Rooms Table"
       bottomContent={
         <TableBottomContent
           hasSearchFilter={hasSearchFilter}
@@ -71,7 +99,7 @@ export default function RoomTable() {
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
-          usersCount={users.length}
+          usersCount={rooms.length}
         />
       }
       topContentPlacement="outside"
@@ -79,15 +107,21 @@ export default function RoomTable() {
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
-          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"} allowsSorting={column.sortable}>
+          <TableColumn
+            key={column.uid}
+            align={column.uid === "actions" ? "center" : "start"}
+            allowsSorting={column.sortable}
+          >
             {column.name}
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent="No users found" items={items}>
+      <TableBody isLoading={isLoading} loadingContent={<Spinner label="Loading..." />} emptyContent="No rooms found" items={items}>
         {(item) => (
           <TableRow key={item.id}>
-            {(columnKey) => <TableCell>{RenderCell(item, columnKey as string)}</TableCell>}
+            {(columnKey) => (
+              <TableCell>{RenderCell(item, columnKey as string)}</TableCell>
+            )}
           </TableRow>
         )}
       </TableBody>

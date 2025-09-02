@@ -7,6 +7,8 @@ import { fontSans } from "@/config/fonts";
 
 import { ToastProvider } from "@heroui/toast";
 
+import { ReduxProvider } from "./providers";
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -40,7 +42,9 @@ export default function RootLayout({
         )}
       >
         <ToastProvider />
-        {children}
+         <ReduxProvider>
+          {children}
+         </ReduxProvider>
       </body>
     </html>
   );
