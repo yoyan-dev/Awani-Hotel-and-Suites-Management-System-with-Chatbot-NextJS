@@ -1,6 +1,4 @@
-import { AnyARecord } from "dns";
-
-export type InventoryStatus = "inStock" | "outOfStock" | "discontinued";
+export type InventoryStatus = "in-stock" | "out-of-stock" | "discontinued";
 
 export interface Inventory {
   id?: string;

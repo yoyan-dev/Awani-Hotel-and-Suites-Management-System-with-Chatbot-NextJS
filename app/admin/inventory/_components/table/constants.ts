@@ -10,8 +10,8 @@ export const columns: ColumnType[] = [
 ];
 
 export const statusOptions = [
-  { name: "in stock", uid: "inStock" },
-  { name: "out of stock", uid: "outOfStock" },
+  { name: "in-stock", uid: "in-stock" },
+  { name: "out-of-stock", uid: "out-of-stock" },
   { name: "discontinued", uid: "discontinued" },
 ];
 
@@ -19,8 +19,8 @@ export const statusColorMap: Record<
   (typeof statusOptions)[number]["uid"],
   "success" | "danger" | "warning"
 > = {
-  inStock: "success",
-  outOfStock: "danger",
+  "in-stock": "success",
+  "out-of-stock": "danger",
   discontinued: "warning",
 };
 

@@ -8,7 +8,7 @@ const inventory: Inventory[] = [
     quantity: 100,
     description: "Description for Item A",
     createdAt: new Date(),
-    status: "inStock",
+    status: "in-stock",
   },
 ];
 
