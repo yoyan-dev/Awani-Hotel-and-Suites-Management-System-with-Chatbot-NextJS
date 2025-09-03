@@ -22,30 +22,32 @@ import { AppDispatch, type RootState } from "@/store/store";
 import { addRoom } from "@/features/room/room-thunk";
 
 export default function AddModal() {
-  const dispatch = useDispatch<AppDispatch>()
-  const { isLoading, error } =  useSelector((state: RootState) => state.room);
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, error } = useSelector((state: RootState) => state.room);
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [room, setRoom] = React.useState<Partial<Room>>({});
   const [submitted, setSubmitted] = React.useState(null);
 
-   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
 
-    dispatch(addRoom(data));
-    console.log(error)
-  };
+    await dispatch(addRoom(data));
+    error === undefined ? onClose() : null;
+  }
 
   return (
     <>
-        <Button color="primary" endContent={<Plus />} size="sm" onPress={onOpen}>
+      <Button color="primary" endContent={<Plus />} size="sm" onPress={onOpen}>
         Add New
-        </Button>
+      </Button>
       <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Add New Room</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                Add New Room
+              </ModalHeader>
               <ModalBody>
                 <Form
                   className="w-full justify-center items-center space-y-4"
@@ -66,8 +68,21 @@ export default function AddModal() {
                       variant="bordered"
                       labelPlacement="outside"
                     />
-                    <Select color="primary" name="room_type" label="Room type" onChange={(e) => setRoom({...room, room_type: e.target.value})} labelPlacement="outside" defaultSelectedKeys={room.room_type} value={room.room_type} placeholder="Select Room Type" variant="bordered" className="w-full">
-                      <SelectItem key="single" >Single</SelectItem>
+                    <Select
+                      color="primary"
+                      name="room_type"
+                      label="Room type"
+                      onChange={(e) =>
+                        setRoom({ ...room, room_type: e.target.value })
+                      }
+                      labelPlacement="outside"
+                      defaultSelectedKeys={room.room_type}
+                      value={room.room_type}
+                      placeholder="Select Room Type"
+                      variant="bordered"
+                      className="w-full"
+                    >
+                      <SelectItem key="single">Single</SelectItem>
                       <SelectItem key="double">Double</SelectItem>
                       <SelectItem key="suite">Suite</SelectItem>
                     </Select>
@@ -76,13 +91,24 @@ export default function AddModal() {
                     color="primary"
                     name="description"
                     value={room.description}
-                    onChange={(e) => setRoom({...room, description: e.target.value})}
+                    onChange={(e) =>
+                      setRoom({ ...room, description: e.target.value })
+                    }
                     label="Description"
                     labelPlacement="outside"
                     variant="bordered"
                   />
                   <div className="flex gap-4">
-                    <Select color="primary" label="Floor" name="floor" labelPlacement="outside" value={room.floor} placeholder="Select floor" variant="bordered" className="w-full">
+                    <Select
+                      color="primary"
+                      label="Floor"
+                      name="floor"
+                      labelPlacement="outside"
+                      value={room.floor}
+                      placeholder="Select floor"
+                      variant="bordered"
+                      className="w-full"
+                    >
                       <SelectItem key="1">1</SelectItem>
                       <SelectItem key="2">2</SelectItem>
                       <SelectItem key="3">3</SelectItem>
@@ -114,7 +140,7 @@ export default function AddModal() {
                     <Button onPress={onClose} variant="bordered">
                       Cancel
                     </Button>
-                    <Button  color="primary" type="submit" isLoading={isLoading}>
+                    <Button color="primary" type="submit" isLoading={isLoading}>
                       Submit
                     </Button>
                   </div>
