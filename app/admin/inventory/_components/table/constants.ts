@@ -1,40 +1,34 @@
-import { ColumnType, UserType } from "./types";
+import { ColumnType } from "@/types/column";
 
 export const columns: ColumnType[] = [
-  { name: "ID", uid: "id", sortable: true },
-  { name: "NAME", uid: "name", sortable: true },
-  { name: "AGE", uid: "age", sortable: true },
-  { name: "ROLE", uid: "role", sortable: true },
-  { name: "TEAM", uid: "team" },
-  { name: "EMAIL", uid: "email" },
-  { name: "STATUS", uid: "status", sortable: true },
+  { name: "ID", uid: "id" },
+  { name: "NAME", uid: "name" },
+  { name: "DESCRIPTION", uid: "description" },
+  { name: "QUANTITY", uid: "quantity" },
+  { name: "STATUS", uid: "status" },
   { name: "ACTIONS", uid: "actions" },
 ];
 
 export const statusOptions = [
-  { name: "Active", uid: "active" },
-  { name: "Paused", uid: "paused" },
-  { name: "Vacation", uid: "vacation" },
+  { name: "in stock", uid: "inStock" },
+  { name: "out of stock", uid: "outOfStock" },
+  { name: "discontinued", uid: "discontinued" },
 ];
 
-export const statusColorMap: Record<string, "success" | "danger" | "warning"> = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
+export const statusColorMap: Record<
+  (typeof statusOptions)[number]["uid"],
+  "success" | "danger" | "warning"
+> = {
+  inStock: "success",
+  outOfStock: "danger",
+  discontinued: "warning",
 };
 
-export const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
-
-export const users: UserType[] = [
-  {
-    id: 1,
-    name: "Tony Reichert",
-    role: "CEO",
-    team: "Management",
-    status: "active",
-    age: "29",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    email: "tony.reichert@example.com",
-  },
-  // ... other users
+export const INITIAL_VISIBLE_COLUMNS = [
+  "id",
+  "name",
+  "description",
+  "quantity",
+  "status",
+  "actions",
 ];

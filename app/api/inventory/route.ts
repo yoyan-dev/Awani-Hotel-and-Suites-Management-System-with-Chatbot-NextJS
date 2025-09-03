@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
+import type { Inventory, InventoryStatus } from "@/types/inventory";
 
-const inventory: any = [
+const inventory: Inventory[] = [
+  {
+    id: "1",
+    name: "Item A",
+    quantity: 100,
+    description: "Description for Item A",
+    createdAt: new Date(),
+    status: "inStock",
+  },
 ];
 
 export async function GET() {
@@ -8,24 +17,29 @@ export async function GET() {
 }
 
 // CREATE room
-// export async function POST(req: Request) {
-//   const formData = await req.formData();
+export async function POST(req: Request) {
+  const formData = await req.formData();
 
-//   const newRoom: Room = {
-//     id: Date.now().toString(),
-//     room_id: `R-${Math.floor(1000 + Math.random() * 9000)}`,
-//     room_number: Number(formData.get("room_number")),
-//     room_type: formData.get("room_type") as Room["room_type"],
-//     description: formData.get("description") as string,
-//     floor: Number(formData.get("floor")),
-//     max_guest: Number(formData.get("max_guest")),
-//     base_price: Number(formData.get("base_price")),
-//     status: "available",
-//     image: "https://heroui.com/images/hero-card-complete.jpeg",
-//   };
+  const newItem: Inventory = {
+    id: (inventory.length + 1).toString(),
+    name: formData.get("name") as string,
+    quantity: Number(formData.get("quantity")),
+    description: formData.get("description") as string,
+    createdAt: new Date(),
+    status: formData.get("status") as InventoryStatus,
+  };
 
-//   rooms.push(newRoom);
-
-//   return NextResponse.json(newRoom, { status: 201 });
-// }
-
+  inventory.push(newItem);
+  return NextResponse.json(
+    {
+      success: true,
+      message: {
+        title: "Success",
+        description: "Item added successfully",
+        color: "success",
+      },
+      inventory: newItem,
+    },
+    { status: 200 }
+  );
+}
