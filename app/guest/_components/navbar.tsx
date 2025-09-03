@@ -1,0 +1,111 @@
+import {
+  Navbar as HeroUINavbar,
+  NavbarContent,
+  NavbarMenu,
+  NavbarMenuToggle,
+  NavbarBrand,
+  NavbarItem,
+  NavbarMenuItem,
+} from "@heroui/navbar";
+import { Button, Image } from "@heroui/react";
+import { Link } from "@heroui/link";
+import NextLink from "next/link";
+
+import { siteConfig } from "@/config/site";
+import { ThemeSwitch } from "@/components/theme-switch";
+import { GithubIcon } from "@/components/icons";
+import { User } from "@heroui/react";
+
+export default function AdminNavbar() {
+  return (
+    <HeroUINavbar
+      maxWidth="xl"
+      position="sticky"
+      className="top-0 z-50 bg-white dark:bg-gray-900 "
+    >
+      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+        <NavbarBrand as="li" className="gap-3 max-w-fit">
+          <NextLink className="flex justify-start items-center gap-1" href="/">
+            <Image alt="Awani logo" src="/awani-logo.png" width={50} />
+            <div>
+              <p className="font-bold text-inherit">MA. Awani</p>
+              <span className="text-gray-500 text-sm font-">
+                Hotel and suites
+              </span>
+            </div>
+          </NextLink>
+        </NavbarBrand>
+      </NavbarContent>
+
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Home
+          </Link>
+        </NavbarItem>
+        <NavbarItem isActive>
+          <Link aria-current="page" href="#">
+            About Us
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Rooms
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Booking
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Contact
+          </Link>
+        </NavbarItem>
+      </NavbarContent>
+
+      <NavbarContent
+        className="hidden sm:flex basis-1/5 sm:basis-full"
+        justify="end"
+      >
+        <NavbarItem className="hidden sm:flex gap-2">
+          <ThemeSwitch />
+          <Button color="primary" variant="bordered">
+            Sign Up
+          </Button>
+        </NavbarItem>
+      </NavbarContent>
+
+      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+        <ThemeSwitch />
+        <NavbarMenuToggle />
+        <Button color="primary" variant="bordered">
+          Sign Up
+        </Button>
+      </NavbarContent>
+
+      <NavbarMenu>
+        <div className="mx-4 mt-2 flex flex-col gap-2">
+          {siteConfig.navMenuItems.map((item, index) => (
+            <NavbarMenuItem key={`${item}-${index}`}>
+              <Link
+                color={
+                  index === 2
+                    ? "primary"
+                    : index === siteConfig.navMenuItems.length - 1
+                      ? "danger"
+                      : "foreground"
+                }
+                href="#"
+                size="lg"
+              >
+                {item.label}
+              </Link>
+            </NavbarMenuItem>
+          ))}
+        </div>
+      </NavbarMenu>
+    </HeroUINavbar>
+  );
+}
