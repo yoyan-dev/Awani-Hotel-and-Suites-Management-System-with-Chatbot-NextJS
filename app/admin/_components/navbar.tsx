@@ -7,6 +7,7 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@heroui/navbar";
+import { Image } from "@heroui/react";
 import { Kbd } from "@heroui/kbd";
 import { Link } from "@heroui/link";
 import { Input } from "@heroui/input";
@@ -16,11 +17,7 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  GithubIcon,
-  SearchIcon,
-  Logo,
-} from "@/components/icons";
+import { GithubIcon, SearchIcon, Logo } from "@/components/icons";
 import { User } from "@heroui/react";
 
 export default function AdminNavbar() {
@@ -46,12 +43,21 @@ export default function AdminNavbar() {
   // );
 
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky" className="top-0 z-50 bg-white dark:bg-gray-800 ">
+    <HeroUINavbar
+      maxWidth="xl"
+      position="sticky"
+      className="top-0 z-50 bg-white dark:bg-gray-900 "
+    >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo />
-            <p className="font-bold text-inherit">Awani</p>
+            <Image alt="Awani logo" src="/awani-logo.png" width={50} />
+            <div>
+              <p className="font-bold text-inherit">Awani</p>
+              <span className="text-gray-500 text-sm font-">
+                Hotel and suites management system
+              </span>
+            </div>
           </NextLink>
         </NavbarBrand>
       </NavbarContent>
@@ -62,15 +68,7 @@ export default function AdminNavbar() {
       >
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
-          <User
-            avatarProps={{
-              src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-            }}
-            description="Product Designer"
-            name="Jane Doe"
-          />
         </NavbarItem>
-        
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
@@ -104,4 +102,4 @@ export default function AdminNavbar() {
       </NavbarMenu>
     </HeroUINavbar>
   );
-};
+}

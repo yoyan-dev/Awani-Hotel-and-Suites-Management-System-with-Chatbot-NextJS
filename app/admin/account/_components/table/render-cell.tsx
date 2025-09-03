@@ -1,33 +1,38 @@
 import React from "react";
-import {
-  User,
-  Chip,
-  Button,
-  Dropdown,
-  DropdownMenu,
-  DropdownTrigger,
-  DropdownItem,
-} from "@heroui/react";
-import type { Inventory } from "@/types/inventory";
+import { User, Chip, Button, Dropdown, DropdownMenu, DropdownTrigger, DropdownItem } from "@heroui/react";
+import { UserType } from "./types";
 import { statusColorMap } from "./constants";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical } from 'lucide-react';
 
-export const RenderCell = (inventory: Inventory, columnKey: string) => {
-  const cellValue = inventory[columnKey as keyof Inventory];
+export const RenderCell = (user: UserType, columnKey: string) => {
+  const cellValue = user[columnKey as keyof UserType];
 
   switch (columnKey) {
+    case "name":
+      return (
+        <User
+          avatarProps={{ radius: "full", size: "sm", src: user.avatar }}
+          classNames={{ description: "text-default-500" }}
+          description={user.email}
+          name={user.name}
+        />
+      );
+    case "role":
+      return (
+        <div className="flex flex-col">
+          <p className="text-bold text-small capitalize">{user.role}</p>
+          <p className="text-bold text-tiny capitalize text-default-500">{user.team}</p>
+        </div>
+      );
     case "status":
       return (
         <Chip
           className="capitalize border-none gap-1 text-default-600"
-          color={
-            statusColorMap[inventory.status as keyof typeof statusColorMap] ||
-            "default"
-          }
+          color={statusColorMap[user.status]}
           size="sm"
           variant="dot"
         >
-          {inventory.status}
+          {user.status}
         </Chip>
       );
     case "actions":

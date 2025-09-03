@@ -1,16 +1,26 @@
-'use client'
+"use client";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { ChartPie, Bed, ShoppingCart, Notebook, Bookmark , ShieldUser, Settings, CircleArrowOutDownLeft } from 'lucide-react';
-import {Listbox, ListboxItem, cn} from "@heroui/react";
-import { Logo } from "@/components/icons";
+import {
+  ChartPie,
+  Bed,
+  ShoppingCart,
+  Notebook,
+  Bookmark,
+  ShieldUser,
+  Settings,
+  CircleArrowOutDownLeft,
+  BrushCleaning,
+  Users,
+} from "lucide-react";
+import { Listbox, ListboxItem, cn, User } from "@heroui/react";
 
-export const ListboxWrapper = ({children}: any) => {
-  return(
+export const ListboxWrapper = ({ children }: any) => {
+  return (
     <div className="w-64 h-screen max-w-64 space-y-4 border-small px-2 py-4 text-white rounded-small border-default-200 dark:border-default-100">
       {children}
     </div>
-  )
+  );
 };
 
 export default function Sidebar() {
@@ -19,24 +29,66 @@ export default function Sidebar() {
   return (
     <div className="bg-primary dark:bg-primary-100 hidden lg:block">
       <ListboxWrapper>
-        <NextLink className="flex justify-start items-center gap-1" href="/admin">
-          <Logo />
-          <p className="font-bold text-inherit">Awani</p>
+        <NextLink
+          className="flex justify-start items-center gap-1 bg-white text-gray-900 dark:text-white dark:bg-gray-800 p-4 rounded"
+          href="/admin"
+        >
+          <User
+            avatarProps={{
+              src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+            }}
+            description="Admin"
+            name="Jane Doe"
+          />
         </NextLink>
         <Listbox aria-label="Listbox menu with icons" variant="faded">
-          <ListboxItem  className={pathname === '/admin' ? 'bg-primary-400 text-white dark:text-primary-300' : ''} as={NextLink} href="/admin" key="home" startContent={<ChartPie />}>
+          <ListboxItem
+            className={
+              pathname === "/admin"
+                ? "bg-primary-400 text-white dark:text-primary-50"
+                : ""
+            }
+            as={NextLink}
+            href="/admin"
+            key="home"
+            startContent={<ChartPie />}
+          >
             Dashboard
           </ListboxItem>
-          <ListboxItem className={pathname === '/admin/room' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/room" key="room" startContent={<Bed />}>
+          <ListboxItem
+            className={
+              pathname === "/admin/room"
+                ? "bg-primary-400 text-white dark:text-primary-50"
+                : ""
+            }
+            as={NextLink}
+            href="/admin/room"
+            key="room"
+            startContent={<Bed />}
+          >
             Rooms
           </ListboxItem>
-          <ListboxItem  className={pathname === '/admin/inventory' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/inventory"
+          <ListboxItem
+            className={
+              pathname === "/admin/inventory"
+                ? "bg-primary-400 text-white dark:text-primary-50"
+                : ""
+            }
+            as={NextLink}
+            href="/admin/inventory"
             key="inventory"
             startContent={<ShoppingCart />}
           >
             Inventory
           </ListboxItem>
-          <ListboxItem  className={pathname === '/admin/booking' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/booking"
+          <ListboxItem
+            className={
+              pathname === "/admin/booking"
+                ? "bg-primary-400 text-white dark:text-primary-50"
+                : ""
+            }
+            as={NextLink}
+            href="/admin/booking"
             key="booking"
             startContent={<Notebook />}
           >
@@ -48,26 +100,62 @@ export default function Sidebar() {
           >
             Feedbacks
           </ListboxItem> */}
-          <ListboxItem  className={pathname === '/admin/guest' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/guest"
-            key="guest"
-            startContent={<ShieldUser />}
-          >
-            Guest
-          </ListboxItem>
-          <ListboxItem  className={pathname === '/admin/housekeeping' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/housekeeping"
+          <ListboxItem
+            className={
+              pathname === "/admin/housekeeping"
+                ? "bg-primary-400 text-white dark:text-primary-50"
+                : ""
+            }
+            as={NextLink}
+            href="/admin/housekeeping"
             key="housekeeping"
-            startContent={<ShieldUser />}
+            startContent={<BrushCleaning />}
           >
             Housekeeping
           </ListboxItem>
-          <ListboxItem  className={pathname === '/admin/setting' ? 'bg-primary-400 text-white dark:text-primary-300' : ''}  as={NextLink} href="/admin/settings"
+          <ListboxItem
+            className={
+              pathname === "/admin/guest"
+                ? "bg-primary-400 text-white dark:text-primary-50"
+                : ""
+            }
+            as={NextLink}
+            href="/admin/guest"
+            key="guest"
+            startContent={<Users />}
+          >
+            Guest
+          </ListboxItem>
+          <ListboxItem
+            className={
+              pathname === "/admin/account"
+                ? "bg-primary-400 text-white dark:text-primary-50"
+                : ""
+            }
+            as={NextLink}
+            href="/admin/account"
+            key="account"
+            startContent={<ShieldUser />}
+          >
+            Account Management
+          </ListboxItem>
+          <ListboxItem
+            className={
+              pathname === "/admin/setting"
+                ? "bg-primary-400 text-white dark:text-primary-50"
+                : ""
+            }
+            as={NextLink}
+            href="/admin/settings"
             key="setting"
             showDivider
             startContent={<Settings />}
           >
             Settings
           </ListboxItem>
-          <ListboxItem  as={NextLink} href="/admin"
+          <ListboxItem
+            as={NextLink}
+            href="/admin"
             key="logout"
             color="danger"
             startContent={<CircleArrowOutDownLeft />}

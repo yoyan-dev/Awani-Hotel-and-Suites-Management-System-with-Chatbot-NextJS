@@ -13,12 +13,12 @@ import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
 import { useSelector, useDispatch } from "react-redux";
-import { getRooms } from "@/features/room/room-thunk";
+import { fetchRooms } from "@/features/room/room-thunk";
 import type { RootState, AppDispatch } from "@/store/store";
 
 export default function RoomTable() {
   const dispatch = useDispatch<AppDispatch>();
-  const { rooms, isLoading} = useSelector((state: RootState) => state.room);
+  const { rooms, isLoading, error} = useSelector((state: RootState) => state.room);
 
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
@@ -30,8 +30,9 @@ export default function RoomTable() {
   const [page, setPage] = React.useState(1);
 
   React.useEffect(() => {
-    dispatch(getRooms());
-  }, [dispatch]);
+    dispatch(fetchRooms());
+    console.log(error)
+  }, [dispatch, error]);
 
   const pages = Math.ceil(rooms.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
@@ -120,7 +121,7 @@ export default function RoomTable() {
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>{RenderCell(item, columnKey as string)}</TableCell>
+              <TableCell className="capitalize">{RenderCell(item, columnKey as string)}</TableCell>
             )}
           </TableRow>
         )}
