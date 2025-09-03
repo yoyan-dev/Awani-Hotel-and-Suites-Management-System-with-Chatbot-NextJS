@@ -3,6 +3,8 @@ import { Image, Chip, Button, Dropdown, DropdownMenu, DropdownTrigger, DropdownI
 import type { Room } from "@/types/room";
 import { statusColorMap } from "./constants";
 import { EllipsisVertical } from 'lucide-react';
+import UpdateModal from "../modals/edit-modal";
+import DeleteModal from "../modals/delete-modal";
 
 export const RenderCell = (room: Room, columnKey: string) => {
   const cellValue = room[columnKey as keyof Room];
@@ -30,7 +32,7 @@ export const RenderCell = (room: Room, columnKey: string) => {
     case "actions":
       return (
         <div className="relative flex justify-end items-center gap-2">
-          <Dropdown className="bg-background border-1 border-default-200">
+          <Dropdown className="bg-background border-1 border-default-200" closeOnSelect={false}>
             <DropdownTrigger>
               <Button isIconOnly radius="full" size="sm" variant="light">
                 <EllipsisVertical className="text-default-400" />
@@ -38,8 +40,8 @@ export const RenderCell = (room: Room, columnKey: string) => {
             </DropdownTrigger>
             <DropdownMenu>
               <DropdownItem key="view">View</DropdownItem>
-              <DropdownItem key="edit">Edit</DropdownItem>
-              <DropdownItem key="delete">Delete</DropdownItem>
+              <DropdownItem key="edit" color="success" className="text-success"><UpdateModal room={room}/></DropdownItem>
+              <DropdownItem key="delete" color="danger" className="text-danger"><DeleteModal room={room}/></DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </div>

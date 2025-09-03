@@ -2,8 +2,8 @@
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { ChartPie, Bed, ShoppingCart, Notebook, Bookmark , ShieldUser, Settings, CircleArrowOutDownLeft } from 'lucide-react';
-import {Listbox, ListboxItem, cn} from "@heroui/react";
-import { Logo } from "@/components/icons";
+import {Listbox, ListboxItem, cn, User} from "@heroui/react";
+
 
 export const ListboxWrapper = ({children}: any) => {
   return(
@@ -19,9 +19,14 @@ export default function Sidebar() {
   return (
     <div className="bg-primary dark:bg-primary-100 hidden lg:block">
       <ListboxWrapper>
-        <NextLink className="flex justify-start items-center gap-1" href="/admin">
-          <Logo />
-          <p className="font-bold text-inherit">Awani</p>
+        <NextLink className="flex justify-start items-center gap-1 bg-white text-gray-900 dark:text-white dark:bg-gray-900 p-4 rounded" href="/admin">
+          <User
+            avatarProps={{
+              src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+            }}
+            description="Admin"
+            name="Jane Doe"
+          />
         </NextLink>
         <Listbox aria-label="Listbox menu with icons" variant="faded">
           <ListboxItem  className={pathname === '/admin' ? 'bg-primary-400 text-white dark:text-primary-300' : ''} as={NextLink} href="/admin" key="home" startContent={<ChartPie />}>
