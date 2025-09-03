@@ -6,22 +6,13 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Spinner,
 } from "@heroui/react";
-import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
+import { users, columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchInventory } from "@/features/inventory/inventory-thunk";
-import type { RootState, AppDispatch } from "@/store/store";
 
-export default function InventoryTable() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { inventory, isLoading, error } = useSelector(
-    (state: RootState) => state.inventory
-  );
-
+export default function StaffTable() {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
@@ -31,12 +22,7 @@ export default function InventoryTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(1);
 
-  React.useEffect(() => {
-    dispatch(fetchInventory());
-    console.log(error);
-  }, [dispatch, error]);
-
-  const pages = Math.ceil(inventory.length / rowsPerPage);
+  const pages = Math.ceil(users.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
@@ -47,18 +33,18 @@ export default function InventoryTable() {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredInventory = [...inventory];
+    let filteredUsers = [...users];
     if (hasSearchFilter) {
-      filteredInventory = filteredInventory.filter((item) =>
-        item.name.toLowerCase().includes(filterValue.toLowerCase())
+      filteredUsers = filteredUsers.filter((user) =>
+        user.name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length) {
-      filteredInventory = filteredInventory.filter((item) =>
-        Array.from(statusFilter).includes(item.status)
+      filteredUsers = filteredUsers.filter((user) =>
+        Array.from(statusFilter).includes(user.status)
       );
     }
-    return filteredInventory;
+    return filteredUsers;
   }, [filterValue, statusFilter]);
 
   const items = React.useMemo(() => {
@@ -99,7 +85,7 @@ export default function InventoryTable() {
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
-          itemsCount={inventory.length}
+          usersCount={users.length}
         />
       }
       topContentPlacement="outside"
@@ -116,12 +102,7 @@ export default function InventoryTable() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody
-        emptyContent="No item found"
-        isLoading={isLoading}
-        loadingContent={<Spinner label="Loading..." />}
-        items={items}
-      >
+      <TableBody emptyContent="No users found" items={items}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (

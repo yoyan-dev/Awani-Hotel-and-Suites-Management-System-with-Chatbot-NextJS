@@ -17,11 +17,7 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  GithubIcon,
-  SearchIcon,
-  Logo,
-} from "@/components/icons";
+import { GithubIcon, SearchIcon, Logo } from "@/components/icons";
 import { User } from "@heroui/react";
 
 export default function AdminNavbar() {
@@ -47,18 +43,20 @@ export default function AdminNavbar() {
   // );
 
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky" className="top-0 z-50 bg-white dark:bg-gray-800 ">
+    <HeroUINavbar
+      maxWidth="xl"
+      position="sticky"
+      className="top-0 z-50 bg-white dark:bg-gray-900 "
+    >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Image
-              alt="Awani logo"
-              src="/awani-logo.png"
-              width={100}
-            />
+            <Image alt="Awani logo" src="/awani-logo.png" width={50} />
             <div>
               <p className="font-bold text-inherit">Awani</p>
-              <span className="text-gray-500 text-sm font-">Hotel and suites management system</span>
+              <span className="text-gray-500 text-sm font-">
+                Hotel and suites management system
+              </span>
             </div>
           </NextLink>
         </NavbarBrand>
@@ -71,7 +69,6 @@ export default function AdminNavbar() {
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
-        
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
@@ -105,4 +102,4 @@ export default function AdminNavbar() {
       </NavbarMenu>
     </HeroUINavbar>
   );
-};
+}
