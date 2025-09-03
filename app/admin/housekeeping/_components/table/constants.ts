@@ -17,10 +17,30 @@ export const statusOptions = [
   { name: "Vacation", uid: "vacation" },
 ];
 
-export const statusColorMap: Record<string, "success" | "danger" | "warning"> = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
+export const priorityLevel = [
+  { name: "high", uid: "high" },
+  { name: "medium", uid: "medium" },
+  { name: "low", uid: "low" },
+];
+
+export const category = [
+  { name: "repair", uid: "repair" },
+  { name: "service", uid: "service" },
+  { name: "inspection", uid: "inspection" },
+  { name: "safety", uid: "safety" },
+];
+
+export const statusColorMap: Record<string, "success" | "danger" | "warning"> =
+  {
+    active: "success",
+    paused: "danger",
+    vacation: "warning",
+  };
+
+export const levelColorMap: Record<string, "success" | "danger" | "warning"> = {
+  low: "success",
+  medium: "danger",
+  high: "warning",
 };
 
 export const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];

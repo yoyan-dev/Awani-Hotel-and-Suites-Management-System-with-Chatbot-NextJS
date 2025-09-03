@@ -13,18 +13,20 @@ import {
 import { MailIcon, LockIcon, Plus } from "lucide-react";
 
 export default function AddModal() {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <>
-        <Button color="primary" endContent={<Plus />} size="sm" onPress={onOpen}>
-        Add New
-        </Button>
+      <Button color="primary" endContent={<Plus />} size="sm" onPress={onOpen}>
+        Add Task
+      </Button>
       <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Add New Room</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                Add New Room
+              </ModalHeader>
               <ModalBody>
                 <Input
                   endContent={

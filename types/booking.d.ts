@@ -14,10 +14,12 @@ export interface Booking {
   guest_name: string;
   guest_email: string;
   guest_phone?: string;
+  nights: number;
   check_in: string;
   check_out: string;
   total_price: number;
   status: BookingStatus;
+  amenities: string[];
   payment_method?: "cash" | "card" | "gcash";
   created_at: string;
 }

@@ -1,7 +1,14 @@
 import React from "react";
-import { Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
-import { Search, ChevronDown } from 'lucide-react';
-import { columns, statusOptions } from "./constants";
+import {
+  Input,
+  Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@heroui/react";
+import { Search, ChevronDown } from "lucide-react";
+import { columns, statusOptions, priorityLevel, category } from "./constants";
 import { capitalize } from "@/app/utils/capitalize";
 import AddModal from "../modals/add-modal";
 
@@ -31,21 +38,14 @@ export const TableTopContent: React.FC<Props> = ({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between gap-3 items-end">
-        <Input
-          isClearable
-          classNames={{ base: "w-full sm:max-w-[44%]", inputWrapper: "border-1" }}
-          placeholder="Search by name..."
-          size="sm"
-          startContent={<Search className="text-default-300" />}
-          value={filterValue}
-          variant="bordered"
-          onClear={() => setFilterValue("")}
-          onValueChange={onSearchChange}
-        />
         <div className="flex gap-3">
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
-              <Button endContent={<ChevronDown className="text-small" />} size="sm" variant="flat">
+              <Button
+                endContent={<ChevronDown className="text-small" />}
+                size="sm"
+                variant="flat"
+              >
                 Status
               </Button>
             </DropdownTrigger>
@@ -66,7 +66,57 @@ export const TableTopContent: React.FC<Props> = ({
           </Dropdown>
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
-              <Button endContent={<ChevronDown className="text-small" />} size="sm" variant="flat">
+              <Button
+                endContent={<ChevronDown className="text-small" />}
+                size="sm"
+                variant="flat"
+              >
+                Priority level
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              disallowEmptySelection
+              aria-label="Table Columns"
+              closeOnSelect={false}
+              selectionMode="multiple"
+            >
+              {priorityLevel.map((level) => (
+                <DropdownItem key={level.uid} className="capitalize">
+                  {capitalize(level.name)}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+          <Dropdown>
+            <DropdownTrigger className="hidden sm:flex">
+              <Button
+                endContent={<ChevronDown className="text-small" />}
+                size="sm"
+                variant="flat"
+              >
+                Category
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              disallowEmptySelection
+              aria-label="Table Columns"
+              closeOnSelect={false}
+              selectionMode="multiple"
+            >
+              {category.map((item) => (
+                <DropdownItem key={item.uid} className="capitalize">
+                  {capitalize(item.name)}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+          <Dropdown>
+            <DropdownTrigger className="hidden sm:flex">
+              <Button
+                endContent={<ChevronDown className="text-small" />}
+                size="sm"
+                variant="flat"
+              >
                 Columns
               </Button>
             </DropdownTrigger>
@@ -85,11 +135,29 @@ export const TableTopContent: React.FC<Props> = ({
               ))}
             </DropdownMenu>
           </Dropdown>
+        </div>
+        <div className="flex gap-3">
+          <Input
+            isClearable
+            classNames={{
+              base: "w-full sm:max-w-[44%]",
+              inputWrapper: "border-1",
+            }}
+            placeholder="Search by name..."
+            size="sm"
+            startContent={<Search className="text-default-300" />}
+            value={filterValue}
+            variant="bordered"
+            onClear={() => setFilterValue("")}
+            onValueChange={onSearchChange}
+          />
           <AddModal />
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-default-400 text-small">Total {usersCount} users</span>
+        <span className="text-default-400 text-small">
+          Total {usersCount} users
+        </span>
         <label className="flex items-center text-default-400 text-small">
           Rows per page: 10
         </label>
