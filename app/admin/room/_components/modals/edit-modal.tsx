@@ -154,6 +154,10 @@ export default function UpdateModal(room: any) {
                         placeholder="Select Room status"
                         variant="bordered"
                         defaultSelectedKeys={[newRoom.status]}
+                        value={newRoom.status}
+                        onChange={(e) =>
+                          setRoom({ ...newRoom, status: e.target.value })
+                        }
                       >
                         <SelectItem key="available">Available</SelectItem>
                         <SelectItem key="cleaning">Cleaning</SelectItem>

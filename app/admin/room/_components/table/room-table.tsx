@@ -6,7 +6,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Spinner
+  Spinner,
 } from "@heroui/react";
 import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
 import { RenderCell } from "./render-cell";
@@ -15,10 +15,13 @@ import { TableBottomContent } from "./bottom-content";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchRooms } from "@/features/room/room-thunk";
 import type { RootState, AppDispatch } from "@/store/store";
+import { Room } from "@/types/room";
 
 export default function RoomTable() {
   const dispatch = useDispatch<AppDispatch>();
-  const { rooms, isLoading, error} = useSelector((state: RootState) => state.room);
+  const { rooms, isLoading, error } = useSelector(
+    (state: RootState) => state.room
+  );
 
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
@@ -31,7 +34,7 @@ export default function RoomTable() {
 
   React.useEffect(() => {
     dispatch(fetchRooms());
-    console.log(error)
+    console.log(error);
   }, [dispatch, error]);
 
   const pages = Math.ceil(rooms.length / rowsPerPage);
@@ -117,11 +120,18 @@ export default function RoomTable() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody isLoading={isLoading} loadingContent={<Spinner label="Loading..." />} emptyContent="No rooms found" items={items}>
+      <TableBody
+        isLoading={isLoading}
+        loadingContent={<Spinner label="Loading..." />}
+        emptyContent="No rooms found"
+        items={items}
+      >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell className="capitalize">{RenderCell(item, columnKey as string)}</TableCell>
+              <TableCell className="capitalize">
+                <RenderCell room={item} columnKey={columnKey as string} />
+              </TableCell>
             )}
           </TableRow>
         )}
