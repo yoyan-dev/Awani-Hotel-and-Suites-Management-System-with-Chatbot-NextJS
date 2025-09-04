@@ -1,38 +1,61 @@
 import React from "react";
-import { User, Chip, Button, Dropdown, DropdownMenu, DropdownTrigger, DropdownItem } from "@heroui/react";
-import { UserType } from "./types";
-import { statusColorMap } from "./constants";
-import { EllipsisVertical } from 'lucide-react';
+import {
+  User,
+  Chip,
+  Button,
+  Dropdown,
+  DropdownMenu,
+  DropdownTrigger,
+  DropdownItem,
+} from "@heroui/react";
+import { Housekeeping } from "@/types/housekeeping";
+import { levelColorMap, priorityLevel, statusColorMap } from "./constants";
+import { EllipsisVertical, Link } from "lucide-react";
 
-export const RenderCell = (user: UserType, columnKey: string) => {
-  const cellValue = user[columnKey as keyof UserType];
+export const RenderCell = (housekeeping: Housekeeping, columnKey: string) => {
+  const cellValue = housekeeping[columnKey as keyof Housekeeping];
 
   switch (columnKey) {
-    case "name":
+    case "assigned_to":
       return (
         <User
-          avatarProps={{ radius: "full", size: "sm", src: user.avatar }}
+          avatarProps={{ radius: "full", size: "sm", src: "" }}
           classNames={{ description: "text-default-500" }}
-          description={user.email}
-          name={user.name}
+          name={housekeeping.assigned_to}
         />
       );
-    case "role":
+    case "attachment":
       return (
-        <div className="flex flex-col">
-          <p className="text-bold text-small capitalize">{user.role}</p>
-          <p className="text-bold text-tiny capitalize text-default-500">{user.team}</p>
+        <div className="text-gray-500">
+          <Link size={10} />
         </div>
+      );
+    case "priority":
+      return (
+        <Chip
+          className="capitalize border-none gap-1"
+          color={levelColorMap[housekeeping.priority]}
+          size="sm"
+          variant="flat"
+        >
+          {housekeeping.priority}
+        </Chip>
+      );
+    case "category":
+      return (
+        <Chip className="capitalize border-none gap-1" size="sm" variant="flat">
+          {housekeeping.category}
+        </Chip>
       );
     case "status":
       return (
         <Chip
           className="capitalize border-none gap-1 text-default-600"
-          color={statusColorMap[user.status]}
+          color={statusColorMap[housekeeping.status]}
           size="sm"
           variant="dot"
         >
-          {user.status}
+          {housekeeping.status}
         </Chip>
       );
     case "actions":

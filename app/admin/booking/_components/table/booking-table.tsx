@@ -7,27 +7,23 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/react";
-import {
-  housekeepingTasks,
-  columns,
-  INITIAL_VISIBLE_COLUMNS,
-} from "./constants";
+import { bookings, columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
-import { Housekeeping } from "@/types/housekeeping";
+import { Booking } from "@/types/booking";
 
-export default function HousekeepingTable() {
+export default function BookingTable() {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<any>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(housekeepingTasks.length / rowsPerPage);
+  const pages = Math.ceil(bookings.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
@@ -38,18 +34,18 @@ export default function HousekeepingTable() {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredHousekeepingTasks = [...housekeepingTasks];
+    let filteredBookings = [...bookings];
     if (hasSearchFilter) {
-      filteredHousekeepingTasks = filteredHousekeepingTasks.filter((task) =>
-        task.assigned_to.toLowerCase().includes(filterValue.toLowerCase())
+      filteredBookings = filteredBookings.filter((booking) =>
+        booking.guest_name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length) {
-      filteredHousekeepingTasks = filteredHousekeepingTasks.filter((task) =>
-        Array.from(statusFilter).includes(task.status)
+      filteredBookings = filteredBookings.filter((booking) =>
+        Array.from(statusFilter).includes(booking.status)
       );
     }
-    return filteredHousekeepingTasks;
+    return filteredBookings;
   }, [filterValue, statusFilter]);
 
   const items = React.useMemo(() => {
@@ -66,7 +62,7 @@ export default function HousekeepingTable() {
     <Table
       isCompact
       removeWrapper
-      aria-label="Housekeeping Tasks Table"
+      aria-label="Users Table"
       bottomContent={
         <TableBottomContent
           hasSearchFilter={hasSearchFilter}
@@ -90,7 +86,7 @@ export default function HousekeepingTable() {
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
-          usersCount={housekeepingTasks.length}
+          usersCount={bookings.length}
         />
       }
       topContentPlacement="outside"
@@ -107,12 +103,12 @@ export default function HousekeepingTable() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent="No housekeeping task found" items={items}>
+      <TableBody emptyContent="No booking found" items={items}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell>
-                {RenderCell(item as Housekeeping, columnKey as string)}
+                {RenderCell(item as Booking, columnKey as string)}
               </TableCell>
             )}
           </TableRow>

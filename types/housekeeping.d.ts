@@ -9,6 +9,11 @@ export interface Housekeeping {
   id: string;
   room_id: string;
   staff_id: string;
+  title: string;
+  attachment: any;
+  priority: "N/A" | "high" | "medium" | "low";
+  category: "repair" | "service" | "inspection" | "safety";
+  area: string;
   assigned_to: string;
   scheduled_date: string;
   start_time?: string;

@@ -18,14 +18,14 @@ export default function AddModal() {
   return (
     <>
       <Button color="primary" endContent={<Plus />} size="sm" onPress={onOpen}>
-        Add Task
+        Add Booking
       </Button>
       <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add New Room
+                Add New Booking
               </ModalHeader>
               <ModalBody>
                 <Input
