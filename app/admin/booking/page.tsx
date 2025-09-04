@@ -1,14 +1,12 @@
 "use client";
-import BookingList from "./_components/booking-list";
-import RoomList from "./_components/room-list";
-export default function Booking() {
+import Header from "./_components/header";
+import BookingTable from "./_components/table/booking-table";
+
+export default function Room() {
   return (
-    <div className="p-2 flex flex-col gap-4">
-      Booking page
-      <div className="flex gap-4">
-        <BookingList />
-        <RoomList />
-      </div>
+    <div className="p-2 bg-white dark:bg-gray-900 rounded space-y-2">
+      <Header />
+      <BookingTable />
     </div>
   );
 }

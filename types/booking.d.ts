@@ -2,6 +2,8 @@ export type BookingStatus =
   | "pending"
   | "procedding"
   | "reserved"
+  | "confirmed"
+  | "cancelled"
   | "seposit"
   | "paid"
   | "check-in"
@@ -9,9 +11,11 @@ export type BookingStatus =
 
 export interface Booking {
   id: string;
+  booking_id: string;
   room_id: string;
   guest_id: string;
   guest_name: string;
+  room_type: string;
   guest_email: string;
   guest_phone?: string;
   nights: number;
