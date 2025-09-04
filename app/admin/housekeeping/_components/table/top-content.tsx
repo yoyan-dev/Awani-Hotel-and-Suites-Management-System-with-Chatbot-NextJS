@@ -155,8 +155,8 @@ export const TableTopContent: React.FC<Props> = ({
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-default-400 text-small">
-          Total {usersCount} users
+        <span className="text-default-600 text-small">
+          Total {usersCount} housekeeping tasks
         </span>
         <label className="flex items-center text-default-400 text-small">
           Rows per page: 10

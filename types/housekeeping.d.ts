@@ -13,6 +13,7 @@ export interface Housekeeping {
   attachment: any;
   priority: "N/A" | "high" | "medium" | "low";
   category: "repair" | "service" | "inspection" | "safety";
+  area: string;
   assigned_to: string;
   scheduled_date: string;
   start_time?: string;

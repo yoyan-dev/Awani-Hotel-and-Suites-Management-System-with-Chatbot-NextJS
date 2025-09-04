@@ -1,42 +1,61 @@
 import React from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
-import { users, columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@heroui/react";
+import {
+  housekeepingTasks,
+  columns,
+  INITIAL_VISIBLE_COLUMNS,
+} from "./constants";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
+import { Housekeeping } from "@/types/housekeeping";
 
 export default function HousekeepingTable() {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState<any>(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [visibleColumns, setVisibleColumns] = React.useState<any>(
+    new Set(INITIAL_VISIBLE_COLUMNS)
+  );
   const [statusFilter, setStatusFilter] = React.useState<any>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(users.length / rowsPerPage);
+  const pages = Math.ceil(housekeepingTasks.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
-    return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+    return columns.filter((column) =>
+      Array.from(visibleColumns).includes(column.uid)
+    );
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredHousekeepingTasks = [...housekeepingTasks];
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) => user.name.toLowerCase().includes(filterValue.toLowerCase()));
+      filteredHousekeepingTasks = filteredHousekeepingTasks.filter((task) =>
+        task.assigned_to.toLowerCase().includes(filterValue.toLowerCase())
+      );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length) {
-      filteredUsers = filteredUsers.filter((user) => Array.from(statusFilter).includes(user.status));
+      filteredHousekeepingTasks = filteredHousekeepingTasks.filter((task) =>
+        Array.from(statusFilter).includes(task.status)
+      );
     }
-    return filteredUsers;
+    return filteredHousekeepingTasks;
   }, [filterValue, statusFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     return filteredItems.slice(start, start + rowsPerPage);
   }, [page, filteredItems, rowsPerPage]);
-
 
   const onRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
@@ -47,7 +66,7 @@ export default function HousekeepingTable() {
     <Table
       isCompact
       removeWrapper
-      aria-label="Users Table"
+      aria-label="Housekeeping Tasks Table"
       bottomContent={
         <TableBottomContent
           hasSearchFilter={hasSearchFilter}
@@ -71,7 +90,7 @@ export default function HousekeepingTable() {
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
-          usersCount={users.length}
+          usersCount={housekeepingTasks.length}
         />
       }
       topContentPlacement="outside"
@@ -79,15 +98,23 @@ export default function HousekeepingTable() {
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
-          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"} allowsSorting={column.sortable}>
+          <TableColumn
+            key={column.uid}
+            align={column.uid === "actions" ? "center" : "start"}
+            allowsSorting={column.sortable}
+          >
             {column.name}
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent="No users found" items={items}>
+      <TableBody emptyContent="No housekeeping task found" items={items}>
         {(item) => (
           <TableRow key={item.id}>
-            {(columnKey) => <TableCell>{RenderCell(item, columnKey as string)}</TableCell>}
+            {(columnKey) => (
+              <TableCell>
+                {RenderCell(item as Housekeeping, columnKey as string)}
+              </TableCell>
+            )}
           </TableRow>
         )}
       </TableBody>
