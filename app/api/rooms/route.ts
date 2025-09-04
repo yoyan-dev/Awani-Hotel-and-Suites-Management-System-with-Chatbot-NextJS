@@ -1,55 +1,75 @@
 import { NextResponse } from "next/server";
 import type { Room } from "@/types/room";
+import { supabase } from "@/lib/supabase-client";
+import { uploadRoomImage } from "@/lib/upload-room-image";
 
-const rooms: Room[] = [
-  {
-    id: "1",
-    room_id: "101",
-    room_number: 101,
-    room_type: "single",
-    floor: 1,
-    description: "a cozy single room",
-    max_guest: 1,
-    base_price: 100,
-    status: "available",
-    image: "https://heroui.com/images/hero-card-complete.jpeg",
-  },
-  {
-    id: "2",
-    room_id: "102",
-    room_number: 102,
-    room_type: "double",
-    floor: 1,
-    description: "spacious double room",
-    max_guest: 2,
-    base_price: 180,
-    status: "occupied",
-    image: "https://heroui.com/images/hero-card-complete.jpeg",
-  },
-];
+let rooms: Room[];
 
 export async function GET() {
+  const { data: roomData, error } = await supabase.from("rooms").select("*");
+
+  if (error) {
+    console.error("Error fetching rooms:", error.message);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  console.log("Room data:", roomData);
+  rooms = roomData || [];
   return NextResponse.json(rooms);
 }
 
 // CREATE room
 export async function POST(req: Request) {
-  const formData = await req.formData();
+  try {
+    const formData = await req.formData();
+    const roomNumber = Number(formData.get("room_number"));
+    const file = formData.get("image") as File | null;
 
-  const newRoom: Room = {
-    id: Date.now().toString(),
-    room_id: `R-${Math.floor(1000 + Math.random() * 9000)}`,
-    room_number: Number(formData.get("room_number")),
-    room_type: formData.get("room_type") as Room["room_type"],
-    description: formData.get("description") as string,
-    floor: Number(formData.get("floor")),
-    max_guest: Number(formData.get("max_guest")),
-    base_price: Number(formData.get("base_price")),
-    status: "available",
-    image: "https://heroui.com/images/hero-card-complete.jpeg",
-  };
+    let imageUrl: string | null = null;
 
-  rooms.push(newRoom);
+    if (file && file.size > 0) {
+      try {
+        imageUrl = await uploadRoomImage(file, roomNumber);
+      } catch (uploadErr: any) {
+        console.error("Upload error:", uploadErr.message);
+        return NextResponse.json(
+          { error: "Image upload failed" },
+          { status: 500 }
+        );
+      }
+    }
 
-  return NextResponse.json(newRoom, { status: 201 });
+    const newRoom = {
+      room_id: `RM-${roomNumber}`,
+      room_number: roomNumber,
+      room_type: formData.get("room_type") as string,
+      description: formData.get("description") as string,
+      floor: Number(formData.get("floor")),
+      max_guest: Number(formData.get("max_guest")),
+      base_price: Number(formData.get("base_price")),
+      status: formData.get("status") as string,
+      image: imageUrl,
+    };
+
+    const { data, error } = await supabase
+      .from("rooms")
+      .insert([newRoom])
+      .select();
+
+    if (error) {
+      console.error("Supabase insert error:", error);
+      if (error.code === "23505") {
+        return NextResponse.json(
+          { error: "Room number already exists." },
+          { status: 400 }
+        );
+      }
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data[0], { status: 201 });
+  } catch (err: any) {
+    console.error("Unexpected error:", err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
 }

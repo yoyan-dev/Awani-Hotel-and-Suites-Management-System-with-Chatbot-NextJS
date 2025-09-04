@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { Room } from "@/types/room";
+import { supabase } from "@/lib/supabase-client";
 
 const rooms: Room[] = [
   {
@@ -31,13 +32,34 @@ const rooms: Room[] = [
 // UPDATE
 export async function PUT(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await context.params;
+  const { id } = params;
   const body = await req.json();
 
-  const index = rooms.findIndex((r) => r.id === id);
-  if (index === -1) {
+  const { data, error } = await supabase
+    .from("rooms")
+    .update(body)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Update error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: {
+          title: "Error",
+          description: error.message,
+          color: "error",
+        },
+      },
+      { status: 500 }
+    );
+  }
+
+  if (!data) {
     return NextResponse.json(
       {
         success: false,
@@ -51,8 +73,6 @@ export async function PUT(
     );
   }
 
-  rooms[index] = { ...rooms[index], ...body };
-
   return NextResponse.json({
     success: true,
     message: {
@@ -60,7 +80,7 @@ export async function PUT(
       description: "Room updated successfully",
       color: "success",
     },
-    room: rooms[index],
+    room: data,
   });
 }
 
@@ -70,6 +90,13 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
-  // rooms = rooms.filter((r) => r.id !== id);
+
+  const { error } = await supabase.from("rooms").delete().eq("id", id);
+
+  if (error) {
+    console.error("Delete error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
   return NextResponse.json({ success: true });
 }

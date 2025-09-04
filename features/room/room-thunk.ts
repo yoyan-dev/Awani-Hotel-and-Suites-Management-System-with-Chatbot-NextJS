@@ -36,6 +36,7 @@ export const addRoom = createAsyncThunk<Room, FormData>(
       if (!res.ok) throw new Error("Failed to add room");
       return res.json();
     } catch (error: any) {
+      console.log(error.message);
       return rejectWithValue(error.message);
     }
   }
@@ -61,8 +62,13 @@ export const updateRoom = createAsyncThunk<Room, Room, { rejectValue: string }>(
         );
       }
 
-      return data.room as Room;
+      return data.room;
     } catch (err: any) {
+      addToast({
+        title: "Error",
+        description: err.message,
+        color: "danger",
+      });
       return rejectWithValue(err.message);
     }
   }
