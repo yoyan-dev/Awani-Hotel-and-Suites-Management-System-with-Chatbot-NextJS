@@ -8,7 +8,7 @@ import {
   DropdownTrigger,
   DropdownItem,
 } from "@heroui/react";
-import { statusColorMap } from "./constants";
+import { bookingStatusColorMap } from "./constants";
 import {
   CalendarArrowDown,
   CalendarArrowUp,
@@ -16,11 +16,19 @@ import {
 } from "lucide-react";
 import { Booking } from "@/types/booking";
 import { formatPHP } from "@/lib/format-php";
+import { calculateBookingPrice, getNights } from "@/utils/pricing";
 
 export const RenderCell = (booking: Booking, columnKey: string) => {
   const cellValue = booking[columnKey as keyof Booking];
+  const nights = getNights(booking.check_in, booking.check_out);
 
   switch (columnKey) {
+    case "guest_name":
+      return booking.users.full_name;
+    case "room_type":
+      return booking.rooms.room_type;
+    case "nights":
+      return nights;
     case "check_in":
       return (
         <div className="flex gap-2">
@@ -42,12 +50,12 @@ export const RenderCell = (booking: Booking, columnKey: string) => {
         </div>
       );
     case "total_price":
-      return formatPHP(booking.total_price);
+      return formatPHP(calculateBookingPrice(booking));
     case "status":
       return (
         <Chip
           className="capitalize border-none gap-1 text-default-600"
-          color={statusColorMap[booking.status]}
+          color={bookingStatusColorMap[booking.status]}
           size="sm"
           variant="dot"
         >
