@@ -1,4 +1,4 @@
-import { ColumnType, UserType } from "./types";
+import { ColumnType } from "@/types/column";
 
 export const columns: ColumnType[] = [
   { name: "ID", uid: "id", sortable: true },
@@ -17,24 +17,11 @@ export const statusOptions = [
   { name: "Vacation", uid: "vacation" },
 ];
 
-export const statusColorMap: Record<string, "success" | "danger" | "warning"> = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
-};
+export const statusColorMap: Record<string, "success" | "danger" | "warning"> =
+  {
+    active: "success",
+    paused: "danger",
+    vacation: "warning",
+  };
 
 export const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
-
-export const users: UserType[] = [
-  {
-    id: 1,
-    name: "Tony Reichert",
-    role: "CEO",
-    team: "Management",
-    status: "active",
-    age: "29",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    email: "tony.reichert@example.com",
-  },
-  // ... other users
-];

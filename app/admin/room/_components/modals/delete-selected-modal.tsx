@@ -10,33 +10,44 @@ import {
 } from "@heroui/react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/store";
-import { deleteRoom } from "@/features/room/room-thunk";
+import { deleteRooms } from "@/features/room/room-thunk";
 
-export default function DeleteModal(room: any) {
+interface DeleteSelectedModalProps {
+  selectedKeys: Set<number> | "all";
+}
+
+export default function DeleteSelectedModal({
+  selectedKeys,
+}: DeleteSelectedModalProps) {
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector((state: RootState) => state.room.isLoading);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   function handleDelete() {
-    dispatch(deleteRoom(room.room.id));
+    dispatch(deleteRooms({ selectedValues: selectedKeys }));
+    onOpenChange();
   }
 
-  console.log(room);
   return (
     <>
-      <div onClick={onOpen}>Delete</div>
+      <Button variant="bordered" color="danger" size="sm" onPress={onOpen}>
+        Delete
+      </Button>
       <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Delete Room
+                Confirm Delete
               </ModalHeader>
               <ModalBody>
                 <p>
-                  Are you sure you want to delete this room? This action cannot
-                  be undone.
+                  Are you sure you want to delete this
+                  {selectedKeys === "all"
+                    ? " All"
+                    : ` ${selectedKeys.size}`}{" "}
+                  selected rooms? This action cannot be undone.
                 </p>
               </ModalBody>
               <ModalFooter>

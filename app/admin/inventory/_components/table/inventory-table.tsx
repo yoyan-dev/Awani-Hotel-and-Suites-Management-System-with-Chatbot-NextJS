@@ -13,8 +13,8 @@ import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchInventory } from "@/features/inventory/inventory-thunk";
 import type { RootState, AppDispatch } from "@/store/store";
+import { fetchInventory } from "@/features/inventory/inventory-thunk";
 
 export default function InventoryTable() {
   const dispatch = useDispatch<AppDispatch>();
@@ -48,18 +48,21 @@ export default function InventoryTable() {
 
   const filteredItems = React.useMemo(() => {
     let filteredInventory = [...inventory];
+
     if (hasSearchFilter) {
       filteredInventory = filteredInventory.filter((item) =>
-        item.name.toLowerCase().includes(filterValue.toLowerCase())
+        item.name?.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
+
     if (statusFilter !== "all" && Array.from(statusFilter).length) {
       filteredInventory = filteredInventory.filter((item) =>
         Array.from(statusFilter).includes(item.status)
       );
     }
+
     return filteredInventory;
-  }, [filterValue, statusFilter]);
+  }, [inventory, filterValue, statusFilter, hasSearchFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -75,7 +78,7 @@ export default function InventoryTable() {
     <Table
       isCompact
       removeWrapper
-      aria-label="Users Table"
+      aria-label="Rooms Table"
       bottomContent={
         <TableBottomContent
           hasSearchFilter={hasSearchFilter}
@@ -100,6 +103,7 @@ export default function InventoryTable() {
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
           itemsCount={inventory.length}
+          selectedKeys={selectedKeys}
         />
       }
       topContentPlacement="outside"
@@ -117,15 +121,17 @@ export default function InventoryTable() {
         )}
       </TableHeader>
       <TableBody
-        emptyContent="No item found"
         isLoading={isLoading}
         loadingContent={<Spinner label="Loading..." />}
+        emptyContent="No rooms found"
         items={items}
       >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>{RenderCell(item, columnKey as string)}</TableCell>
+              <TableCell className="capitalize">
+                <RenderCell inventory={item} columnKey={columnKey as string} />
+              </TableCell>
             )}
           </TableRow>
         )}

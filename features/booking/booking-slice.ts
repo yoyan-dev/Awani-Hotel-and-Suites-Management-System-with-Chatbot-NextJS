@@ -1,27 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type {
-  Inventory,
-  InventoryState,
-  InventoryStatus,
-} from "@/types/inventory";
+import type { Booking, BookingState } from "@/types/booking";
 import {
-  fetchInventory,
-  fetchInventoryItem,
-  addItem,
-  UpdateItem,
-  deleteItem,
-  deleteSelectedItems,
-} from "./inventory-thunk";
+  fetchBooking,
+  fetchBookings,
+  addBooking,
+  updateBooking,
+  deleteBooking,
+  deleteSelectedBooking,
+} from "./booking-thunk";
 
-const initialState: InventoryState = {
-  inventory: [],
-  item: {} as Inventory,
+const initialState: BookingState = {
+  bookings: [],
+  booking: {} as Booking,
   isLoading: false,
   error: undefined,
 };
 
-const inventorySlice = createSlice({
-  name: "inventory",
+const bookingSlice = createSlice({
+  name: "booking",
   initialState,
   reducers: {
     setLoading: (state, action: PayloadAction<boolean>) => {
@@ -31,114 +27,115 @@ const inventorySlice = createSlice({
   extraReducers: (builder) => {
     builder
       // get single room
-      .addCase(fetchInventoryItem.pending, (state) => {
+      .addCase(fetchBooking.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
       .addCase(
-        fetchInventoryItem.fulfilled,
-        (state, action: PayloadAction<Inventory>) => {
+        fetchBooking.fulfilled,
+        (state, action: PayloadAction<Booking>) => {
           state.isLoading = false;
-          state.item = action.payload;
+          state.booking = action.payload;
           state.error = undefined;
         }
       )
-      .addCase(fetchInventoryItem.rejected, (state, action) => {
+      .addCase(fetchBooking.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
 
       // get all rooms
-      .addCase(fetchInventory.pending, (state) => {
+      .addCase(fetchBookings.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
       .addCase(
-        fetchInventory.fulfilled,
-        (state, action: PayloadAction<Inventory[]>) => {
+        fetchBookings.fulfilled,
+        (state, action: PayloadAction<Booking[]>) => {
           state.isLoading = false;
-          state.inventory = action.payload;
+          state.bookings = action.payload;
           state.error = undefined;
         }
       )
-      .addCase(fetchInventory.rejected, (state, action) => {
+      .addCase(fetchBookings.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
 
       // add room
-      .addCase(addItem.pending, (state) => {
+      .addCase(addBooking.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(addItem.fulfilled, (state, action: PayloadAction<Inventory>) => {
-        state.isLoading = false;
-        state.error = undefined;
-        state.inventory.push(action.payload);
-      })
-      .addCase(addItem.rejected, (state, action) => {
+      .addCase(
+        addBooking.fulfilled,
+        (state, action: PayloadAction<Booking>) => {
+          state.isLoading = false;
+          state.error = undefined;
+          state.bookings.push(action.payload);
+        }
+      )
+      .addCase(addBooking.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
 
       // update room
-      .addCase(UpdateItem.pending, (state) => {
+      .addCase(updateBooking.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
       .addCase(
-        UpdateItem.fulfilled,
-        (state, action: PayloadAction<Inventory>) => {
+        updateBooking.fulfilled,
+        (state, action: PayloadAction<Booking>) => {
           state.isLoading = false;
           state.error = undefined;
-          const index = state.inventory.findIndex(
+          const index = state.bookings.findIndex(
             (r) => r.id === action.payload.id
           );
           if (index !== -1) {
-            state.inventory[index] = action.payload;
+            state.bookings[index] = action.payload;
           }
         }
       )
-      .addCase(UpdateItem.rejected, (state, action) => {
+      .addCase(updateBooking.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
 
       // delete room
-      .addCase(deleteItem.pending, (state) => {
+      .addCase(deleteBooking.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(deleteItem.fulfilled, (state, action) => {
+      .addCase(deleteBooking.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = undefined;
-        state.inventory = state.inventory.filter(
-          (r) => r.id !== action.payload
-        );
+        state.bookings = state.bookings.filter((r) => r.id !== action.payload);
       })
-      .addCase(deleteItem.rejected, (state, action) => {
+      .addCase(deleteBooking.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
 
       // delete rooms
-      .addCase(deleteSelectedItems.pending, (state) => {
+      .addCase(deleteSelectedBooking.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(deleteSelectedItems.fulfilled, (state, action) => {
+      .addCase(deleteSelectedBooking.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = undefined;
-        state.inventory = state.inventory.filter(
+        state.bookings = state.bookings.filter(
           (r) => !action.payload.map((room) => room.id).includes(r.id)
         );
       })
-      .addCase(deleteSelectedItems.rejected, (state, action) => {
+      .addCase(deleteSelectedBooking.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });
   },
 });
 
-export const { setLoading } = inventorySlice.actions;
-export default inventorySlice.reducer;
+export const { setLoading } = bookingSlice.actions;
+export default bookingSlice.reducer;

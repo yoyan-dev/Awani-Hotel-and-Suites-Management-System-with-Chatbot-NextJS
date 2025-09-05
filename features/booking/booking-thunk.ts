@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { Inventory } from "@/types/inventory";
+import { Booking } from "@/types/booking";
 import { addToast } from "@heroui/react";
 
-const apiUrl = "/api/inventory";
+const apiUrl = "/api/bookings";
 
-export const fetchInventory = createAsyncThunk<Inventory[]>(
-  "inventory/fetchInventory",
+export const fetchBookings = createAsyncThunk<Booking[]>(
+  "booking/fetchBookings",
   async (_, { rejectWithValue }) => {
     try {
       const res = await fetch(apiUrl);
@@ -14,7 +14,7 @@ export const fetchInventory = createAsyncThunk<Inventory[]>(
       if (!res.ok || !data.success) {
         addToast(data.message);
         return rejectWithValue(
-          data.message?.description ?? "Failed to fetch intentory"
+          data.message?.description ?? "Failed to fetch bookings"
         );
       }
       return data.data;
@@ -24,8 +24,8 @@ export const fetchInventory = createAsyncThunk<Inventory[]>(
   }
 );
 
-export const fetchInventoryItem = createAsyncThunk<Inventory, string>(
-  "inventory/fetchInventoryItem",
+export const fetchBooking = createAsyncThunk<Booking, string>(
+  "booking/fetchBooking",
   async (id, { rejectWithValue }) => {
     try {
       const res = await fetch(`${apiUrl}/${id}`);
@@ -34,7 +34,7 @@ export const fetchInventoryItem = createAsyncThunk<Inventory, string>(
       if (!res.ok || !data.success) {
         addToast(data.message);
         return rejectWithValue(
-          data.message?.description ?? "Failed to fetch item"
+          data.message?.description ?? "Failed to fetch booking"
         );
       }
       return data.data;
@@ -49,8 +49,8 @@ export const fetchInventoryItem = createAsyncThunk<Inventory, string>(
   }
 );
 
-export const addItem = createAsyncThunk<Inventory, FormData>(
-  "inventory/addItem",
+export const addBooking = createAsyncThunk<Booking, FormData>(
+  "booking/addBooking",
   async (formData, { rejectWithValue }) => {
     try {
       const res = await fetch(apiUrl, {
@@ -61,7 +61,7 @@ export const addItem = createAsyncThunk<Inventory, FormData>(
       addToast(data.message);
       if (!res.ok || !data.success) {
         return rejectWithValue(
-          data.message?.description ?? "Failed to add item in inventory"
+          data.message?.description ?? "Failed to add booking"
         );
       }
       return data.data;
@@ -78,16 +78,16 @@ export const addItem = createAsyncThunk<Inventory, FormData>(
 );
 
 // UPDATE
-export const UpdateItem = createAsyncThunk<
-  Inventory,
-  Inventory,
+export const updateBooking = createAsyncThunk<
+  Booking,
+  Booking,
   { rejectValue: string }
->("inventory/UpdateItem", async (inventory, { rejectWithValue }) => {
+>("booking/updateBooking", async (booking, { rejectWithValue }) => {
   try {
-    const res = await fetch(`${apiUrl}/${inventory.id}`, {
+    const res = await fetch(`${apiUrl}/${booking.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(inventory),
+      body: JSON.stringify(booking),
     });
 
     const data = await res.json();
@@ -95,7 +95,7 @@ export const UpdateItem = createAsyncThunk<
 
     if (!res.ok || !data.success) {
       return rejectWithValue(
-        data.message?.description ?? "Failed to update item"
+        data.message?.description ?? "Failed to update booking"
       );
     }
 
@@ -111,8 +111,8 @@ export const UpdateItem = createAsyncThunk<
 });
 
 // DELETE
-export const deleteItem = createAsyncThunk<string, string>(
-  "inventory/deleteItem",
+export const deleteBooking = createAsyncThunk<string, string>(
+  "booking/deleteBooking",
   async (id, { rejectWithValue }) => {
     try {
       const res = await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
@@ -121,7 +121,7 @@ export const deleteItem = createAsyncThunk<string, string>(
       addToast(data.message);
       if (!res.ok || !data.success) {
         return rejectWithValue(
-          data.message?.description ?? "Failed to delete item"
+          data.message?.description ?? "Failed to delete booking"
         );
       }
 
@@ -138,11 +138,11 @@ export const deleteItem = createAsyncThunk<string, string>(
 );
 
 //  delete selected rooms or all
-export const deleteSelectedItems = createAsyncThunk<
-  Inventory[],
+export const deleteSelectedBooking = createAsyncThunk<
+  Booking[],
   { selectedValues: Set<number> | "all" },
   { rejectValue: string }
->("inventory/deleteSelectedItems", async ({ selectedValues }, thunkAPI) => {
+>("booking/deleteSelectedBooking", async ({ selectedValues }, thunkAPI) => {
   try {
     const body =
       selectedValues === "all"

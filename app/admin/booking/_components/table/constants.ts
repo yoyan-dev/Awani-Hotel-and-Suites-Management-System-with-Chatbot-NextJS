@@ -1,4 +1,3 @@
-import { Booking } from "@/types/booking";
 import { ColumnType } from "@/types/column";
 
 export const columns: ColumnType[] = [
@@ -13,18 +12,32 @@ export const columns: ColumnType[] = [
   { name: "ACTIONS", uid: "actions" },
 ];
 
-export const statusOptions = [
-  { name: "Active", uid: "active" },
-  { name: "Paused", uid: "paused" },
-  { name: "Vacation", uid: "vacation" },
+export const bookingStatusOptions = [
+  { name: "Confirmed", uid: "confirmed" },
+  { name: "Cancelled", uid: "cancelled" },
+  { name: "Pending", uid: "pending" },
+  { name: "Processing", uid: "processing" },
+  { name: "Reserved", uid: "reserved" },
+  { name: "Deposit", uid: "deposit" },
+  { name: "Paid", uid: "paid" },
+  { name: "Checked In", uid: "checked_in" },
+  { name: "Checked Out", uid: "checked_out" },
 ];
 
-export const statusColorMap: Record<string, "success" | "danger" | "warning"> =
-  {
-    active: "success",
-    paused: "danger",
-    vacation: "warning",
-  };
+export const bookingStatusColorMap: Record<
+  (typeof bookingStatusOptions)[number]["uid"],
+  "default" | "primary" | "secondary" | "success" | "warning" | "danger"
+> = {
+  confirmed: "success",
+  cancelled: "danger",
+  pending: "warning",
+  processing: "primary",
+  reserved: "secondary",
+  deposit: "danger",
+  paid: "success",
+  checked_in: "primary",
+  checked_out: "default",
+};
 
 export const INITIAL_VISIBLE_COLUMNS = [
   "booking_id",
@@ -35,62 +48,4 @@ export const INITIAL_VISIBLE_COLUMNS = [
   "total_price",
   "status",
   "actions",
-];
-
-export const bookings = [
-  {
-    id: "1",
-    booking_id: "BKG-2025-001",
-    guest_name: "Juan Dela Cruz",
-    room_type: "Deluxe Suite",
-    nights: 3,
-    check_in: "Sep 10, 2025",
-    check_out: "Sep 13, 2025",
-    total_price: 7500,
-    status: "reserved",
-  },
-  {
-    id: "2",
-    booking_id: "BKG-2025-002",
-    guest_name: "Maria Santos",
-    room_type: "Standard Room",
-    nights: 2,
-    check_in: "Sep 12, 2025",
-    check_out: "Sep 14, 2025",
-    total_price: 4000,
-    status: "pending",
-  },
-  {
-    id: "3",
-    booking_id: "BKG-2025-003",
-    guest_name: "Jose Rizal",
-    room_type: "Presidential Suite",
-    nights: 1,
-    check_in: "Sep 15, 2025",
-    check_out: "Sep 16, 2025",
-    total_price: 10000,
-    status: "check-in",
-  },
-  {
-    id: "4",
-    booking_id: "BKG-2025-004",
-    guest_name: "Ana Cruz",
-    room_type: "Family Room",
-    nights: 4,
-    check_in: "Sep 20, 2025",
-    check_out: "Sep 24, 2025",
-    total_price: 12000,
-    status: "cancelled",
-  },
-  {
-    id: "5",
-    booking_id: "BKG-2025-005",
-    guest_name: "Mark Reyes",
-    room_type: "Twin Room",
-    nights: 2,
-    check_in: "Sep 25, 2025",
-    check_out: "Sep 27, 2025",
-    total_price: 5000,
-    status: "confirmed",
-  },
 ];

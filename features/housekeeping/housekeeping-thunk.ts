@@ -1,18 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { Room } from "@/types/room";
+import { Housekeeping } from "@/types/housekeeping";
 import { addToast } from "@heroui/react";
 
-export const fetchRooms = createAsyncThunk<Room[]>(
-  "room/fetchRooms",
+const apiUrl = "/api/housekeeping";
+
+export const fetchHousekeepingTasks = createAsyncThunk<Housekeeping[]>(
+  "housekeeping/fetchHousekeepingTasks",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await fetch("/api/rooms");
+      const res = await fetch(apiUrl);
       const data = await res.json();
 
       if (!res.ok || !data.success) {
         addToast(data.message);
         return rejectWithValue(
-          data.message?.description ?? "Failed to fetch rooms"
+          data.message?.description ?? "Failed to fetch housekeeping tasks"
         );
       }
       return data.data;
@@ -22,17 +24,17 @@ export const fetchRooms = createAsyncThunk<Room[]>(
   }
 );
 
-export const fetchRoom = createAsyncThunk<Room, string>(
-  "room/fetchRoom",
+export const fetchHousekeepingTask = createAsyncThunk<Housekeeping, string>(
+  "housekeeping/fetchHousekeepingTask",
   async (id, { rejectWithValue }) => {
     try {
-      const res = await fetch(`/api/rooms/${id}`);
+      const res = await fetch(`${apiUrl}/${id}`);
       const data = await res.json();
 
       if (!res.ok || !data.success) {
         addToast(data.message);
         return rejectWithValue(
-          data.message?.description ?? "Failed to fetch room"
+          data.message?.description ?? "Failed to fetch housekeeping task"
         );
       }
       return data.data;
@@ -47,11 +49,11 @@ export const fetchRoom = createAsyncThunk<Room, string>(
   }
 );
 
-export const addRoom = createAsyncThunk<Room, FormData>(
-  "room/addRoom",
+export const addHousekeepingTask = createAsyncThunk<Housekeeping, FormData>(
+  "housekeeping/addHousekeepingTask",
   async (formData, { rejectWithValue }) => {
     try {
-      const res = await fetch("/api/rooms", {
+      const res = await fetch(apiUrl, {
         method: "POST",
         body: formData,
       });
@@ -59,7 +61,7 @@ export const addRoom = createAsyncThunk<Room, FormData>(
       addToast(data.message);
       if (!res.ok || !data.success) {
         return rejectWithValue(
-          data.message?.description ?? "Failed to add room"
+          data.message?.description ?? "Failed to add housekeeping task"
         );
       }
       return data.data;
@@ -76,14 +78,18 @@ export const addRoom = createAsyncThunk<Room, FormData>(
 );
 
 // UPDATE
-export const updateRoom = createAsyncThunk<Room, Room, { rejectValue: string }>(
-  "room/updateRoom",
-  async (room, { rejectWithValue }) => {
+export const updateHousekeepingTask = createAsyncThunk<
+  Housekeeping,
+  Housekeeping,
+  { rejectValue: string }
+>(
+  "housekeeping/updateHousekeepingTask",
+  async (housekeeping, { rejectWithValue }) => {
     try {
-      const res = await fetch(`/api/rooms/${room.id}`, {
+      const res = await fetch(`${apiUrl}/${housekeeping.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(room),
+        body: JSON.stringify(housekeeping),
       });
 
       const data = await res.json();
@@ -91,7 +97,7 @@ export const updateRoom = createAsyncThunk<Room, Room, { rejectValue: string }>(
 
       if (!res.ok || !data.success) {
         return rejectWithValue(
-          data.message?.description ?? "Failed to update room"
+          data.message?.description ?? "Failed to update housekeeping task"
         );
       }
 
@@ -108,17 +114,17 @@ export const updateRoom = createAsyncThunk<Room, Room, { rejectValue: string }>(
 );
 
 // DELETE
-export const deleteRoom = createAsyncThunk<string, string>(
-  "room/deleteRoom",
+export const deleteHousekeepingTask = createAsyncThunk<string, string>(
+  "housekeeping/deleteHousekeepingTask",
   async (id, { rejectWithValue }) => {
     try {
-      const res = await fetch(`/api/rooms/${id}`, { method: "DELETE" });
+      const res = await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
       const data = await res.json();
 
       addToast(data.message);
       if (!res.ok || !data.success) {
         return rejectWithValue(
-          data.message?.description ?? "Failed to delete room"
+          data.message?.description ?? "Failed to delete housekeeping task"
         );
       }
 
@@ -135,34 +141,37 @@ export const deleteRoom = createAsyncThunk<string, string>(
 );
 
 //  delete selected rooms or all
-export const deleteRooms = createAsyncThunk<
-  Room[],
+export const deleteSelectedHousekeepingTask = createAsyncThunk<
+  Housekeeping[],
   { selectedValues: Set<number> | "all" },
   { rejectValue: string }
->("rooms/deleteRooms", async ({ selectedValues }, thunkAPI) => {
-  try {
-    const body =
-      selectedValues === "all"
-        ? { selectedValues: "all" }
-        : { selectedValues: Array.from(selectedValues) };
+>(
+  "housekeeping/deleteSelectedHousekeepingTask",
+  async ({ selectedValues }, thunkAPI) => {
+    try {
+      const body =
+        selectedValues === "all"
+          ? { selectedValues: "all" }
+          : { selectedValues: Array.from(selectedValues) };
 
-    const res = await fetch("/api/rooms", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+      const res = await fetch(apiUrl, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
-    const data = await res.json();
-    addToast(data.message);
-    if (!res.ok) return thunkAPI.rejectWithValue(data.error);
+      const data = await res.json();
+      addToast(data.message);
+      if (!res.ok) return thunkAPI.rejectWithValue(data.error);
 
-    return data.data;
-  } catch (err: any) {
-    addToast({
-      title: "Error",
-      description: err.message,
-      color: "danger",
-    });
-    return thunkAPI.rejectWithValue(err.message);
+      return data.data;
+    } catch (err: any) {
+      addToast({
+        title: "Error",
+        description: err.message,
+        color: "danger",
+      });
+      return thunkAPI.rejectWithValue(err.message);
+    }
   }
-});
+);

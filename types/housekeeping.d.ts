@@ -14,18 +14,19 @@ export interface Housekeeping {
   priority: "N/A" | "high" | "medium" | "low";
   category: "repair" | "service" | "inspection" | "safety";
   area: string;
-  assigned_to: string;
   scheduled_date: string;
   start_time?: string;
   end_time?: string;
   notes?: string;
+  rooms: any;
+  users: any;
   status: HousekeepingStatus;
   created_at: string;
-  updated_at?: string;
 }
 
 export interface HousekeepingState {
   tasks: Housekeeping[];
+  task: Housekeeping;
   isLoading: boolean;
-  error: string | null;
+  error: string | undefined;
 }

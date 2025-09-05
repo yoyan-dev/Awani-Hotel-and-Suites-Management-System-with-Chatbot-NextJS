@@ -112,7 +112,7 @@ export default function UpdateModal(room: any) {
                           onChange={handleFileChange}
                         />
                       </div>
-                      <div className="flex gap-2 items-center">
+                      {/* <div className="flex gap-2 items-center">
                         <Input
                           radius="sm"
                           type="number"
@@ -142,7 +142,7 @@ export default function UpdateModal(room: any) {
                           variant="bordered"
                           className="flex-1 w-full"
                         />
-                      </div>
+                      </div> */}
                     </div>
                     <div className="flex-1 w-full p-4 border-l border-gray-500 space-y-8">
                       <Select
@@ -154,6 +154,10 @@ export default function UpdateModal(room: any) {
                         placeholder="Select Room status"
                         variant="bordered"
                         defaultSelectedKeys={[newRoom.status]}
+                        value={newRoom.status}
+                        onChange={(e) =>
+                          setRoom({ ...newRoom, status: e.target.value })
+                        }
                       >
                         <SelectItem key="available">Available</SelectItem>
                         <SelectItem key="cleaning">Cleaning</SelectItem>

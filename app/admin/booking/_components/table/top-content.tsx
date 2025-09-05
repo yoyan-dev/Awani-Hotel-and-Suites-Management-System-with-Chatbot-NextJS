@@ -8,7 +8,7 @@ import {
   DropdownItem,
 } from "@heroui/react";
 import { Search, ChevronDown } from "lucide-react";
-import { columns, statusOptions } from "./constants";
+import { columns, bookingStatusOptions } from "./constants";
 import { capitalize } from "@/app/utils/capitalize";
 import AddModal from "../modals/add-modal";
 
@@ -21,7 +21,7 @@ interface Props {
   visibleColumns: any;
   setVisibleColumns: (val: any) => void;
   onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  usersCount: number;
+  bookingsCount: number;
 }
 
 export const TableTopContent: React.FC<Props> = ({
@@ -33,7 +33,7 @@ export const TableTopContent: React.FC<Props> = ({
   visibleColumns,
   setVisibleColumns,
   onRowsPerPageChange,
-  usersCount,
+  bookingsCount,
 }) => {
   return (
     <div className="flex flex-col gap-4">
@@ -71,7 +71,7 @@ export const TableTopContent: React.FC<Props> = ({
               selectionMode="multiple"
               onSelectionChange={setStatusFilter}
             >
-              {statusOptions.map((status) => (
+              {bookingStatusOptions.map((status) => (
                 <DropdownItem key={status.uid} className="capitalize">
                   {capitalize(status.name)}
                 </DropdownItem>
@@ -83,7 +83,7 @@ export const TableTopContent: React.FC<Props> = ({
       </div>
       <div className="flex justify-between items-center">
         <span className="text-default-400 text-small">
-          Total {usersCount} bookings
+          Total {bookingsCount} bookings
         </span>
         <label className="flex items-center text-default-400 text-small">
           Rows per page: 10

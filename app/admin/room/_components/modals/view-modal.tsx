@@ -20,7 +20,12 @@ export default function ViewModal(room: any) {
   return (
     <>
       <div onClick={onOpen}>View</div>
-      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
+      <Modal
+        isOpen={isOpen}
+        size="3xl"
+        placement="top-center"
+        onOpenChange={onOpenChange}
+      >
         <ModalContent>
           {(onClose) => (
             <>
@@ -28,13 +33,23 @@ export default function ViewModal(room: any) {
                 Room Details
               </ModalHeader>
               <ModalBody>
-                <Image
-                  alt="HeroUI hero Image"
-                  src={room.room.image}
-                  width={200}
-                />
-                <div>
-                  <h2>{room.room.room_number}</h2>
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <Image
+                      alt="HeroUI hero Image"
+                      src={room.room.image}
+                      width={500}
+                    />
+                    {/* <span>size: 4 x 4 feet</span> */}
+                  </div>
+                  <div className="flex-1">
+                    <h2>room id: {room.room.room_id}</h2>
+                    <p>{room.room.description}</p>
+                    <p>status: {room.room.status}</p>
+                    <p>price: {room.room.base_price}</p>
+                    <p>max guest: {room.room.max_guest}</p>
+                    <p>floor: {room.room.floor}</p>
+                  </div>
                 </div>
               </ModalBody>
               {/* <ModalFooter>

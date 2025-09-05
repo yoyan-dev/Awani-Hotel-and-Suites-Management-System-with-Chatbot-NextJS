@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { Inventory } from "@/types/inventory";
+import { User } from "@/types/users";
 import { addToast } from "@heroui/react";
 
-const apiUrl = "/api/inventory";
+const apiUrl = "/api/users";
 
-export const fetchInventory = createAsyncThunk<Inventory[]>(
-  "inventory/fetchInventory",
+export const fetchUsers = createAsyncThunk<User[]>(
+  "users/fetchUsers",
   async (_, { rejectWithValue }) => {
     try {
       const res = await fetch(apiUrl);
@@ -14,7 +14,7 @@ export const fetchInventory = createAsyncThunk<Inventory[]>(
       if (!res.ok || !data.success) {
         addToast(data.message);
         return rejectWithValue(
-          data.message?.description ?? "Failed to fetch intentory"
+          data.message?.description ?? "Failed to fetch users"
         );
       }
       return data.data;
@@ -24,8 +24,8 @@ export const fetchInventory = createAsyncThunk<Inventory[]>(
   }
 );
 
-export const fetchInventoryItem = createAsyncThunk<Inventory, string>(
-  "inventory/fetchInventoryItem",
+export const fetchUser = createAsyncThunk<User, string>(
+  "users/fetchUser",
   async (id, { rejectWithValue }) => {
     try {
       const res = await fetch(`${apiUrl}/${id}`);
@@ -34,7 +34,7 @@ export const fetchInventoryItem = createAsyncThunk<Inventory, string>(
       if (!res.ok || !data.success) {
         addToast(data.message);
         return rejectWithValue(
-          data.message?.description ?? "Failed to fetch item"
+          data.message?.description ?? "Failed to fetch user"
         );
       }
       return data.data;
@@ -49,8 +49,8 @@ export const fetchInventoryItem = createAsyncThunk<Inventory, string>(
   }
 );
 
-export const addItem = createAsyncThunk<Inventory, FormData>(
-  "inventory/addItem",
+export const addUser = createAsyncThunk<User, FormData>(
+  "users/addUser",
   async (formData, { rejectWithValue }) => {
     try {
       const res = await fetch(apiUrl, {
@@ -61,7 +61,7 @@ export const addItem = createAsyncThunk<Inventory, FormData>(
       addToast(data.message);
       if (!res.ok || !data.success) {
         return rejectWithValue(
-          data.message?.description ?? "Failed to add item in inventory"
+          data.message?.description ?? "Failed to add register new user"
         );
       }
       return data.data;
@@ -78,41 +78,40 @@ export const addItem = createAsyncThunk<Inventory, FormData>(
 );
 
 // UPDATE
-export const UpdateItem = createAsyncThunk<
-  Inventory,
-  Inventory,
-  { rejectValue: string }
->("inventory/UpdateItem", async (inventory, { rejectWithValue }) => {
-  try {
-    const res = await fetch(`${apiUrl}/${inventory.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(inventory),
-    });
+export const updateUser = createAsyncThunk<User, User, { rejectValue: string }>(
+  "users/updateUser",
+  async (user, { rejectWithValue }) => {
+    try {
+      const res = await fetch(`${apiUrl}/${user.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      });
 
-    const data = await res.json();
-    addToast(data.message);
+      const data = await res.json();
+      addToast(data.message);
 
-    if (!res.ok || !data.success) {
-      return rejectWithValue(
-        data.message?.description ?? "Failed to update item"
-      );
+      if (!res.ok || !data.success) {
+        return rejectWithValue(
+          data.message?.description ?? "Failed to update user"
+        );
+      }
+
+      return data.room;
+    } catch (err: any) {
+      addToast({
+        title: "Error",
+        description: err.message,
+        color: "danger",
+      });
+      return rejectWithValue(err.message);
     }
-
-    return data.room;
-  } catch (err: any) {
-    addToast({
-      title: "Error",
-      description: err.message,
-      color: "danger",
-    });
-    return rejectWithValue(err.message);
   }
-});
+);
 
 // DELETE
-export const deleteItem = createAsyncThunk<string, string>(
-  "inventory/deleteItem",
+export const deleteUser = createAsyncThunk<string, string>(
+  "users/deleteUser",
   async (id, { rejectWithValue }) => {
     try {
       const res = await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
@@ -121,7 +120,7 @@ export const deleteItem = createAsyncThunk<string, string>(
       addToast(data.message);
       if (!res.ok || !data.success) {
         return rejectWithValue(
-          data.message?.description ?? "Failed to delete item"
+          data.message?.description ?? "Failed to delete user"
         );
       }
 
@@ -138,11 +137,11 @@ export const deleteItem = createAsyncThunk<string, string>(
 );
 
 //  delete selected rooms or all
-export const deleteSelectedItems = createAsyncThunk<
-  Inventory[],
+export const deleteSelectedUser = createAsyncThunk<
+  User[],
   { selectedValues: Set<number> | "all" },
   { rejectValue: string }
->("inventory/deleteSelectedItems", async ({ selectedValues }, thunkAPI) => {
+>("users/deleteSelectedUser", async ({ selectedValues }, thunkAPI) => {
   try {
     const body =
       selectedValues === "all"

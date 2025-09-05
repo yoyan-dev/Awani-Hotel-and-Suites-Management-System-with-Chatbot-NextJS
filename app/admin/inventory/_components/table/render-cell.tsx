@@ -12,7 +12,15 @@ import type { Inventory } from "@/types/inventory";
 import { statusColorMap } from "./constants";
 import { EllipsisVertical } from "lucide-react";
 
-export const RenderCell = (inventory: Inventory, columnKey: string) => {
+interface RenderCellProps {
+  inventory: Inventory;
+  columnKey: string;
+}
+
+export const RenderCell: React.FC<RenderCellProps> = ({
+  inventory,
+  columnKey,
+}) => {
   const cellValue = inventory[columnKey as keyof Inventory];
 
   switch (columnKey) {

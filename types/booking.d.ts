@@ -13,23 +13,19 @@ export interface Booking {
   id: string;
   booking_id: string;
   room_id: string;
-  guest_id: string;
-  guest_name: string;
-  room_type: string;
-  guest_email: string;
-  guest_phone?: string;
-  nights: number;
+  user_id: string;
   check_in: string;
   check_out: string;
-  total_price: number;
+  special_requests: string;
   status: BookingStatus;
-  amenities: string[];
-  payment_method?: "cash" | "card" | "gcash";
-  created_at: string;
+  rooms?: any;
+  users?: any;
+  created_at: any;
 }
 
-interface BookingState {
+export interface BookingState {
   bookings: Booking[];
+  booking: Booking;
   isLoading: boolean;
-  error: string | null;
+  error: string | undefined;
 }

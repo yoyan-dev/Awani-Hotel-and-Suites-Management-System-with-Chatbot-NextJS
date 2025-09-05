@@ -6,22 +6,34 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Spinner,
 } from "@heroui/react";
-import { bookings, columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
+import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
-import { Booking } from "@/types/booking";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "@/store/store";
+import { fetchBookings } from "@/features/booking/booking-thunk";
 
 export default function BookingTable() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { bookings, isLoading, error } = useSelector(
+    (state: RootState) => state.booking
+  );
+
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<any>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [page, setPage] = React.useState(1);
+
+  React.useEffect(() => {
+    dispatch(fetchBookings());
+  }, [dispatch]);
 
   const pages = Math.ceil(bookings.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
@@ -35,18 +47,21 @@ export default function BookingTable() {
 
   const filteredItems = React.useMemo(() => {
     let filteredBookings = [...bookings];
+
     if (hasSearchFilter) {
-      filteredBookings = filteredBookings.filter((booking) =>
-        booking.guest_name.toLowerCase().includes(filterValue.toLowerCase())
+      filteredBookings = filteredBookings.filter((item) =>
+        item.users.full_name?.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
+
     if (statusFilter !== "all" && Array.from(statusFilter).length) {
-      filteredBookings = filteredBookings.filter((booking) =>
-        Array.from(statusFilter).includes(booking.status)
+      filteredBookings = filteredBookings.filter((item) =>
+        Array.from(statusFilter).includes(item.status)
       );
     }
+
     return filteredBookings;
-  }, [filterValue, statusFilter]);
+  }, [bookings, filterValue, statusFilter, hasSearchFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -62,7 +77,7 @@ export default function BookingTable() {
     <Table
       isCompact
       removeWrapper
-      aria-label="Users Table"
+      aria-label="Rooms Table"
       bottomContent={
         <TableBottomContent
           hasSearchFilter={hasSearchFilter}
@@ -86,7 +101,7 @@ export default function BookingTable() {
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
-          usersCount={bookings.length}
+          bookingsCount={bookings.length}
         />
       }
       topContentPlacement="outside"
@@ -103,12 +118,17 @@ export default function BookingTable() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent="No booking found" items={items}>
+      <TableBody
+        isLoading={isLoading}
+        loadingContent={<Spinner label="Loading..." />}
+        emptyContent="No rooms found"
+        items={items}
+      >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>
-                {RenderCell(item as Booking, columnKey as string)}
+              <TableCell className="capitalize">
+                {RenderCell(item, columnKey as string)}
               </TableCell>
             )}
           </TableRow>

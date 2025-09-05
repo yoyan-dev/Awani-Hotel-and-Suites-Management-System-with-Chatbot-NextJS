@@ -1,23 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { Room, RoomState, RoomStatus } from "@/types/room";
+import type { User, UserState } from "@/types/users";
 import {
-  fetchRoom,
-  fetchRooms,
-  addRoom,
-  updateRoom,
-  deleteRoom,
-  deleteRooms,
-} from "./room-thunk";
+  fetchUser,
+  fetchUsers,
+  addUser,
+  updateUser,
+  deleteUser,
+  deleteSelectedUser,
+} from "./user-thunk";
 
-const initialState: RoomState = {
-  rooms: [],
-  room: {} as Room,
+const initialState: UserState = {
+  users: [],
+  user: {} as User,
   isLoading: false,
   error: undefined,
 };
 
-const roomSlice = createSlice({
-  name: "room",
+const userSlice = createSlice({
+  name: "users",
   initialState,
   reducers: {
     setLoading: (state, action: PayloadAction<boolean>) => {
@@ -27,101 +27,101 @@ const roomSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // get single room
-      .addCase(fetchRoom.pending, (state) => {
+      .addCase(fetchUser.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(fetchRoom.fulfilled, (state, action: PayloadAction<Room>) => {
+      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.isLoading = false;
-        state.room = action.payload;
+        state.user = action.payload;
         state.error = undefined;
       })
-      .addCase(fetchRoom.rejected, (state, action) => {
+      .addCase(fetchUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
 
       // get all rooms
-      .addCase(fetchRooms.pending, (state) => {
+      .addCase(fetchUsers.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(fetchRooms.fulfilled, (state, action: PayloadAction<Room[]>) => {
+      .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
         state.isLoading = false;
-        state.rooms = action.payload;
+        state.users = action.payload;
         state.error = undefined;
       })
-      .addCase(fetchRooms.rejected, (state, action) => {
+      .addCase(fetchUsers.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
 
       // add room
-      .addCase(addRoom.pending, (state) => {
+      .addCase(addUser.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(addRoom.fulfilled, (state, action: PayloadAction<Room>) => {
+      .addCase(addUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.isLoading = false;
         state.error = undefined;
-        state.rooms.push(action.payload);
+        state.users.push(action.payload);
       })
-      .addCase(addRoom.rejected, (state, action) => {
+      .addCase(addUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
 
       // update room
-      .addCase(updateRoom.pending, (state) => {
+      .addCase(updateUser.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(updateRoom.fulfilled, (state, action: PayloadAction<Room>) => {
+      .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.isLoading = false;
         state.error = undefined;
-        const index = state.rooms.findIndex((r) => r.id === action.payload.id);
+        const index = state.users.findIndex((r) => r.id === action.payload.id);
         if (index !== -1) {
-          state.rooms[index] = action.payload;
+          state.users[index] = action.payload;
         }
       })
-      .addCase(updateRoom.rejected, (state, action) => {
+      .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
 
       // delete room
-      .addCase(deleteRoom.pending, (state) => {
+      .addCase(deleteUser.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(deleteRoom.fulfilled, (state, action) => {
+      .addCase(deleteUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = undefined;
-        state.rooms = state.rooms.filter((r) => r.id !== action.payload);
+        state.users = state.users.filter((r) => r.id !== action.payload);
       })
-      .addCase(deleteRoom.rejected, (state, action) => {
+      .addCase(deleteUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
 
       // delete rooms
-      .addCase(deleteRooms.pending, (state) => {
+      .addCase(deleteSelectedUser.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(deleteRooms.fulfilled, (state, action) => {
+      .addCase(deleteSelectedUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = undefined;
-        state.rooms = state.rooms.filter(
+        state.users = state.users.filter(
           (r) => !action.payload.map((room) => room.id).includes(r.id)
         );
       })
-      .addCase(deleteRooms.rejected, (state, action) => {
+      .addCase(deleteSelectedUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });
   },
 });
 
-export const { setLoading } = roomSlice.actions;
-export default roomSlice.reducer;
+export const { setLoading } = userSlice.actions;
+export default userSlice.reducer;
