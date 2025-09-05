@@ -6,18 +6,22 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Spinner,
 } from "@heroui/react";
-import {
-  housekeepingTasks,
-  columns,
-  INITIAL_VISIBLE_COLUMNS,
-} from "./constants";
+import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
-import { Housekeeping } from "@/types/housekeeping";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "@/store/store";
+import { fetchHousekeepingTasks } from "@/features/housekeeping/housekeeping-thunk";
 
 export default function HousekeepingTable() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { tasks, isLoading, error } = useSelector(
+    (state: RootState) => state.housekeeping
+  );
+
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
@@ -27,7 +31,11 @@ export default function HousekeepingTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(housekeepingTasks.length / rowsPerPage);
+  React.useEffect(() => {
+    dispatch(fetchHousekeepingTasks());
+  }, [dispatch]);
+
+  const pages = Math.ceil(tasks.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
@@ -38,19 +46,22 @@ export default function HousekeepingTable() {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredHousekeepingTasks = [...housekeepingTasks];
+    let filteredTasks = [...tasks];
+
     if (hasSearchFilter) {
-      filteredHousekeepingTasks = filteredHousekeepingTasks.filter((task) =>
-        task.assigned_to.toLowerCase().includes(filterValue.toLowerCase())
+      filteredTasks = filteredTasks.filter((item) =>
+        item.users.full_name?.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
+
     if (statusFilter !== "all" && Array.from(statusFilter).length) {
-      filteredHousekeepingTasks = filteredHousekeepingTasks.filter((task) =>
-        Array.from(statusFilter).includes(task.status)
+      filteredTasks = filteredTasks.filter((item) =>
+        Array.from(statusFilter).includes(item.status)
       );
     }
-    return filteredHousekeepingTasks;
-  }, [filterValue, statusFilter]);
+
+    return filteredTasks;
+  }, [tasks, filterValue, statusFilter, hasSearchFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -66,7 +77,7 @@ export default function HousekeepingTable() {
     <Table
       isCompact
       removeWrapper
-      aria-label="Housekeeping Tasks Table"
+      aria-label="Rooms Table"
       bottomContent={
         <TableBottomContent
           hasSearchFilter={hasSearchFilter}
@@ -90,7 +101,7 @@ export default function HousekeepingTable() {
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
-          usersCount={housekeepingTasks.length}
+          taskCount={tasks.length}
         />
       }
       topContentPlacement="outside"
@@ -107,12 +118,17 @@ export default function HousekeepingTable() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent="No housekeeping task found" items={items}>
+      <TableBody
+        isLoading={isLoading}
+        loadingContent={<Spinner label="Loading..." />}
+        emptyContent="No rooms found"
+        items={items}
+      >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>
-                {RenderCell(item as Housekeeping, columnKey as string)}
+              <TableCell className="capitalize">
+                {RenderCell(item, columnKey as string)}
               </TableCell>
             )}
           </TableRow>

@@ -21,7 +21,7 @@ export const RenderCell = (housekeeping: Housekeeping, columnKey: string) => {
         <User
           avatarProps={{ radius: "full", size: "sm", src: "" }}
           classNames={{ description: "text-default-500" }}
-          name={housekeeping.assigned_to}
+          name={housekeeping.users.full_name}
         />
       );
     case "attachment":

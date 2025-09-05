@@ -3,6 +3,7 @@ import counterReducer from "@/features/counter/counter-slice";
 import roomReducer from "@/features/room/room-slice";
 import inventoryReducer from "@/features/inventory/inventory-slice";
 import bookingReducer from "@/features/booking/booking-slice";
+import housekeepingReducer from "@/features/housekeeping/housekeeping-slice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     room: roomReducer,
     inventory: inventoryReducer,
     booking: bookingReducer,
+    housekeeping: housekeepingReducer,
   },
 });
 

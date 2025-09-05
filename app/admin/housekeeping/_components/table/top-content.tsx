@@ -21,7 +21,7 @@ interface Props {
   visibleColumns: any;
   setVisibleColumns: (val: any) => void;
   onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  usersCount: number;
+  taskCount: number;
 }
 
 export const TableTopContent: React.FC<Props> = ({
@@ -33,7 +33,7 @@ export const TableTopContent: React.FC<Props> = ({
   visibleColumns,
   setVisibleColumns,
   onRowsPerPageChange,
-  usersCount,
+  taskCount,
 }) => {
   return (
     <div className="flex flex-col gap-4">
@@ -156,7 +156,7 @@ export const TableTopContent: React.FC<Props> = ({
       </div>
       <div className="flex justify-between items-center">
         <span className="text-default-600 text-small">
-          Total {usersCount} housekeeping tasks
+          Total {taskCount} housekeeping tasks
         </span>
         <label className="flex items-center text-default-400 text-small">
           Rows per page: 10

@@ -141,7 +141,7 @@ export async function DELETE(
     const body = await request.json();
     const selectedValues: number[] | "all" = body.selectedValues;
 
-    let query = supabase.from("inventory").delete();
+    let query = supabase.from("bookings").delete();
 
     if (selectedValues === "all") {
     } else if (Array.isArray(selectedValues) && selectedValues.length > 0) {
