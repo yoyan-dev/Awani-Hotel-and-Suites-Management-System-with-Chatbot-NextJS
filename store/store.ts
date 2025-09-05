@@ -4,6 +4,7 @@ import roomReducer from "@/features/room/room-slice";
 import inventoryReducer from "@/features/inventory/inventory-slice";
 import bookingReducer from "@/features/booking/booking-slice";
 import housekeepingReducer from "@/features/housekeeping/housekeeping-slice";
+import userReducer from "@/features/users/user-slice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     inventory: inventoryReducer,
     booking: bookingReducer,
     housekeeping: housekeepingReducer,
+    users: userReducer,
   },
 });
 

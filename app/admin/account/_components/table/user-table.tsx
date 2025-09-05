@@ -6,13 +6,22 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Spinner,
 } from "@heroui/react";
-import { users, columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
+import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "@/store/store";
+import { fetchUsers } from "@/features/users/user-thunk";
 
-export default function StaffTable() {
+export default function UserTable() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { users, isLoading, error } = useSelector(
+    (state: RootState) => state.users
+  );
+
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
@@ -21,6 +30,11 @@ export default function StaffTable() {
   const [statusFilter, setStatusFilter] = React.useState<any>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(1);
+
+  React.useEffect(() => {
+    dispatch(fetchUsers());
+    console.log(error);
+  }, [dispatch, error]);
 
   const pages = Math.ceil(users.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
@@ -34,18 +48,21 @@ export default function StaffTable() {
 
   const filteredItems = React.useMemo(() => {
     let filteredUsers = [...users];
+
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase())
+      filteredUsers = filteredUsers.filter((item) =>
+        item.full_name?.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
-    if (statusFilter !== "all" && Array.from(statusFilter).length) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status)
-      );
-    }
+
+    // if (statusFilter !== "all" && Array.from(statusFilter).length) {
+    //   filteredUsers = filteredUsers.filter((item) =>
+    //     Array.from(statusFilter).includes(item.status)
+    //   );
+    // }
+
     return filteredUsers;
-  }, [filterValue, statusFilter]);
+  }, [users, filterValue, statusFilter, hasSearchFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -61,7 +78,7 @@ export default function StaffTable() {
     <Table
       isCompact
       removeWrapper
-      aria-label="Users Table"
+      aria-label="Rooms Table"
       bottomContent={
         <TableBottomContent
           hasSearchFilter={hasSearchFilter}
@@ -102,11 +119,18 @@ export default function StaffTable() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent="No users found" items={items}>
+      <TableBody
+        isLoading={isLoading}
+        loadingContent={<Spinner label="Loading..." />}
+        emptyContent="No rooms found"
+        items={items}
+      >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>{RenderCell(item, columnKey as string)}</TableCell>
+              <TableCell className="capitalize">
+                {RenderCell(item, columnKey as string)}
+              </TableCell>
             )}
           </TableRow>
         )}
