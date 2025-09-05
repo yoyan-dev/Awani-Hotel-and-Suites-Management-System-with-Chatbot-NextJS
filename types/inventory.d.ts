@@ -1,4 +1,4 @@
-export type InventoryStatus = "in-stock" | "out-of-stock" | "discontinued";
+export type InventoryStatus = "in-stock" | "out-of-stock" | "unavailable";
 
 export interface Inventory {
   id?: string;

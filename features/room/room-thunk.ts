@@ -59,7 +59,7 @@ export const addRoom = createAsyncThunk<Room, FormData>(
       addToast(data.message);
       if (!res.ok || !data.success) {
         return rejectWithValue(
-          data.message?.description ?? "Failed to update room"
+          data.message?.description ?? "Failed to add room"
         );
       }
       return data.data;
@@ -118,7 +118,7 @@ export const deleteRoom = createAsyncThunk<string, string>(
       addToast(data.message);
       if (!res.ok || !data.success) {
         return rejectWithValue(
-          data.message?.description ?? "Failed to update room"
+          data.message?.description ?? "Failed to delete room"
         );
       }
 

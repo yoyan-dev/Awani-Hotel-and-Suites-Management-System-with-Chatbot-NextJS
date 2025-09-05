@@ -7,11 +7,11 @@ import type {
 import {
   fetchInventory,
   fetchInventoryItem,
-  addInventoryItem,
-  updateInventoryItem,
-  deleteInventoryItem,
+  addItem,
+  UpdateItem,
+  deleteItem,
+  deleteSelectedItems,
 } from "./inventory-thunk";
-import { addToast } from "@heroui/react";
 
 const initialState: InventoryState = {
   inventory: [],
@@ -40,6 +40,7 @@ const inventorySlice = createSlice({
         (state, action: PayloadAction<Inventory>) => {
           state.isLoading = false;
           state.item = action.payload;
+          state.error = undefined;
         }
       )
       .addCase(fetchInventoryItem.rejected, (state, action) => {
@@ -57,6 +58,7 @@ const inventorySlice = createSlice({
         (state, action: PayloadAction<Inventory[]>) => {
           state.isLoading = false;
           state.inventory = action.payload;
+          state.error = undefined;
         }
       )
       .addCase(fetchInventory.rejected, (state, action) => {
@@ -65,36 +67,30 @@ const inventorySlice = createSlice({
       })
 
       // add room
-      .addCase(addInventoryItem.pending, (state) => {
+      .addCase(addItem.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(
-        addInventoryItem.fulfilled,
-        (state, action: PayloadAction<Inventory>) => {
-          state.isLoading = false;
-          state.inventory.push(action.payload);
-        }
-      )
-      .addCase(addInventoryItem.rejected, (state, action) => {
+      .addCase(addItem.fulfilled, (state, action: PayloadAction<Inventory>) => {
+        state.isLoading = false;
+        state.error = undefined;
+        state.inventory.push(action.payload);
+      })
+      .addCase(addItem.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
-        addToast({
-          title: "Error",
-          description: action.error.message || "Failed to add room",
-          color: "danger",
-        });
       })
 
       // update room
-      .addCase(updateInventoryItem.pending, (state) => {
+      .addCase(UpdateItem.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
       .addCase(
-        updateInventoryItem.fulfilled,
+        UpdateItem.fulfilled,
         (state, action: PayloadAction<Inventory>) => {
           state.isLoading = false;
+          state.error = undefined;
           const index = state.inventory.findIndex(
             (r) => r.id === action.payload.id
           );
@@ -103,36 +99,43 @@ const inventorySlice = createSlice({
           }
         }
       )
-      .addCase(updateInventoryItem.rejected, (state, action) => {
+      .addCase(UpdateItem.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
 
       // delete room
-      .addCase(deleteInventoryItem.pending, (state) => {
+      .addCase(deleteItem.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(deleteInventoryItem.fulfilled, (state, action) => {
+      .addCase(deleteItem.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.error = undefined;
         state.inventory = state.inventory.filter(
           (r) => r.id !== action.payload
         );
-        addToast({
-          title: "Success",
-          description: "Item deleted successfully",
-          color: "success",
-        });
       })
-      .addCase(deleteInventoryItem.rejected, (state, action) => {
+      .addCase(deleteItem.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
-        addToast({
-          title: "Success",
-          description:
-            action.error.message || "Failed to delete item in inventory",
-          color: "success",
-        });
+      })
+
+      // delete rooms
+      .addCase(deleteSelectedItems.pending, (state) => {
+        state.isLoading = true;
+        state.error = undefined;
+      })
+      .addCase(deleteSelectedItems.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = undefined;
+        state.inventory = state.inventory.filter(
+          (r) => !action.payload.map((room) => room.id).includes(r.id)
+        );
+      })
+      .addCase(deleteSelectedItems.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
       });
   },
 });

@@ -22,6 +22,7 @@ interface Props {
   setVisibleColumns: (val: any) => void;
   onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   itemsCount: number;
+  selectedKeys: Set<number> | "all";
 }
 
 export const TableTopContent: React.FC<Props> = ({
@@ -34,6 +35,7 @@ export const TableTopContent: React.FC<Props> = ({
   setVisibleColumns,
   onRowsPerPageChange,
   itemsCount,
+  selectedKeys,
 }) => {
   return (
     <div className="flex flex-col gap-4">
