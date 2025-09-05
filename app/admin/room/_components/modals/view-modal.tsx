@@ -40,7 +40,7 @@ export default function ViewModal(room: any) {
                       src={room.room.image}
                       width={500}
                     />
-                    <span>size: 4 x 4 feet</span>
+                    {/* <span>size: 4 x 4 feet</span> */}
                   </div>
                   <div className="flex-1">
                     <h2>room id: {room.room.room_id}</h2>

@@ -7,8 +7,15 @@ export const fetchRooms = createAsyncThunk<Room[]>(
   async (_, { rejectWithValue }) => {
     try {
       const res = await fetch("/api/rooms");
-      if (!res.ok) throw new Error("Failed to fetch rooms");
-      return res.json();
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        addToast(data.message);
+        return rejectWithValue(
+          data.message?.description ?? "Failed to fetch rooms"
+        );
+      }
+      return data.data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -20,9 +27,21 @@ export const fetchRoom = createAsyncThunk<Room, string>(
   async (id, { rejectWithValue }) => {
     try {
       const res = await fetch(`/api/rooms/${id}`);
-      if (!res.ok) throw new Error("Failed to fetch rooms");
-      return res.json();
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        addToast(data.message);
+        return rejectWithValue(
+          data.message?.description ?? "Failed to fetch room"
+        );
+      }
+      return data.data;
     } catch (error: any) {
+      addToast({
+        title: "Error",
+        description: error.message,
+        color: "danger",
+      });
       return rejectWithValue(error.message);
     }
   }
@@ -32,12 +51,26 @@ export const addRoom = createAsyncThunk<Room, FormData>(
   "room/addRoom",
   async (formData, { rejectWithValue }) => {
     try {
-      const res = await fetch("/api/rooms", { method: "POST", body: formData });
-      if (!res.ok) throw new Error("Failed to add room");
-      return res.json();
-    } catch (error: any) {
-      console.log(error.message);
-      return rejectWithValue(error.message);
+      const res = await fetch("/api/rooms", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      addToast(data.message);
+      if (!res.ok || !data.success) {
+        return rejectWithValue(
+          data.message?.description ?? "Failed to update room"
+        );
+      }
+      return data.data;
+    } catch (err: any) {
+      console.log(err.message);
+      addToast({
+        title: "Error",
+        description: err.message,
+        color: "danger",
+      });
+      return rejectWithValue(err.message);
     }
   }
 );
@@ -80,10 +113,56 @@ export const deleteRoom = createAsyncThunk<string, string>(
   async (id, { rejectWithValue }) => {
     try {
       const res = await fetch(`/api/rooms/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete room");
-      return id;
+      const data = await res.json();
+
+      addToast(data.message);
+      if (!res.ok || !data.success) {
+        return rejectWithValue(
+          data.message?.description ?? "Failed to update room"
+        );
+      }
+
+      return data.data;
     } catch (error: any) {
+      addToast({
+        title: "Error",
+        description: error.message,
+        color: "danger",
+      });
       return rejectWithValue(error.message);
     }
   }
 );
+
+//  delete selected rooms or all
+export const deleteRooms = createAsyncThunk<
+  Room[],
+  { selectedValues: Set<number> | "all" },
+  { rejectValue: string }
+>("rooms/deleteRooms", async ({ selectedValues }, thunkAPI) => {
+  try {
+    const body =
+      selectedValues === "all"
+        ? { selectedValues: "all" }
+        : { selectedValues: Array.from(selectedValues) };
+
+    const res = await fetch("/api/rooms", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    const data = await res.json();
+    addToast(data.message);
+    if (!res.ok) return thunkAPI.rejectWithValue(data.error);
+
+    return data.data;
+  } catch (err: any) {
+    addToast({
+      title: "Error",
+      description: err.message,
+      color: "danger",
+    });
+    return thunkAPI.rejectWithValue(err.message);
+  }
+});

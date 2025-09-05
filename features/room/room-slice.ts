@@ -6,8 +6,8 @@ import {
   addRoom,
   updateRoom,
   deleteRoom,
+  deleteRooms,
 } from "./room-thunk";
-import { addToast } from "@heroui/react";
 
 const initialState: RoomState = {
   rooms: [],
@@ -34,6 +34,7 @@ const roomSlice = createSlice({
       .addCase(fetchRoom.fulfilled, (state, action: PayloadAction<Room>) => {
         state.isLoading = false;
         state.room = action.payload;
+        state.error = undefined;
       })
       .addCase(fetchRoom.rejected, (state, action) => {
         state.isLoading = false;
@@ -48,6 +49,7 @@ const roomSlice = createSlice({
       .addCase(fetchRooms.fulfilled, (state, action: PayloadAction<Room[]>) => {
         state.isLoading = false;
         state.rooms = action.payload;
+        state.error = undefined;
       })
       .addCase(fetchRooms.rejected, (state, action) => {
         state.isLoading = false;
@@ -61,21 +63,12 @@ const roomSlice = createSlice({
       })
       .addCase(addRoom.fulfilled, (state, action: PayloadAction<Room>) => {
         state.isLoading = false;
+        state.error = undefined;
         state.rooms.push(action.payload);
-        addToast({
-          title: "Success",
-          description: "Room added successfully",
-          color: "success",
-        });
       })
       .addCase(addRoom.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
-        addToast({
-          title: "Error",
-          description: action.error.message || "Failed to add room",
-          color: "danger",
-        });
       })
 
       // update room
@@ -85,6 +78,7 @@ const roomSlice = createSlice({
       })
       .addCase(updateRoom.fulfilled, (state, action: PayloadAction<Room>) => {
         state.isLoading = false;
+        state.error = undefined;
         const index = state.rooms.findIndex((r) => r.id === action.payload.id);
         if (index !== -1) {
           state.rooms[index] = action.payload;
@@ -102,21 +96,29 @@ const roomSlice = createSlice({
       })
       .addCase(deleteRoom.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.error = undefined;
         state.rooms = state.rooms.filter((r) => r.id !== action.payload);
-        addToast({
-          title: "Success",
-          description: "Room deleted successfully",
-          color: "success",
-        });
       })
       .addCase(deleteRoom.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
-        addToast({
-          title: "Success",
-          description: action.error.message || "Failed to delete room",
-          color: "success",
-        });
+      })
+
+      // delete rooms
+      .addCase(deleteRooms.pending, (state) => {
+        state.isLoading = true;
+        state.error = undefined;
+      })
+      .addCase(deleteRooms.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = undefined;
+        state.rooms = state.rooms.filter(
+          (r) => !action.payload.map((room) => room.id).includes(r.id)
+        );
+      })
+      .addCase(deleteRooms.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
       });
   },
 });

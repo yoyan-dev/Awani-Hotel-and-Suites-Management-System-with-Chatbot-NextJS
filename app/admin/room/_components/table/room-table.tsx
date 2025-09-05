@@ -15,7 +15,6 @@ import { TableBottomContent } from "./bottom-content";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchRooms } from "@/features/room/room-thunk";
 import type { RootState, AppDispatch } from "@/store/store";
-import { Room } from "@/types/room";
 
 export default function RoomTable() {
   const dispatch = useDispatch<AppDispatch>();
@@ -104,6 +103,7 @@ export default function RoomTable() {
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
           usersCount={rooms.length}
+          selectedKeys={selectedKeys}
         />
       }
       topContentPlacement="outside"

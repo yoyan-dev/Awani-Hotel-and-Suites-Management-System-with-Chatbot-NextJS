@@ -112,7 +112,7 @@ export default function UpdateModal(room: any) {
                           onChange={handleFileChange}
                         />
                       </div>
-                      <div className="flex gap-2 items-center">
+                      {/* <div className="flex gap-2 items-center">
                         <Input
                           radius="sm"
                           type="number"
@@ -142,7 +142,7 @@ export default function UpdateModal(room: any) {
                           variant="bordered"
                           className="flex-1 w-full"
                         />
-                      </div>
+                      </div> */}
                     </div>
                     <div className="flex-1 w-full p-4 border-l border-gray-500 space-y-8">
                       <Select
