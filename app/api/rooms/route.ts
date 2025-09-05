@@ -194,7 +194,7 @@ export async function DELETE(
             : "Selected rooms deleted successfully",
         color: "success",
       },
-      data,
+      data: data,
     });
   } catch (err: any) {
     return NextResponse.json(

@@ -5,8 +5,18 @@ export interface Inventory {
   name: string;
   quantity: number;
   description?: string;
+  category: "toiletries" | "linens" | "minibar" | "cleaning_supply";
   createdAt?: any;
   status?: InventoryStatus;
+}
+
+export interface InventoryUsage {
+  usage_id: string;
+  item_id: number;
+  booking_id: number;
+  used_by: "housekeeping" | "front_office";
+  quantity: number;
+  used_at: any;
 }
 
 export interface InventoryState {

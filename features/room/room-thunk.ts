@@ -95,7 +95,7 @@ export const updateRoom = createAsyncThunk<Room, Room, { rejectValue: string }>(
         );
       }
 
-      return data.room;
+      return data.data;
     } catch (err: any) {
       addToast({
         title: "Error",
