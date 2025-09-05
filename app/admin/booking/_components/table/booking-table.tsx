@@ -6,14 +6,22 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Spinner,
 } from "@heroui/react";
-import { bookings, columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
+import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
 import { Booking } from "@/types/booking";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { fetchBookings } from "@/features/booking/booking-thunk";
 
 export default function BookingTable() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { bookings, isLoading, error } = useSelector(
+    (state: RootState) => state.booking
+  );
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
@@ -22,6 +30,10 @@ export default function BookingTable() {
   const [statusFilter, setStatusFilter] = React.useState<any>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(1);
+
+  React.useEffect(() => {
+    dispatch(fetchBookings());
+  }, [dispatch]);
 
   const pages = Math.ceil(bookings.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
@@ -37,7 +49,9 @@ export default function BookingTable() {
     let filteredBookings = [...bookings];
     if (hasSearchFilter) {
       filteredBookings = filteredBookings.filter((booking) =>
-        booking.guest_name.toLowerCase().includes(filterValue.toLowerCase())
+        booking.users.full_name
+          .toLowerCase()
+          .includes(filterValue.toLowerCase())
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length) {
@@ -103,7 +117,12 @@ export default function BookingTable() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent="No booking found" items={items}>
+      <TableBody
+        isLoading={isLoading}
+        loadingContent={<Spinner label="Loading..." />}
+        emptyContent="No booking found"
+        items={items}
+      >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (

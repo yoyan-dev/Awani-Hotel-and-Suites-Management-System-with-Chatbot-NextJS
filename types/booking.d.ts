@@ -13,16 +13,19 @@ export interface Booking {
   id: string;
   booking_id: string;
   room_id: string;
-  guest_id: string;
+  user_id: string;
   check_in: string;
   check_out: string;
   special_requests: string;
   status: BookingStatus;
+  rooms?: any;
+  users?: any;
   created_at: any;
 }
 
-interface BookingState {
+export interface BookingState {
   bookings: Booking[];
+  booking: Booking;
   isLoading: boolean;
-  error: string | null;
+  error: string | undefined;
 }
