@@ -4,7 +4,7 @@ export default function HeroBanner() {
   return (
     <section
       className="h-[500px] flex flex-col items-center justify-center text-center text-white bg-cover bg-center"
-      style={{ backgroundImage: "url('/hotel-bg.jpg')" }}
+      style={{ backgroundImage: "url('/bg.jpg')" }}
     >
       <p className="text-yellow-400 text-lg mb-2">⭐⭐⭐⭐⭐ 1.0</p>
       <h1 className="text-4xl font-bold">
