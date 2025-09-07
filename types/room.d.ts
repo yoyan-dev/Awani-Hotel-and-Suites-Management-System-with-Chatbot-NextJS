@@ -11,12 +11,15 @@ export interface Room {
   room_id?: string;
   room_number?: number;
   room_type?: string;
-  floor?: number;
+  name?: string;
+  area?: string;
   description?: string;
   max_guest?: number;
   base_price?: number;
+  beds?: string[];
+  facilities?: string[];
   status?: RoomStatus;
-  image?: any;
+  images?: string[];
 }
 
 export interface RoomState {

@@ -46,7 +46,7 @@ export default function AdminNavbar() {
     <HeroUINavbar
       maxWidth="xl"
       position="sticky"
-      className="top-0 z-50 bg-white dark:bg-gray-900 "
+      className="top-0 z-40 bg-white dark:bg-gray-900 "
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">

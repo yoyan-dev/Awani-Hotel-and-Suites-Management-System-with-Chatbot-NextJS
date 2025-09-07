@@ -8,12 +8,12 @@ import {
   DropdownItem,
   Select,
   SelectItem,
+  Link,
 } from "@heroui/react";
 import type { Room } from "@/types/room";
 import { statusColorMap } from "./constants";
 import { EllipsisVertical } from "lucide-react";
 import ViewModal from "../modals/view-modal";
-import UpdateModal from "../modals/edit-modal";
 import DeleteModal from "../modals/delete-modal";
 import { formatPHP } from "@/lib/format-php";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,11 +35,11 @@ export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
   }
 
   switch (columnKey) {
-    case "image":
+    case "images":
       return (
         <Image
           alt="HeroUI hero Image"
-          src={room.image || "https://via.placeholder.com/100"}
+          src={room.images?.[0] || "/bg.jpg"}
           width={100}
         />
       );
@@ -92,10 +92,12 @@ export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
             </DropdownTrigger>
             <DropdownMenu>
               <DropdownItem key="view">
-                <ViewModal room={room} />
+                <Link href={`room/${room.id}`}>View</Link>
               </DropdownItem>
               <DropdownItem key="edit" color="success" className="text-success">
-                <UpdateModal room={room} />
+                <Link href={`room/update-room/${room.id}`} color="success">
+                  Edit
+                </Link>
               </DropdownItem>
               <DropdownItem key="delete" color="danger" className="text-danger">
                 <DeleteModal room={room} />

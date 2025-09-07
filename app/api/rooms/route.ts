@@ -45,39 +45,28 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
     const formData = await req.formData();
     const roomNumber = Number(formData.get("room_number"));
-    const file = formData.get("image") as File | null;
+    const formObj = Object.fromEntries(formData.entries());
 
-    let imageUrl: string | null = null;
+    const beds = JSON.parse(formObj.beds as string);
+    const facilities = JSON.parse(formObj.facilities as string);
+    const images = formData.getAll("images") as File[];
 
-    if (file && file.size > 0) {
-      try {
-        imageUrl = await uploadRoomImage(file, roomNumber);
-      } catch (uploadErr: any) {
-        console.error("Upload error:", uploadErr.message);
-        return NextResponse.json(
-          {
-            success: false,
-            message: {
-              title: "Error",
-              description: "Image upload failed.",
-              color: "danger",
-            },
-          },
-          { status: 500 }
-        );
-      }
-    }
+    const imageUrls = await Promise.all(
+      images.map(async (file) => {
+        if (!file || file.size === 0) throw new Error("File missing or empty");
+
+        const imageUrl = await uploadRoomImage(file, Number(roomNumber));
+        return imageUrl;
+      })
+    );
 
     const newRoom = {
+      ...formObj,
       room_id: `RM-${roomNumber}`,
-      room_number: roomNumber,
-      room_type: formData.get("room_type") as string,
-      description: formData.get("description") as string,
-      floor: Number(formData.get("floor")),
-      max_guest: Number(formData.get("max_guest")),
-      base_price: Number(formData.get("base_price")),
-      status: formData.get("status") as string,
-      image: imageUrl,
+      beds: beds,
+      facilities: facilities,
+      images: imageUrls,
+      status: "available",
     };
 
     const { data, error } = await supabase
