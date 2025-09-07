@@ -169,6 +169,10 @@ export default function RoomForm({
           <h1>Room photo</h1>
           <hr className="border border-gray-400" />
           <ImagesUpload images={images} setImages={setImages} />
+          <FacilitiesInput
+            facilities={facilities}
+            setFacilities={setFacilities}
+          />
         </div>
       </div>
 

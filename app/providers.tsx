@@ -43,18 +43,20 @@ function RouteLoader({ children }: { children: React.ReactNode }) {
   );
 }
 
+function ReduxProvider({ children }: { children: React.ReactNode }) {
+  return <Provider store={store}>{children}</Provider>;
+}
+
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
 
   return (
     <HeroUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
-        <RouteLoader>{children}</RouteLoader>
+        <RouteLoader>
+          <ReduxProvider>{children}</ReduxProvider>
+        </RouteLoader>
       </NextThemesProvider>
     </HeroUIProvider>
   );
-}
-
-export function ReduxProvider({ children }: { children: React.ReactNode }) {
-  return <Provider store={store}>{children}</Provider>;
 }

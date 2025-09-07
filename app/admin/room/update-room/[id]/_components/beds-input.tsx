@@ -29,7 +29,7 @@ export default function BedsInput({ beds, setBeds }: BedsInputProps) {
           variant="bordered"
           radius="none"
         />
-        <Button isIconOnly color="primary" onPress={addBed}>
+        <Button isIconOnly color="primary" radius="none" onPress={addBed}>
           <Plus />
         </Button>
       </div>

@@ -11,7 +11,6 @@ import {
 import { Search, ChevronDown, Plus } from "lucide-react";
 import { columns, statusOptions } from "./constants";
 import { capitalize } from "@/app/utils/capitalize";
-import AddModal from "../modals/add-modal";
 import DeleteSelectedModal from "../modals/delete-selected-modal";
 
 interface Props {

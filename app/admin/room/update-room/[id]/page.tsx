@@ -8,6 +8,7 @@ import { Room } from "@/types/room";
 import { uploadRoomImage } from "@/lib/upload-room-image";
 import { setLoading } from "@/features/room/room-slice";
 import RoomForm from "./_components/room-form";
+import Header from "./_components/header";
 
 export default function Page() {
   const { id } = useParams();
@@ -63,17 +64,20 @@ export default function Page() {
   }
 
   return (
-    <RoomForm
-      formData={formData}
-      setFormData={setFormData}
-      onSubmit={handleSubmit}
-      beds={beds}
-      setBeds={setBeds}
-      facilities={facilities}
-      setFacilities={setFacilities}
-      images={images}
-      setImages={setImages}
-      isLoading={isLoading}
-    />
+    <div className="space-y-4">
+      <Header />
+      <RoomForm
+        formData={formData}
+        setFormData={setFormData}
+        onSubmit={handleSubmit}
+        beds={beds}
+        setBeds={setBeds}
+        facilities={facilities}
+        setFacilities={setFacilities}
+        images={images}
+        setImages={setImages}
+        isLoading={isLoading}
+      />
+    </div>
   );
 }
