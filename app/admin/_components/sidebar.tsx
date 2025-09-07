@@ -57,7 +57,7 @@ export default function Sidebar() {
           </ListboxItem>
           <ListboxItem
             className={
-              pathname.includes("admin/room/")
+              pathname.includes("admin/room") || pathname === "/admin/room"
                 ? "bg-primary-400 text-white dark:text-primary-50"
                 : ""
             }
