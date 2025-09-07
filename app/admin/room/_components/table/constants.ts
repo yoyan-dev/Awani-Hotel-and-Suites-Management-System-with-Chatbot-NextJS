@@ -2,12 +2,15 @@ import type { ColumnType } from "@/types/column";
 
 export const columns: ColumnType[] = [
   { name: "ID", uid: "id", sortable: true },
-  { name: "Image", uid: "image" },
+  { name: "Image", uid: "images" },
   { name: "ROOM ID", uid: "room_id" },
   { name: "ROOM NUMBER", uid: "room_number" },
   { name: "ROOM TYPE", uid: "room_type" },
-  { name: "FLOOR", uid: "floor" },
+  { name: "NAME", uid: "name" },
+  { name: "AREA", uid: "area" },
   { name: "DESCRIPTION", uid: "description" },
+  { name: "BEDS", uid: "beds" },
+  { name: "FACILITIES", uid: "facilities" },
   { name: "MAX GUEST", uid: "max_guest" },
   { name: "BASE PRICE", uid: "base_price" },
   { name: "STATUS", uid: "status" },
@@ -32,14 +35,15 @@ export const statusColorMap: Record<
   reserved: "warning",
   occupied: "warning",
   maintenance: "danger",
-  out_of_service: "secondary",
+  out_of_service: "default",
 };
 
 export const INITIAL_VISIBLE_COLUMNS = [
-  "id",
-  "image",
+  "images",
   "room_id",
+  "room_number",
   "room_type",
+  "name",
   "max_guest",
   "base_price",
   "status",

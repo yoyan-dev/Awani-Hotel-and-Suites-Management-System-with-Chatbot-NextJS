@@ -8,6 +8,7 @@ import {
   DropdownItem,
   Select,
   SelectItem,
+  Link,
 } from "@heroui/react";
 import type { Room } from "@/types/room";
 import { statusColorMap } from "./constants";
@@ -35,11 +36,11 @@ export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
   }
 
   switch (columnKey) {
-    case "image":
+    case "images":
       return (
         <Image
           alt="HeroUI hero Image"
-          src={room.image || "https://via.placeholder.com/100"}
+          src={room.images?.[0] || "/bg.jpg"}
           width={100}
         />
       );
@@ -95,7 +96,7 @@ export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
                 <ViewModal room={room} />
               </DropdownItem>
               <DropdownItem key="edit" color="success" className="text-success">
-                <UpdateModal room={room} />
+                <Link href={`room/update-room/${room.id}`}>Edit</Link>
               </DropdownItem>
               <DropdownItem key="delete" color="danger" className="text-danger">
                 <DeleteModal room={room} />

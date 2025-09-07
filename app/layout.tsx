@@ -7,7 +7,7 @@ import { fontSans } from "@/config/fonts";
 
 import { ToastProvider } from "@heroui/toast";
 
-import { ReduxProvider } from "./providers";
+import { Providers, ReduxProvider } from "./providers";
 
 export const metadata: Metadata = {
   title: {
@@ -33,19 +33,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en">
-      <head />
-      <body
-        className={clsx(
-          "min-h-screen text-foreground bg-background font-sans antialiased",
-          fontSans.variable,
-        )}
-      >
-        <ToastProvider />
-         <ReduxProvider>
-          {children}
-         </ReduxProvider>
-      </body>
-    </html>
+    <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+      <html suppressHydrationWarning lang="en">
+        <head />
+        <body
+          className={clsx(
+            "min-h-screen text-foreground bg-background font-sans antialiased",
+            fontSans.variable
+          )}
+        >
+          <ToastProvider />
+          <ReduxProvider>{children}</ReduxProvider>
+        </body>
+      </html>
+    </Providers>
   );
 }

@@ -6,8 +6,9 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Link,
 } from "@heroui/react";
-import { Search, ChevronDown } from "lucide-react";
+import { Search, ChevronDown, Plus } from "lucide-react";
 import { columns, statusOptions } from "./constants";
 import { capitalize } from "@/app/utils/capitalize";
 import AddModal from "../modals/add-modal";
@@ -106,7 +107,16 @@ export const TableTopContent: React.FC<Props> = ({
               ))}
             </DropdownMenu>
           </Dropdown>
-          <AddModal />
+          {/* <AddModal /> */}
+          <Button
+            size="sm"
+            as={Link}
+            color="primary"
+            href="room/new-room"
+            variant="solid"
+          >
+            Add New <Plus />
+          </Button>
           {(selectedKeys instanceof Set && selectedKeys.size > 0) ||
           selectedKeys === "all" ? (
             <DeleteSelectedModal selectedKeys={selectedKeys} />

@@ -3,6 +3,48 @@ import type { Room } from "@/types/room";
 import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
 
+//Get room
+export async function GET(
+  _req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+): Promise<NextResponse<ApiResponse>> {
+  const { id } = await context.params;
+
+  const { data: room, error } = await supabase
+    .from("rooms")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching room:", error.message);
+    return NextResponse.json(
+      {
+        success: false,
+        message: {
+          title: "Error",
+          description: error.message,
+          color: "danger",
+        },
+      },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json(
+    {
+      success: true,
+      message: {
+        title: "success",
+        description: "",
+        color: "success",
+      },
+      data: room,
+    },
+    { status: 201 }
+  );
+}
+
 // UPDATE
 export async function PUT(
   req: NextRequest,
