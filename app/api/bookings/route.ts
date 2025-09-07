@@ -21,10 +21,10 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
         room_id,
         room_number,
         room_type,
-        floor,
+        area,
         base_price,
         status,
-        image
+        images
       ),
       users:user_id (
         id,

@@ -5,6 +5,8 @@ export interface User {
   password_hash: string;
   role: "admin" | "front_office" | "housekeeping" | "guest";
   phone: string;
+  image?: any;
+  valid_id_image?: any;
   created_at: string;
 }
 

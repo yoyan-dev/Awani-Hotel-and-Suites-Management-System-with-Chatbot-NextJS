@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import type { User } from "@/types/users";
 import { supabase } from "@/lib/supabase-client";
-import { uploadRoomImage } from "@/lib/upload-room-image";
 import { ApiResponse } from "@/types/response";
+import { uploadUserImage } from "@/lib/upload-user-image";
 
 let users: User[];
 
@@ -41,105 +41,81 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
 }
 
 // CREATE room
-// export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
-//   try {
-//     const formData = await req.formData();
-//     const name = Number(formData.get("full_name"));
-//     const file = formData.get("image") as File | null;
+export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
+  try {
+    const formData = await req.formData();
 
-//     let imageUrl: string | null = null;
+    const formObj = Object.fromEntries(formData.entries());
+    const id = formData.get("id");
+    const fileImage = formData.get("image") as File;
+    // const fileValidIdImage = formData.get("image") as File;
 
-//     if (file && file.size > 0) {
-//       try {
-//         // imageUrl = await uploadRoomImage(file, name);
-//       } catch (uploadErr: any) {
-//         console.error("Upload error:", uploadErr.message);
-//         return NextResponse.json(
-//           {
-//             success: false,
-//             message: {
-//               title: "Error",
-//               description: "Image upload failed.",
-//               color: "danger",
-//             },
-//           },
-//           { status: 500 }
-//         );
-//       }
-//     }
+    const newData = {
+      ...formObj,
+      image: fileImage ? await uploadUserImage(fileImage, id as string) : "",
+      valid_id_image: "",
+    };
 
-//     const newRoom = {
-//       room_id: `RM-${roomNumber}`,
-//       room_number: roomNumber,
-//       room_type: formData.get("room_type") as string,
-//       description: formData.get("description") as string,
-//       floor: Number(formData.get("floor")),
-//       max_guest: Number(formData.get("max_guest")),
-//       base_price: Number(formData.get("base_price")),
-//       status: formData.get("status") as string,
-//       image: imageUrl,
-//     };
+    const { data, error } = await supabase
+      .from("users")
+      .insert([newData])
+      .select();
 
-//     const { data, error } = await supabase
-//       .from("rooms")
-//       .insert([newRoom])
-//       .select();
+    if (error) {
+      console.error("Supabase insert error:", error);
+      if (error.code === "23505") {
+        return NextResponse.json(
+          {
+            success: false,
+            message: {
+              title: "Error",
+              description: "User already exists.",
+              color: "danger",
+            },
+          },
+          { status: 400 }
+        );
+      }
+      return NextResponse.json(
+        {
+          success: false,
+          message: {
+            title: "Error",
+            description: error.message,
+            color: "danger",
+          },
+        },
+        { status: 500 }
+      );
+    }
 
-//     if (error) {
-//       console.error("Supabase insert error:", error);
-//       if (error.code === "23505") {
-//         return NextResponse.json(
-//           {
-//             success: false,
-//             message: {
-//               title: "Error",
-//               description: "Room number already exists.",
-//               color: "danger",
-//             },
-//           },
-//           { status: 400 }
-//         );
-//       }
-//       return NextResponse.json(
-//         {
-//           success: false,
-//           message: {
-//             title: "Error",
-//             description: error.message,
-//             color: "danger",
-//           },
-//         },
-//         { status: 500 }
-//       );
-//     }
-
-//     return NextResponse.json(
-//       {
-//         success: true,
-//         message: {
-//           title: "Success",
-//           description: "Room added successfully",
-//           color: "success",
-//         },
-//         data: data[0],
-//       },
-//       { status: 201 }
-//     );
-//   } catch (err: any) {
-//     console.error("Unexpected error:", err);
-//     return NextResponse.json(
-//       {
-//         success: false,
-//         message: {
-//           title: "Error",
-//           description: err.message,
-//           color: "danger",
-//         },
-//       },
-//       { status: 500 }
-//     );
-//   }
-// }
+    return NextResponse.json(
+      {
+        success: true,
+        message: {
+          title: "Success",
+          description: "Account registered successfully.",
+          color: "success",
+        },
+        data: data[0],
+      },
+      { status: 201 }
+    );
+  } catch (err: any) {
+    console.error("Unexpected error:", err);
+    return NextResponse.json(
+      {
+        success: false,
+        message: {
+          title: "Error",
+          description: err.message,
+          color: "danger",
+        },
+      },
+      { status: 500 }
+    );
+  }
+}
 
 export async function DELETE(
   request: Request
