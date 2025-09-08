@@ -75,8 +75,8 @@ export default function HousekeepingTable() {
 
   return (
     <Table
-      isCompact
-      removeWrapper
+      isHeaderSticky
+      classNames={{ wrapper: ["shadow-none", "dark:bg-gray-900", "p-0"] }}
       aria-label="Rooms Table"
       bottomContent={
         <TableBottomContent

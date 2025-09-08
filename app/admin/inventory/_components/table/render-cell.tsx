@@ -11,6 +11,8 @@ import {
 import type { Inventory } from "@/types/inventory";
 import { statusColorMap } from "./constants";
 import { EllipsisVertical } from "lucide-react";
+import UpdateModal from "../modals/edit-modal";
+import DeleteModal from "../modals/delete-modal";
 
 interface RenderCellProps {
   inventory: Inventory;
@@ -41,7 +43,10 @@ export const RenderCell: React.FC<RenderCellProps> = ({
     case "actions":
       return (
         <div className="relative flex justify-end items-center gap-2">
-          <Dropdown className="bg-background border-1 border-default-200">
+          <Dropdown
+            closeOnSelect={false}
+            className="bg-background border-1 border-default-200 z-10"
+          >
             <DropdownTrigger>
               <Button isIconOnly radius="full" size="sm" variant="light">
                 <EllipsisVertical className="text-default-400" />
@@ -49,8 +54,12 @@ export const RenderCell: React.FC<RenderCellProps> = ({
             </DropdownTrigger>
             <DropdownMenu>
               <DropdownItem key="view">View</DropdownItem>
-              <DropdownItem key="edit">Edit</DropdownItem>
-              <DropdownItem key="delete">Delete</DropdownItem>
+              <DropdownItem key="edit">
+                <UpdateModal inventory={inventory} />
+              </DropdownItem>
+              <DropdownItem key="delete">
+                <DeleteModal inventory={inventory} />
+              </DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </div>

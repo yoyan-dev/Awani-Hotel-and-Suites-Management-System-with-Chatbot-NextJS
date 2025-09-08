@@ -76,9 +76,9 @@ export default function RoomTable() {
 
   return (
     <Table
-      isCompact
-      removeWrapper
       aria-label="Rooms Table"
+      isHeaderSticky
+      classNames={{ wrapper: ["shadow-none", "dark:bg-gray-900", "p-0"] }}
       bottomContent={
         <TableBottomContent
           hasSearchFilter={hasSearchFilter}
@@ -125,6 +125,7 @@ export default function RoomTable() {
         loadingContent={<Spinner label="Loading..." />}
         emptyContent="No rooms found"
         items={items}
+        className="overflow-x-auto"
       >
         {(item) => (
           <TableRow key={item.id}>

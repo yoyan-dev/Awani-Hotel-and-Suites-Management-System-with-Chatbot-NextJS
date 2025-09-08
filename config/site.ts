@@ -5,65 +5,58 @@ export const siteConfig = {
   description: "Make beautiful websites regardless of your design experience.",
   navItems: [
     {
-      label: "Home",
-      href: "/",
+      label: "Dashboard",
+      href: "/admin",
     },
     {
-      label: "Docs",
-      href: "/docs",
+      label: "Rooms",
+      href: "/admin/room",
     },
     {
-      label: "Pricing",
-      href: "/pricing",
+      label: "Inventory",
+      href: "/admin/inventory",
     },
     {
-      label: "Blog",
-      href: "/blog",
+      label: "Bookings",
+      href: "/admin/booking",
     },
     {
-      label: "About",
-      href: "/about",
+      label: "Housekeeping",
+      href: "/housekeeping",
     },
   ],
   navMenuItems: [
     {
-      label: "Profile",
-      href: "/profile",
-    },
-    {
       label: "Dashboard",
-      href: "/dashboard",
+      href: "/admin",
     },
     {
-      label: "Projects",
-      href: "/projects",
+      label: "Rooms",
+      href: "/admin/room",
     },
     {
-      label: "Team",
-      href: "/team",
+      label: "Inventory",
+      href: "/admin/inventory",
     },
     {
-      label: "Calendar",
-      href: "/calendar",
+      label: "Bookings",
+      href: "/admin/booking",
+    },
+    {
+      label: "Housekeeping",
+      href: "/admin/housekeeping",
+    },
+    {
+      label: "Guest",
+      href: "/admin/guest",
+    },
+    {
+      label: "Account Management",
+      href: "/admin/account",
     },
     {
       label: "Settings",
-      href: "/settings",
-    },
-    {
-      label: "Help & Feedback",
-      href: "/help-feedback",
-    },
-    {
-      label: "Logout",
-      href: "/logout",
+      href: "/admin/settings",
     },
   ],
-  links: {
-    github: "https://github.com/heroui-inc/heroui",
-    twitter: "https://twitter.com/hero_ui",
-    docs: "https://heroui.com",
-    discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev",
-  },
 };
