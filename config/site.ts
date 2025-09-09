@@ -1,3 +1,5 @@
+import { Bed, Home, Inbox, LogOut, Settings, User } from "lucide-react";
+
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
@@ -57,6 +59,38 @@ export const siteConfig = {
     {
       label: "Settings",
       href: "/admin/settings",
+    },
+  ],
+  housekeepingNavMenuItems: [
+    {
+      label: "Dashboard",
+      href: "/housekeeping",
+      icon: Home,
+    },
+    {
+      label: "Rooms",
+      href: "/housekeeping/rooms",
+      icon: Bed,
+    },
+    {
+      label: "Guest",
+      href: "/housekeeping/guest",
+      icon: User,
+    },
+    {
+      label: "Guest Requests",
+      href: "/housekeeping/requests",
+      icon: Inbox,
+    },
+    {
+      label: "Settings",
+      href: "/housekeeping/settings",
+      icon: Settings,
+    },
+    {
+      label: "Logout",
+      href: "/",
+      icon: LogOut,
     },
   ],
 };
