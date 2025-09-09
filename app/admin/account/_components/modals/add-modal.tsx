@@ -1,4 +1,8 @@
+"use client";
+
+import React from "react";
 import {
+  Form,
   Modal,
   ModalContent,
   ModalHeader,
@@ -6,64 +10,133 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Checkbox,
   Input,
-  Link,
+  Select,
+  SelectItem,
+  Textarea,
 } from "@heroui/react";
-import { MailIcon, LockIcon, Plus } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { addUser } from "@/features/users/user-thunk";
+import { Plus } from "lucide-react";
 
 export default function AddModal() {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const dispatch = useDispatch<AppDispatch>();
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsSubmitting(true);
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      await dispatch(addUser(formData));
+      onClose();
+      e.currentTarget.reset();
+    } catch (err) {
+      console.error("Failed to add user", err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <>
-        <Button color="primary" endContent={<Plus />} size="sm" onPress={onOpen}>
-        Add New
-        </Button>
+      <Button color="primary" endContent={<Plus />} size="sm" onPress={onOpen}>
+        Add New User
+      </Button>
+
       <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Add New Room</ModalHeader>
+              <ModalHeader>Add New User</ModalHeader>
               <ModalBody>
-                <Input
-                  endContent={
-                    <MailIcon className="text-2xl text-default-400 pointer-events-none shrink-0" />
-                  }
-                  label="Email"
-                  placeholder="Enter your email"
-                  variant="bordered"
-                />
-                <Input
-                  endContent={
-                    <LockIcon className="text-2xl text-default-400 pointer-events-none shrink-0" />
-                  }
-                  label="Password"
-                  placeholder="Enter your password"
-                  type="password"
-                  variant="bordered"
-                />
-                <div className="flex py-2 px-1 justify-between">
-                  <Checkbox
-                    classNames={{
-                      label: "text-small",
-                    }}
-                  >
-                    Remember me
-                  </Checkbox>
-                  <Link color="primary" href="#" size="sm">
-                    Forgot password?
-                  </Link>
-                </div>
+                <Form className="space-y-4" onSubmit={onSubmit}>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      label="Email"
+                      name="email"
+                      type="email"
+                      placeholder="User email"
+                      required
+                    />
+                    <Input
+                      label="Password"
+                      name="password"
+                      type="password"
+                      placeholder="Password"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      label="Name"
+                      name="name"
+                      placeholder="Full name"
+                      required
+                    />
+                    <Input
+                      label="Phone"
+                      name="phone"
+                      placeholder="Phone number"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Select
+                      label="Gender"
+                      name="gender"
+                      placeholder="Select gender"
+                    >
+                      <SelectItem key="male">Male</SelectItem>
+                      <SelectItem key="female">Female</SelectItem>
+                    </Select>
+                    <Input label="Birthday" name="birthday" type="date" />
+                  </div>
+
+                  <Textarea
+                    label="Address"
+                    name="address"
+                    placeholder="Address"
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      label="Emergency Contact Name"
+                      name="emergency_name"
+                      placeholder="Emergency contact name"
+                    />
+                    <Input
+                      label="Emergency Contact Phone"
+                      name="emergency_phone"
+                      placeholder="Emergency contact phone"
+                    />
+                  </div>
+
+                  <Select label="Role" name="roles" placeholder="Select role">
+                    <SelectItem key="admin">Admin</SelectItem>
+                    <SelectItem key="front_office">Front Office</SelectItem>
+                    <SelectItem key="housekeeping">Housekeeping</SelectItem>
+                    <SelectItem key="guest">Guest</SelectItem>
+                  </Select>
+
+                  <ModalFooter className="flex justify-end gap-2">
+                    <Button onPress={onClose} variant="bordered">
+                      Cancel
+                    </Button>
+                    <Button
+                      color="primary"
+                      type="submit"
+                      isLoading={isSubmitting}
+                    >
+                      Save
+                    </Button>
+                  </ModalFooter>
+                </Form>
               </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Sign in
-                </Button>
-              </ModalFooter>
             </>
           )}
         </ModalContent>

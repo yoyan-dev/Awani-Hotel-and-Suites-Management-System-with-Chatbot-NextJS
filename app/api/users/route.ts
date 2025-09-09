@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
 import { uploadUserImage } from "@/lib/upload-user-image";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 let users: User[];
 
@@ -59,25 +60,28 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
 export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
     const formData = await req.formData();
-
     const formObj = Object.fromEntries(formData.entries());
-    const id = formData.get("id");
-    const fileImage = formData.get("image") as File;
-    // const fileValidIdImage = formData.get("image") as File;
+    const image = formData.get("image") as File;
 
-    const newData = {
-      ...formObj,
-      image: fileImage ? await uploadUserImage(fileImage, id as string) : "",
-      valid_id_image: "",
+    const { email, password, ...metadata } = formObj;
+
+    const userData = {
+      ...metadata,
+      image: await uploadUserImage(image),
     };
-
-    const { data, error } = await supabase
-      .from("users")
-      .insert([newData])
-      .select();
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+      email: email as string,
+      password: password as string,
+      user_metadata: userData,
+      app_metadata: {
+        roles: (formObj.roles as string)?.split(",") ?? ["guest"],
+        department: (formObj.department as string) ?? "General",
+        permissions: ["create", "update"],
+      },
+    });
 
     if (error) {
-      console.error("Supabase insert error:", error);
+      console.error("Supabase create error:", error);
       return NextResponse.json(
         {
           success: false,
@@ -87,7 +91,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
             color: "danger",
           },
         },
-        { status: 500 }
+        { status: 400 }
       );
     }
 
@@ -96,10 +100,10 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         success: true,
         message: {
           title: "Success",
-          description: "Account registered successfully.",
+          description: "Account created successfully.",
           color: "success",
         },
-        data: data[0],
+        data: data.user,
       },
       { status: 201 }
     );

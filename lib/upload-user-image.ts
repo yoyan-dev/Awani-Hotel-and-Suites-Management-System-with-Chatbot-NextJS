@@ -1,7 +1,7 @@
 import { supabase } from "./supabase-client";
 
-export async function uploadUserImage(file: File, id: string) {
-  const filePath = `user-${id}/${file.name}`;
+export async function uploadUserImage(file: File) {
+  const filePath = file.name;
 
   const { error } = await supabase.storage
     .from("user-images")

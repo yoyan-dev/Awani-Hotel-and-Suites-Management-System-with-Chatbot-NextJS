@@ -4,10 +4,7 @@ export type UserMetadata = {
   gender?: "male" | "female";
   address?: string;
   birthday?: string;
-  emergency_contact?: {
-    name: string;
-    phone: string;
-  };
+  image?: string;
 };
 
 export type AppMetadata = {
