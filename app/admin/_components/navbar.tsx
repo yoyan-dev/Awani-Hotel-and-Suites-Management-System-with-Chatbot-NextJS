@@ -56,7 +56,7 @@ export default function AdminNavbar() {
             <Image alt="Awani logo" src="/awani-logo.png" width={50} />
             <div>
               <p className="font-bold text-inherit">Awani</p>
-              <span className="text-gray-500 text-sm font-">
+              <span className="text-gray-500 text-sm flex gap-2">
                 Hotel and suites{" "}
                 <span className="hidden md:block">management system</span>
               </span>

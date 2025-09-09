@@ -9,7 +9,7 @@ import {
   Spinner,
 } from "@heroui/react";
 import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
-import { RenderCell } from "./render-cell";
+import RenderCell from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
 import { useSelector, useDispatch } from "react-redux";
@@ -49,11 +49,11 @@ export default function UserTable() {
   const filteredItems = React.useMemo(() => {
     let filteredUsers = [...users];
 
-    if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((item) =>
-        item.full_name?.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
+    // if (hasSearchFilter) {
+    //   filteredUsers = filteredUsers.filter((item) =>
+    //     item.full_name?.toLowerCase().includes(filterValue.toLowerCase())
+    //   );
+    // }
 
     // if (statusFilter !== "all" && Array.from(statusFilter).length) {
     //   filteredUsers = filteredUsers.filter((item) =>
@@ -129,7 +129,7 @@ export default function UserTable() {
           <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell className="capitalize">
-                {RenderCell(item, columnKey as string)}
+                <RenderCell user={item} columnKey={columnKey as string} />
               </TableCell>
             )}
           </TableRow>

@@ -3,6 +3,7 @@ import React from "react";
 import { Input, Button, Checkbox, Link, Form, Image } from "@heroui/react";
 import { MailIcon, LockIcon } from "lucide-react";
 import { supabase } from "@/lib/supabase-client";
+import { useRouter } from "next/navigation";
 
 export default function Auth() {
   const [email, setEmail] = React.useState<string>("");
@@ -13,6 +14,7 @@ export default function Auth() {
     message: string;
   } | null>(null);
 
+  const router = useRouter();
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
@@ -27,6 +29,12 @@ export default function Auth() {
 
     setIsLoading(false);
     console.log(data);
+
+    const roles = data?.user?.app_metadata?.roles;
+    if (roles.includes("admin")) router.push("/admin");
+    else if (roles.includes("front-office")) router.push("/front-office");
+    else if (roles.includes("housekeeping")) router.push("/housekeeping");
+    else router.push("/housekeeping");
   }
 
   return (

@@ -13,10 +13,10 @@ import NextLink from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { GithubIcon } from "@/components/icons";
-import { User } from "@heroui/react";
+import { usePathname } from "next/navigation";
 
 export default function AdminNavbar() {
+  const pathname = usePathname();
   return (
     <HeroUINavbar
       maxWidth="xl"
@@ -38,31 +38,16 @@ export default function AdminNavbar() {
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Home
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link aria-current="page" href="#">
-            About Us
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Rooms
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Booking
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Contact
-          </Link>
-        </NavbarItem>
+        {siteConfig.guestNavMenuItems.map((item) => (
+          <NavbarItem key={item.href}>
+            <Link
+              color={item.href === pathname ? "primary" : "foreground"}
+              href={item.href}
+            >
+              {item.label}
+            </Link>
+          </NavbarItem>
+        ))}
       </NavbarContent>
 
       <NavbarContent
@@ -71,7 +56,7 @@ export default function AdminNavbar() {
       >
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
-          <Button color="primary" variant="bordered">
+          <Button as={Link} href="/auth" color="primary" variant="bordered">
             Sign Up
           </Button>
         </NavbarItem>
@@ -80,7 +65,7 @@ export default function AdminNavbar() {
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <ThemeSwitch />
         <NavbarMenuToggle />
-        <Button color="primary" variant="bordered">
+        <Button as={Link} href="/auth" color="primary" variant="bordered">
           Sign Up
         </Button>
       </NavbarContent>

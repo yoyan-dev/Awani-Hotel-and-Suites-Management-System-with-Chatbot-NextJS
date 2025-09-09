@@ -3,41 +3,56 @@ import type { User } from "@/types/users";
 import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
 import { uploadUserImage } from "@/lib/upload-user-image";
+import { createClient } from "@/lib/supabase/server";
 
 let users: User[];
 
 export async function GET(): Promise<NextResponse<ApiResponse>> {
-  const { data: userData, error } = await supabase.from("users").select("*");
+  try {
+    const supabase = await createClient();
 
-  if (error) {
-    console.error("Error fetching users:", error.message);
+    const { data, error } = await supabase.auth.admin.listUsers();
+
+    if (error) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: {
+            title: "Error",
+            description: error.message,
+            color: "danger",
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: {
+          title: "Success",
+          description: "",
+          color: "success",
+        },
+        data: data.users,
+      },
+      { status: 201 }
+    );
+  } catch (err: any) {
+    console.error("Unexpected error:", err);
     return NextResponse.json(
       {
         success: false,
         message: {
           title: "Error",
-          description: error.message,
+          description: err.message,
           color: "danger",
         },
       },
       { status: 500 }
     );
   }
-
-  console.log("Users data:", userData);
-  users = userData || [];
-  return NextResponse.json(
-    {
-      success: true,
-      message: {
-        title: "success",
-        description: "",
-        color: "success",
-      },
-      data: users,
-    },
-    { status: 201 }
-  );
 }
 
 // CREATE

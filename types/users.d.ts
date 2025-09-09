@@ -1,18 +1,32 @@
-export interface User {
-  id: string;
-  full_name: string;
-  email: string;
-  password_hash: string;
-  role: "admin" | "front_office" | "housekeeping" | "guest";
-  phone: string;
+export type UserMetadata = {
+  name?: string;
+  phone?: string;
+  gender?: "male" | "female";
   address?: string;
-  nationality?: string;
-  birth_date?: string;
-  gender?: string;
-  image?: any;
-  valid_id_image?: any;
-  created_at: string;
-}
+  birthday?: string;
+  emergency_contact?: {
+    name: string;
+    phone: string;
+  };
+};
+
+export type AppMetadata = {
+  roles?:
+    | ["admin", "editor"]
+    | ["front_office", "editor"]
+    | ["housekeeping", "editor"]
+    | ["guest"];
+  department?: string;
+  permissions?: string[];
+  provider?: string;
+};
+
+export type User = {
+  id: string;
+  email: string;
+  user_metadata: UserMetadata;
+  app_metadata: AppMetadata;
+};
 
 export interface UserState {
   users: User[];

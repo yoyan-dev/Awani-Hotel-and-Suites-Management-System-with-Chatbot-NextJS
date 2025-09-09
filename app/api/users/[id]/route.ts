@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type { User } from "@/types/users";
 import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 //Get [id]
 export async function GET(
@@ -106,34 +107,51 @@ export async function DELETE(
   _req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ): Promise<NextResponse<ApiResponse>> {
-  const { id } = await context.params;
+  try {
+    const { id } = await context.params;
 
-  const { error } = await supabase.from("users").delete().eq("id", id);
+    // Delete user from Supabase Auth
+    const { data, error } = await supabaseAdmin.auth.admin.deleteUser(id);
 
-  if (error) {
-    console.error("Delete error:", error);
+    if (error) {
+      console.error("Delete error:", error);
+      return NextResponse.json(
+        {
+          success: false,
+          message: {
+            title: "Error",
+            description: `DB Error: ${error.message}`,
+            color: "error",
+          },
+        },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: {
+          title: "Success",
+          description: "Account deleted successfully",
+          color: "success",
+        },
+        data: data,
+      },
+      { status: 200 }
+    );
+  } catch (err: any) {
+    console.error("Unexpected error:", err);
     return NextResponse.json(
       {
         success: false,
         message: {
           title: "Error",
-          description: error.message,
-          color: "error",
+          description: `Api Error: ${err.message}`,
+          color: "danger",
         },
       },
-      { status: 404 }
+      { status: 500 }
     );
   }
-
-  return NextResponse.json(
-    {
-      success: true,
-      message: {
-        title: "Success",
-        description: "Account deleted successfully",
-        color: "success",
-      },
-    },
-    { status: 200 }
-  );
 }

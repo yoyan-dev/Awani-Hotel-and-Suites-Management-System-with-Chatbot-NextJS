@@ -64,7 +64,7 @@ export const addUser = createAsyncThunk<User, FormData>(
           data.message?.description ?? "Failed to add register new user"
         );
       }
-      return data.data;
+      return data.users;
     } catch (err: any) {
       console.log(err.message);
       addToast({
@@ -128,7 +128,7 @@ export const deleteUser = createAsyncThunk<string, string>(
     } catch (error: any) {
       addToast({
         title: "Error",
-        description: error.message,
+        description: `Thunk Error: ${error.message}`,
         color: "danger",
       });
       return rejectWithValue(error.message);

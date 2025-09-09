@@ -93,4 +93,22 @@ export const siteConfig = {
       icon: LogOut,
     },
   ],
+  guestNavMenuItems: [
+    {
+      label: "Home",
+      href: "/guest",
+    },
+    {
+      label: "About Us",
+      href: "/guest/about",
+    },
+    {
+      label: "Rooms",
+      href: "/guest/rooms",
+    },
+    {
+      label: "Contact",
+      href: "/guest/contact",
+    },
+  ],
 };
