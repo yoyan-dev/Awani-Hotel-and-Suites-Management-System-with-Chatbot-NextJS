@@ -40,7 +40,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
   );
 }
 
-// CREATE room
+// CREATE
 export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
     const formData = await req.formData();
@@ -63,19 +63,6 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
 
     if (error) {
       console.error("Supabase insert error:", error);
-      if (error.code === "23505") {
-        return NextResponse.json(
-          {
-            success: false,
-            message: {
-              title: "Error",
-              description: "User already exists.",
-              color: "danger",
-            },
-          },
-          { status: 400 }
-        );
-      }
       return NextResponse.json(
         {
           success: false,
