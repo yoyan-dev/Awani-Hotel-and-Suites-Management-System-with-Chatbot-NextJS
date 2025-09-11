@@ -63,18 +63,23 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     const formObj = Object.fromEntries(formData.entries());
     const image = formData.get("image") as File;
 
-    const { email, password, ...metadata } = formObj;
+    const { email, password, name, phone, gender, address, birthday, roles } =
+      formObj;
 
     const userData = {
-      ...metadata,
-      image: await uploadUserImage(image),
+      name,
+      phone,
+      gender,
+      address,
+      birthday,
+      image: image ? await uploadUserImage(image) : "",
     };
     const { data, error } = await supabaseAdmin.auth.admin.createUser({
       email: email as string,
       password: password as string,
       user_metadata: userData,
       app_metadata: {
-        roles: (formObj.roles as string)?.split(",") ?? ["guest"],
+        roles: (roles as string)?.split(",") ?? ["guest"],
         department: (formObj.department as string) ?? "General",
         permissions: ["create", "update"],
       },
@@ -86,7 +91,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         {
           success: false,
           message: {
-            title: "Error",
+            title: "Supabase Error",
             description: error.message,
             color: "danger",
           },
@@ -113,7 +118,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       {
         success: false,
         message: {
-          title: "Error",
+          title: "Api Error",
           description: err.message,
           color: "danger",
         },

@@ -12,6 +12,7 @@ import { User } from "@/types/users";
 import { statusColorMap } from "./constants";
 import { EllipsisVertical } from "lucide-react";
 import DeleteModal from "../modals/delete-modal";
+import EditModal from "../modals/edit-modal";
 
 interface RenderCellProps {
   user: User;
@@ -42,6 +43,25 @@ const RenderCell: React.FC<RenderCellProps> = ({ user, columnKey }) => {
           </p>
         </div>
       );
+    case "gender":
+      return (
+        <div className="flex flex-col">
+          <p className="text-bold text-small capitalize">
+            {user.user_metadata.gender}
+          </p>
+          <p className="text-bold text-tiny capitalize text-default-500">
+            {user.user_metadata.gender}
+          </p>
+        </div>
+      );
+    case "phone":
+      return (
+        <div className="flex flex-col">
+          <p className="text-bold text-small capitalize">
+            {user.user_metadata.phone}
+          </p>
+        </div>
+      );
     case "status":
       return (
         <Chip
@@ -67,7 +87,9 @@ const RenderCell: React.FC<RenderCellProps> = ({ user, columnKey }) => {
             </DropdownTrigger>
             <DropdownMenu>
               <DropdownItem key="view">View</DropdownItem>
-              <DropdownItem key="edit">Edit</DropdownItem>
+              <DropdownItem key="edit" color="success">
+                <EditModal user={user} />
+              </DropdownItem>
               <DropdownItem key="delete" color="danger">
                 <DeleteModal user={user} />
               </DropdownItem>

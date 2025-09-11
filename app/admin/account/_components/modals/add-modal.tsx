@@ -15,13 +15,14 @@ import {
   SelectItem,
   Textarea,
 } from "@heroui/react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
 import { addUser } from "@/features/users/user-thunk";
 import { Plus } from "lucide-react";
 
 export default function AddModal() {
   const dispatch = useDispatch<AppDispatch>();
+  const { isLoading } = useSelector((state: RootState) => state.users);
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -103,7 +104,7 @@ export default function AddModal() {
                     placeholder="Address"
                   />
 
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* <div className="grid grid-cols-2 gap-4">
                     <Input
                       label="Emergency Contact Name"
                       name="emergency_name"
@@ -114,7 +115,7 @@ export default function AddModal() {
                       name="emergency_phone"
                       placeholder="Emergency contact phone"
                     />
-                  </div>
+                  </div> */}
 
                   <Select label="Role" name="roles" placeholder="Select role">
                     <SelectItem key="admin">Admin</SelectItem>
@@ -123,15 +124,11 @@ export default function AddModal() {
                     <SelectItem key="guest">Guest</SelectItem>
                   </Select>
 
-                  <ModalFooter className="flex justify-end gap-2">
+                  <ModalFooter className="flex justify-end gap-2 w-full">
                     <Button onPress={onClose} variant="bordered">
                       Cancel
                     </Button>
-                    <Button
-                      color="primary"
-                      type="submit"
-                      isLoading={isSubmitting}
-                    >
+                    <Button color="primary" type="submit" isLoading={isLoading}>
                       Save
                     </Button>
                   </ModalFooter>

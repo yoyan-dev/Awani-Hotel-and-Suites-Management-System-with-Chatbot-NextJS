@@ -1,7 +1,14 @@
 import React from "react";
-import { Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
-import { Search, ChevronDown } from 'lucide-react';
-import { columns, statusOptions } from "./constants";
+import {
+  Input,
+  Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@heroui/react";
+import { Search, ChevronDown } from "lucide-react";
+import { columns, rolesOptions } from "./constants";
 import { capitalize } from "@/app/utils/capitalize";
 import AddModal from "../modals/add-modal";
 
@@ -9,8 +16,8 @@ interface Props {
   filterValue: string;
   onSearchChange: (value: string) => void;
   setFilterValue: (val: string) => void;
-  statusFilter: any;
-  setStatusFilter: (val: any) => void;
+  rolesStatusFilter: any;
+  setRolesStatusFilter: (val: any) => void;
   visibleColumns: any;
   setVisibleColumns: (val: any) => void;
   onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -21,8 +28,8 @@ export const TableTopContent: React.FC<Props> = ({
   filterValue,
   onSearchChange,
   setFilterValue,
-  statusFilter,
-  setStatusFilter,
+  rolesStatusFilter,
+  setRolesStatusFilter,
   visibleColumns,
   setVisibleColumns,
   onRowsPerPageChange,
@@ -33,7 +40,10 @@ export const TableTopContent: React.FC<Props> = ({
       <div className="flex justify-between gap-3 items-end">
         <Input
           isClearable
-          classNames={{ base: "w-full sm:max-w-[44%]", inputWrapper: "border-1" }}
+          classNames={{
+            base: "w-full sm:max-w-[44%]",
+            inputWrapper: "border-1",
+          }}
           placeholder="Search by name..."
           size="sm"
           startContent={<Search className="text-default-300" />}
@@ -45,26 +55,30 @@ export const TableTopContent: React.FC<Props> = ({
         <div className="flex gap-3">
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
-              <Button endContent={<ChevronDown className="text-small" />} size="sm" variant="flat">
-                Status
+              <Button
+                endContent={<ChevronDown className="text-small" />}
+                size="sm"
+                variant="flat"
+              >
+                System Roles
               </Button>
             </DropdownTrigger>
             <DropdownMenu
               disallowEmptySelection
               aria-label="Table Columns"
               closeOnSelect={false}
-              selectedKeys={statusFilter}
+              selectedKeys={rolesStatusFilter}
               selectionMode="multiple"
-              onSelectionChange={setStatusFilter}
+              onSelectionChange={setRolesStatusFilter}
             >
-              {statusOptions.map((status) => (
-                <DropdownItem key={status.uid} className="capitalize">
-                  {capitalize(status.name)}
+              {rolesOptions.map((role) => (
+                <DropdownItem key={role.uid} className="capitalize">
+                  {capitalize(role.name)}
                 </DropdownItem>
               ))}
             </DropdownMenu>
           </Dropdown>
-          <Dropdown>
+          {/* <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
               <Button endContent={<ChevronDown className="text-small" />} size="sm" variant="flat">
                 Columns
@@ -84,12 +98,14 @@ export const TableTopContent: React.FC<Props> = ({
                 </DropdownItem>
               ))}
             </DropdownMenu>
-          </Dropdown>
+          </Dropdown> */}
           <AddModal />
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-default-400 text-small">Total {usersCount} users</span>
+        <span className="text-default-600 text-small">
+          Total {usersCount} users
+        </span>
         <label className="flex items-center text-default-400 text-small">
           Rows per page: 10
         </label>

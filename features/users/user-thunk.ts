@@ -64,7 +64,7 @@ export const addUser = createAsyncThunk<User, FormData>(
           data.message?.description ?? "Failed to add register new user"
         );
       }
-      return data.users;
+      return data.data;
     } catch (err: any) {
       console.log(err.message);
       addToast({

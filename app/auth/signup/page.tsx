@@ -35,25 +35,25 @@ export default function Auth() {
       const formData = new FormData(e.currentTarget);
       formData.append("role", "guest");
 
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+      // const { data, error: signUpError } = await supabase.auth.signUp({
+      //   email,
+      //   password,
+      // });
 
-      if (signUpError) {
-        setMessage({ error: true, message: signUpError.message });
-        return;
-      }
+      // if (signUpError) {
+      //   setMessage({ error: true, message: signUpError.message });
+      //   return;
+      // }
 
-      if (data.user) {
-        formData.append("id", data.user?.id);
-        await dispatch(addUser(formData));
-        setMessage({
-          error: false,
-          message: "Account registered successfully!",
-        });
-        router.push("/auth");
-      }
+      // if (data.user) {
+      //   formData.append("id", data.user?.id);
+      //   await dispatch(addUser(formData));
+      //   setMessage({
+      //     error: false,
+      //     message: "Account registered successfully!",
+      //   });
+      //   router.push("/auth");
+      // }
     } catch (e) {
       addToast({
         title: "Error",
