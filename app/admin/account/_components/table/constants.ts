@@ -3,18 +3,20 @@ import { ColumnType } from "@/types/column";
 export const columns: ColumnType[] = [
   { name: "ID", uid: "id", sortable: true },
   { name: "NAME", uid: "name", sortable: true },
-  { name: "AGE", uid: "age", sortable: true },
   { name: "ROLE", uid: "role", sortable: true },
-  { name: "TEAM", uid: "team" },
+  { name: "Gender", uid: "gender", sortable: true },
+  { name: "Phone", uid: "phone", sortable: true },
+  // { name: "TEAM", uid: "team" },
   { name: "EMAIL", uid: "email" },
-  { name: "STATUS", uid: "status", sortable: true },
+  // { name: "STATUS", uid: "status", sortable: true },
   { name: "ACTIONS", uid: "actions" },
 ];
 
-export const statusOptions = [
-  { name: "Active", uid: "active" },
-  { name: "Paused", uid: "paused" },
-  { name: "Vacation", uid: "vacation" },
+export const rolesOptions = [
+  { name: "Admin", uid: "admin" },
+  { name: "Front Office", uid: "front_office" },
+  { name: "Housekeeping", uid: "housekeeping" },
+  { name: "Guest", uid: "guest" },
 ];
 
 export const statusColorMap: Record<string, "success" | "danger" | "warning"> =
@@ -24,4 +26,10 @@ export const statusColorMap: Record<string, "success" | "danger" | "warning"> =
     vacation: "warning",
   };
 
-export const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
+export const INITIAL_VISIBLE_COLUMNS = [
+  "name",
+  "role",
+  "gender",
+  "phone",
+  "actions",
+];

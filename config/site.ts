@@ -1,3 +1,5 @@
+import { Bed, Home, Inbox, LogOut, Settings, User } from "lucide-react";
+
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
@@ -5,65 +7,108 @@ export const siteConfig = {
   description: "Make beautiful websites regardless of your design experience.",
   navItems: [
     {
-      label: "Home",
-      href: "/",
+      label: "Dashboard",
+      href: "/admin",
     },
     {
-      label: "Docs",
-      href: "/docs",
+      label: "Rooms",
+      href: "/admin/room",
     },
     {
-      label: "Pricing",
-      href: "/pricing",
+      label: "Inventory",
+      href: "/admin/inventory",
     },
     {
-      label: "Blog",
-      href: "/blog",
+      label: "Bookings",
+      href: "/admin/booking",
     },
     {
-      label: "About",
-      href: "/about",
+      label: "Housekeeping",
+      href: "/housekeeping",
     },
   ],
   navMenuItems: [
     {
-      label: "Profile",
-      href: "/profile",
-    },
-    {
       label: "Dashboard",
-      href: "/dashboard",
+      href: "/admin",
     },
     {
-      label: "Projects",
-      href: "/projects",
+      label: "Rooms",
+      href: "/admin/room",
     },
     {
-      label: "Team",
-      href: "/team",
+      label: "Inventory",
+      href: "/admin/inventory",
     },
     {
-      label: "Calendar",
-      href: "/calendar",
+      label: "Bookings",
+      href: "/admin/booking",
+    },
+    {
+      label: "Housekeeping",
+      href: "/admin/housekeeping",
+    },
+    {
+      label: "Guest",
+      href: "/admin/guest",
+    },
+    {
+      label: "Account Management",
+      href: "/admin/account",
     },
     {
       label: "Settings",
-      href: "/settings",
+      href: "/admin/settings",
+    },
+  ],
+  housekeepingNavMenuItems: [
+    {
+      label: "Dashboard",
+      href: "/housekeeping",
+      icon: Home,
     },
     {
-      label: "Help & Feedback",
-      href: "/help-feedback",
+      label: "Rooms",
+      href: "/housekeeping/rooms",
+      icon: Bed,
+    },
+    {
+      label: "Guest",
+      href: "/housekeeping/guest",
+      icon: User,
+    },
+    {
+      label: "Guest Requests",
+      href: "/housekeeping/requests",
+      icon: Inbox,
+    },
+    {
+      label: "Settings",
+      href: "/housekeeping/settings",
+      icon: Settings,
     },
     {
       label: "Logout",
-      href: "/logout",
+      href: "/",
+      icon: LogOut,
     },
   ],
-  links: {
-    github: "https://github.com/heroui-inc/heroui",
-    twitter: "https://twitter.com/hero_ui",
-    docs: "https://heroui.com",
-    discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev",
-  },
+  guestNavMenuItems: [
+    {
+      label: "Home",
+      href: "/guest",
+    },
+    {
+      label: "About Us",
+      href: "/guest/about",
+    },
+    {
+      label: "Rooms",
+      href: "/guest/rooms",
+    },
+    {
+      label: "Contact",
+      href: "/guest/contact",
+    },
+  ],
 };

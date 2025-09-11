@@ -99,7 +99,7 @@ export const UpdateItem = createAsyncThunk<
       );
     }
 
-    return data.room;
+    return data.data;
   } catch (err: any) {
     addToast({
       title: "Error",

@@ -9,7 +9,7 @@ import {
   Spinner,
 } from "@heroui/react";
 import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
-import { RenderCell } from "./render-cell";
+import RenderCell from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
 import { useSelector, useDispatch } from "react-redux";
@@ -27,7 +27,7 @@ export default function UserTable() {
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [statusFilter, setStatusFilter] = React.useState<any>("all");
+  const [rolesStatusFilter, setRolesStatusFilter] = React.useState<any>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(1);
 
@@ -51,18 +51,20 @@ export default function UserTable() {
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((item) =>
-        item.full_name?.toLowerCase().includes(filterValue.toLowerCase())
+        item.user_metadata.name
+          ?.toLowerCase()
+          .includes(filterValue.toLowerCase())
       );
     }
 
-    // if (statusFilter !== "all" && Array.from(statusFilter).length) {
-    //   filteredUsers = filteredUsers.filter((item) =>
-    //     Array.from(statusFilter).includes(item.status)
-    //   );
-    // }
+    if (rolesStatusFilter !== "all" && Array.from(rolesStatusFilter).length) {
+      filteredUsers = filteredUsers.filter((item) =>
+        Array.from(rolesStatusFilter).includes(item.app_metadata.roles?.[0])
+      );
+    }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter, hasSearchFilter]);
+  }, [users, filterValue, rolesStatusFilter, hasSearchFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -76,8 +78,8 @@ export default function UserTable() {
 
   return (
     <Table
-      isCompact
-      removeWrapper
+      isHeaderSticky
+      classNames={{ wrapper: ["shadow-none", "dark:bg-gray-900", "p-0"] }}
       aria-label="Rooms Table"
       bottomContent={
         <TableBottomContent
@@ -90,15 +92,15 @@ export default function UserTable() {
         />
       }
       bottomContentPlacement="outside"
-      selectedKeys={selectedKeys}
-      selectionMode="multiple"
+      // selectedKeys={selectedKeys}
+      // selectionMode="multiple"
       topContent={
         <TableTopContent
           filterValue={filterValue}
           onSearchChange={setFilterValue}
           setFilterValue={setFilterValue}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
+          rolesStatusFilter={rolesStatusFilter}
+          setRolesStatusFilter={setRolesStatusFilter}
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
@@ -129,7 +131,7 @@ export default function UserTable() {
           <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell className="capitalize">
-                {RenderCell(item, columnKey as string)}
+                <RenderCell user={item} columnKey={columnKey as string} />
               </TableCell>
             )}
           </TableRow>

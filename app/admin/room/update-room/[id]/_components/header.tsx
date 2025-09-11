@@ -4,7 +4,7 @@ import React from "react";
 
 export default function Header() {
   return (
-    <div>
+    <div className="px-2">
       <Breadcrumbs
         itemClasses={{
           item: ["data-[current=true]:text-primary transition-colors"],

@@ -39,7 +39,7 @@ export default function RoomForm({
       className="p-4 bg-white dark:bg-gray-900 rounded space-y-2 w-full"
     >
       <h1 className="text-2xl semi-bold">New Room</h1>
-      <div className="flex gap-8 w-full">
+      <div className="flex flex-col gap-8 w-full md:flex-row">
         {/* LEFT SIDE */}
         <div className="flex-1 flex flex-col gap-4">
           <h1>Basic Information</h1>
@@ -55,7 +55,7 @@ export default function RoomForm({
             labelPlacement="outside"
           />
 
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-4 md:flex-row">
             <Input
               className="w-full"
               label="Room Number"
@@ -90,7 +90,7 @@ export default function RoomForm({
             </Select>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 ">
             <Input
               className="w-full"
               label="Max guest"
@@ -131,7 +131,7 @@ export default function RoomForm({
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="flex-1 flex flex-col gap-4 ">
+        <div className="flex-1 flex flex-col gap-4">
           <h1>Room photo</h1>
           <hr className="border border-gray-400" />
           <ImagesUpload images={images} setImages={setImages} />

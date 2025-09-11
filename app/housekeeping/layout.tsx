@@ -12,7 +12,7 @@ export default function HousekeepingLayout({
       <Sidebar />
       <main className="w-full min-h-screen space-y-4">
         <Navbar />
-        <div className=" dark:bg-gray-800 rounded">{children}</div>
+        <div className="bg-white p-2 dark:bg-gray-800 rounded">{children}</div>
       </main>
     </div>
   );

@@ -128,7 +128,7 @@ export const deleteUser = createAsyncThunk<string, string>(
     } catch (error: any) {
       addToast({
         title: "Error",
-        description: error.message,
+        description: `Thunk Error: ${error.message}`,
         color: "danger",
       });
       return rejectWithValue(error.message);

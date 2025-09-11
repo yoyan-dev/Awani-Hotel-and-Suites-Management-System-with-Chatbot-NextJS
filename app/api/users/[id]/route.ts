@@ -1,7 +1,50 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { Room } from "@/types/room";
+import type { User } from "@/types/users";
 import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
+import { supabaseAdmin } from "@/lib/supabase/admin";
+
+//Get [id]
+export async function GET(
+  _req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+): Promise<NextResponse<ApiResponse>> {
+  const { id } = await context.params;
+
+  const { data: user, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching user:", error.message);
+    return NextResponse.json(
+      {
+        success: false,
+        message: {
+          title: "Error",
+          description: error.message,
+          color: "danger",
+        },
+      },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json(
+    {
+      success: true,
+      message: {
+        title: "success",
+        description: "",
+        color: "success",
+      },
+      data: user,
+    },
+    { status: 201 }
+  );
+}
 
 // UPDATE
 export async function PUT(
@@ -12,7 +55,7 @@ export async function PUT(
   const body = await req.json();
 
   const { data, error } = await supabase
-    .from("rooms")
+    .from("users")
     .update(body)
     .eq("id", id)
     .select()
@@ -40,7 +83,7 @@ export async function PUT(
         success: false,
         message: {
           title: "Error",
-          description: "Room not found",
+          description: "User not found",
           color: "error",
         },
       },
@@ -52,7 +95,7 @@ export async function PUT(
     success: true,
     message: {
       title: "Success",
-      description: "Room updated successfully",
+      description: "Account updated successfully",
       color: "success",
     },
     data: data,
@@ -64,34 +107,51 @@ export async function DELETE(
   _req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ): Promise<NextResponse<ApiResponse>> {
-  const { id } = await context.params;
+  try {
+    const { id } = await context.params;
 
-  const { error } = await supabase.from("rooms").delete().eq("id", id);
+    // Delete user from Supabase Auth
+    const { data, error } = await supabaseAdmin.auth.admin.deleteUser(id);
 
-  if (error) {
-    console.error("Delete error:", error);
+    if (error) {
+      console.error("Delete error:", error);
+      return NextResponse.json(
+        {
+          success: false,
+          message: {
+            title: "Error",
+            description: `DB Error: ${error.message}`,
+            color: "error",
+          },
+        },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: {
+          title: "Success",
+          description: "Account deleted successfully",
+          color: "success",
+        },
+        data: data,
+      },
+      { status: 200 }
+    );
+  } catch (err: any) {
+    console.error("Unexpected error:", err);
     return NextResponse.json(
       {
         success: false,
         message: {
           title: "Error",
-          description: error.message,
-          color: "error",
+          description: `Api Error: ${err.message}`,
+          color: "danger",
         },
       },
-      { status: 404 }
+      { status: 500 }
     );
   }
-
-  return NextResponse.json(
-    {
-      success: true,
-      message: {
-        title: "Success",
-        description: "Room deleted successfully",
-        color: "success",
-      },
-    },
-    { status: 200 }
-  );
 }

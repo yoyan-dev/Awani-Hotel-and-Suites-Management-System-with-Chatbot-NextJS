@@ -4,7 +4,10 @@ export type UserMetadata = {
   gender?: "male" | "female";
   address?: string;
   birthday?: string;
-  image?: string;
+  emergency_contact?: {
+    name: string;
+    phone: string;
+  };
 };
 
 export type AppMetadata = {
@@ -18,16 +21,9 @@ export type AppMetadata = {
   provider?: string;
 };
 
-export type User = {
+export type Admin = {
   id: string;
   email: string;
   user_metadata: UserMetadata;
   app_metadata: AppMetadata;
 };
-
-export interface UserState {
-  users: User[];
-  user: User;
-  isLoading: boolean;
-  error: string | undefined;
-}

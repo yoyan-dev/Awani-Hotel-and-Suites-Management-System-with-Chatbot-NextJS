@@ -19,8 +19,10 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, SearchIcon, Logo } from "@/components/icons";
 import { User } from "@heroui/react";
+import { usePathname } from "next/navigation";
 
 export default function AdminNavbar() {
+  const pathname = usePathname();
   // const searchInput = (
   //   <Input
   //     aria-label="Search"
@@ -54,8 +56,9 @@ export default function AdminNavbar() {
             <Image alt="Awani logo" src="/awani-logo.png" width={50} />
             <div>
               <p className="font-bold text-inherit">Awani</p>
-              <span className="text-gray-500 text-sm font-">
-                Hotel and suites management system
+              <span className="text-gray-500 text-sm flex gap-2">
+                Hotel and suites{" "}
+                <span className="hidden md:block">management system</span>
               </span>
             </div>
           </NextLink>
@@ -72,9 +75,6 @@ export default function AdminNavbar() {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
-        </Link>
         <ThemeSwitch />
         <NavbarMenuToggle />
       </NavbarContent>
@@ -84,20 +84,19 @@ export default function AdminNavbar() {
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href="#"
+                color={pathname === item.href ? "primary" : "foreground"}
+                href={item.href}
                 size="lg"
               >
                 {item.label}
               </Link>
             </NavbarMenuItem>
           ))}
+          <NavbarMenuItem key="logout">
+            <Link color="danger" href="/" size="lg">
+              Logout
+            </Link>
+          </NavbarMenuItem>
         </div>
       </NavbarMenu>
     </HeroUINavbar>
