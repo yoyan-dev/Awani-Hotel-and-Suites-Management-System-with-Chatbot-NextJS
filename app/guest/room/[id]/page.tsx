@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { Chip, Image } from "@heroui/react";
+import { Card, Chip, Image } from "@heroui/react";
 import { useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
@@ -32,10 +32,19 @@ export default function RoomDetails() {
             autoScrollInterval={2500}
             itemsPerView={1}
             dotType="image"
+            images={room.images}
           >
             {room.images?.map((src, index) => (
               <CarouselItem key={index}>
-                <Image src={src} />
+                <Card className="border-none" radius="lg">
+                  <Image
+                    alt="room image"
+                    className="object-cover"
+                    height={200}
+                    src={src}
+                    width={200}
+                  />
+                </Card>
               </CarouselItem>
             ))}
           </Carousel>
