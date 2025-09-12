@@ -5,8 +5,8 @@ import { useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchRoom } from "@/features/room/room-thunk";
-import { statusColorMap } from "../_components/table/constants";
 import { formatPHP } from "@/lib/format-php";
+import { Carousel, CarouselItem } from "@/components/ui/carousel";
 
 export default function RoomDetails() {
   const { id } = useParams();
@@ -26,13 +26,21 @@ export default function RoomDetails() {
   return (
     <div className="space-y-4">
       <div className="p-6 bg-white dark:bg-gray-900 rounded space-y-6">
-        <h1 className="text-2xl font-semibold">{room.name}</h1>
-        <div className="flex gap-2 items-center">
-          <Chip color={statusColorMap[room.status || "default"]} radius="sm">
-            {room.status}
-          </Chip>
-          <span className="text-gray-500">Room #{room.room_number}</span>
+        <div>
+          <Carousel
+            autoScroll
+            autoScrollInterval={2500}
+            itemsPerView={1}
+            dotType="image"
+          >
+            {room.images?.map((src, index) => (
+              <CarouselItem key={index}>
+                <Image src={src} />
+              </CarouselItem>
+            ))}
+          </Carousel>
         </div>
+        <h1 className="text-2xl font-semibold">{room.name}</h1>
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">

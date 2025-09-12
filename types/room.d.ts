@@ -20,6 +20,7 @@ export interface Room {
   facilities?: string[];
   status?: RoomStatus;
   images?: string[];
+  remarks?: string;
 }
 
 export interface RoomState {

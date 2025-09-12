@@ -46,8 +46,6 @@ export async function middleware(req: NextRequest) {
       redirectTo = "/admin";
     } else if (roles?.includes("housekeeping")) {
       redirectTo = "/housekeeping";
-    } else if (roles?.includes("front_office")) {
-      redirectTo = "/front_office";
     }
 
     return NextResponse.redirect(new URL(redirectTo, req.url));

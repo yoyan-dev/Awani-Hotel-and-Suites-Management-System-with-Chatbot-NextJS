@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Room } from "@/types/room";
-import { Button, Card, CardBody, Image, Spinner } from "@heroui/react";
+import { Button, Card, CardBody, Image, Link, Spinner } from "@heroui/react";
 import { ArrowUpRight, Bed, Tv, UserCircle, Wifi } from "lucide-react";
 import { formatPHP } from "@/lib/format-php";
 
@@ -50,7 +50,11 @@ export const RoomsCarousel: React.FC<RoomProps> = ({ rooms, isLoading }) => {
                     <p className="text-gray-700">
                       {formatPHP(Number(room.base_price))}
                     </p>
-                    <Button color="primary">
+                    <Button
+                      color="primary"
+                      as={Link}
+                      href={`/guest/room/${room.id}`}
+                    >
                       <ArrowUpRight />
                     </Button>
                   </div>

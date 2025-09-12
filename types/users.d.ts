@@ -8,11 +8,7 @@ export type UserMetadata = {
 };
 
 export type AppMetadata = {
-  roles?:
-    | ["admin", "editor"]
-    | ["front_office", "editor"]
-    | ["housekeeping", "editor"]
-    | ["guest"];
+  roles?: ["admin", "editor"] | ["housekeeping", "editor"] | ["guest"];
   department?: string;
   permissions?: string[];
   provider?: string;
