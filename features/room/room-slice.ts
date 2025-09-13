@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { Room, RoomState, RoomStatus } from "@/types/room";
+import type { Room, RoomPagination, RoomState, RoomStatus } from "@/types/room";
 import {
   fetchRoom,
   fetchRooms,
@@ -12,6 +12,7 @@ import {
 const initialState: RoomState = {
   rooms: [],
   room: {} as Room,
+  pagination: {} as RoomPagination,
   isLoading: false,
   error: undefined,
 };
@@ -46,11 +47,19 @@ const roomSlice = createSlice({
         state.isLoading = true;
         state.error = undefined;
       })
-      .addCase(fetchRooms.fulfilled, (state, action: PayloadAction<Room[]>) => {
-        state.isLoading = false;
-        state.rooms = action.payload;
-        state.error = undefined;
-      })
+      .addCase(
+        fetchRooms.fulfilled,
+        (
+          state,
+          action: PayloadAction<{ data: Room[]; pagination: RoomPagination }>
+        ) => {
+          state.isLoading = false;
+          state.rooms = action.payload.data;
+          state.pagination = action.payload.pagination;
+          state.error = undefined;
+        }
+      )
+
       .addCase(fetchRooms.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;

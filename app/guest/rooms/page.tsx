@@ -5,16 +5,19 @@ import { AppDispatch, RootState } from "@/store/store";
 import { fetchRooms } from "@/features/room/room-thunk";
 import { RoomsList } from "./_components/room-list";
 import { FetchRoomsParams } from "@/types/room";
+import Header from "./_components/header";
 
 export default function Page() {
   const [query, setQuery] = React.useState<FetchRoomsParams>({});
-  const { rooms, isLoading, error } = useSelector(
+  const { rooms, pagination, isLoading, error } = useSelector(
     (state: RootState) => state.room
   );
   const dispatch = useDispatch<AppDispatch>();
 
   function fetchQuery() {
-    dispatch(fetchRooms(query));
+    dispatch(
+      fetchRooms({ ...query, page: pagination?.page ? pagination.page : 1 })
+    );
   }
 
   useEffect(() => {
@@ -26,13 +29,15 @@ export default function Page() {
   }, [dispatch, query.roomType]);
 
   return (
-    <div className="p-4">
+    <div className="m-0 md:m-4 p-4 bg-white dark:bg-gray-800">
+      <Header />
       <RoomsList
         rooms={rooms}
         isLoading={isLoading}
         query={query}
         setQuery={setQuery}
         fetchQuery={fetchQuery}
+        pagination={pagination}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import { Room } from "@/types/room";
 import { Button, Card, CardBody, Image, Link, Spinner } from "@heroui/react";
 import { ArrowUpRight, Bed, Tv, UserCircle, Wifi } from "lucide-react";
 import { formatPHP } from "@/lib/format-php";
+import SkeletonLoader from "../skeleton-loader";
 
 interface RoomProps {
   rooms: Room[];
@@ -84,7 +85,11 @@ export const RoomsAndSuites: React.FC<RoomProps> = ({ rooms, isLoading }) => {
           </div>
         </section>
       ) : (
-        <Spinner label="Loading..." />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
+          {[1, 2, 3, 4, 5, 6].map((index) => (
+            <SkeletonLoader key={index} />
+          ))}
+        </div>
       )}
     </div>
   );

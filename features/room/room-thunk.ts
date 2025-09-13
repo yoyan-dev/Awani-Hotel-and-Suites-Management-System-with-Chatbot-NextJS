@@ -1,13 +1,14 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { FetchRoomsParams, Room } from "@/types/room";
+import type { FetchRoomsParams, Room, RoomPagination } from "@/types/room";
 import { addToast } from "@heroui/react";
 
 export const fetchRooms = createAsyncThunk<
-  Room[],
+  { data: Room[]; pagination: RoomPagination },
   FetchRoomsParams | undefined
 >("room/fetchRooms", async (params, { rejectWithValue }) => {
   try {
     const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append("page", String(params.page));
     if (params?.query) searchParams.append("q", params.query);
     if (params?.roomType) searchParams.append("roomType", params.roomType);
     if (params?.minPrice !== undefined)
@@ -23,7 +24,10 @@ export const fetchRooms = createAsyncThunk<
       return rejectWithValue(data.message ?? "Failed to fetch rooms");
     }
 
-    return data.data as Room[];
+    return data as {
+      data: Room[];
+      pagination: RoomPagination;
+    };
   } catch (error: any) {
     return rejectWithValue(error.message);
   }

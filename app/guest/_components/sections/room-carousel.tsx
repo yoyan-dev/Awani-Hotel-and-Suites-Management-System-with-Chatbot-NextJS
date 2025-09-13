@@ -14,6 +14,7 @@ import {
 import { ArrowUpRight, Bed, Tv, UserCircle, Wifi } from "lucide-react";
 import { formatPHP } from "@/lib/format-php";
 import { Carousel, CarouselItem } from "@/components/ui/carousel";
+import SkeletonLoader from "../skeleton-loader";
 
 interface RoomProps {
   rooms: Room[];
@@ -141,8 +142,10 @@ export const RoomsCarousel: React.FC<RoomProps> = ({ rooms, isLoading }) => {
           </Carousel>
         </section>
       ) : (
-        <div>
-          <Spinner label="Loading..." />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
+          {[1, 2, 3].map((index) => (
+            <SkeletonLoader key={index} />
+          ))}
         </div>
       )}
     </div>

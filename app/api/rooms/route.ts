@@ -13,6 +13,10 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   const roomType = searchParams.get("roomType") || "";
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
+  const page = Number(searchParams.get("page") || "1");
+  const limit = 10;
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
 
   let q = supabase.from("rooms").select("*");
 
@@ -29,9 +33,11 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   if (maxPrice && Number(maxPrice) !== 0)
     q = q.lte("base_price", Number(maxPrice));
 
-  const { data: roomData, error } = await q.order("base_price", {
-    ascending: true,
-  });
+  const {
+    data: roomData,
+    error,
+    count,
+  } = await q.order("base_price", { ascending: true }).range(from, to);
   if (error) {
     console.error("Error fetching rooms:", error.message);
     return NextResponse.json(
@@ -58,6 +64,12 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
         color: "success",
       },
       data: rooms,
+      pagination: {
+        page,
+        limit,
+        total: count ?? 0,
+        totalPages: Math.ceil((count ?? 0) / limit),
+      },
     },
     { status: 201 }
   );

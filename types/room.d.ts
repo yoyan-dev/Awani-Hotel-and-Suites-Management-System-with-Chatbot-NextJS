@@ -1,3 +1,5 @@
+import { Pagination } from "@supabase/supabase-js";
+
 export type RoomStatus =
   | "available"
   | "cleaning"
@@ -23,14 +25,22 @@ export interface Room {
   remarks?: string;
 }
 
+export interface RoomPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
 export interface RoomState {
   rooms: Room[];
   room: Room;
+  pagination: RoomPagination | null;
   isLoading: boolean;
   error?: string;
 }
 
 export interface FetchRoomsParams {
+  page?: number;
   query?: string;
   roomType?: string;
   minPrice?: number;

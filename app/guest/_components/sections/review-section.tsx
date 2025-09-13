@@ -33,17 +33,20 @@ const reviews = [
 
 export default function Testimonials() {
   return (
-    <section className="bg-white py-16 px-6 md:px-12">
+    <section className="bg-white dark:bg-gray-800 py-16 px-6 md:px-12">
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">Guest Reviews</h2>
+        <h2 className="text-3xl font-bold mb-6 ">Guest Reviews</h2>
         <p className="text-gray-600 mb-12">
           What our happy guests are saying about their stay.
         </p>
 
         <div className="grid md:grid-cols-3 gap-8">
           {reviews.map((review, idx) => (
-            <Card key={idx} className="shadow-lg border border-gray-100">
-              <CardBody className="flex flex-col items-center text-center p-6">
+            <Card
+              key={idx}
+              className="shadow-lg border border-gray-100 dark:border-gray-800"
+            >
+              <CardBody className="flex flex-col items-center text-center p-6 dark:bg-gray-900">
                 <Avatar src={review.avatar} size="lg" className="mb-4" />
                 <h4 className="font-semibold text-lg">{review.name}</h4>
                 <p className="text-gray-500 text-sm mb-2">{review.role}</p>
