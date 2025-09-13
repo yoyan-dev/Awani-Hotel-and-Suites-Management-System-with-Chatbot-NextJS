@@ -119,7 +119,6 @@ export default function AddModal() {
 
                   <Select label="Role" name="roles" placeholder="Select role">
                     <SelectItem key="admin">Admin</SelectItem>
-                    <SelectItem key="front_office">Front Office</SelectItem>
                     <SelectItem key="housekeeping">Housekeeping</SelectItem>
                     <SelectItem key="guest">Guest</SelectItem>
                   </Select>

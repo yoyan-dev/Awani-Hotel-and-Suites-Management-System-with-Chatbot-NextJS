@@ -77,16 +77,23 @@ export default function RoomForm({
             />
             <Select
               radius="none"
-              className="flex-1 w-full"
+              className="flex-1 w-full min-w-40"
               name="room_type"
               label="Room type"
               labelPlacement="outside"
               placeholder="Select Room Type"
               variant="bordered"
             >
-              <SelectItem key="single">Single</SelectItem>
-              <SelectItem key="double">Double</SelectItem>
-              <SelectItem key="suite">Suite</SelectItem>
+              <SelectItem key="delux">Delux</SelectItem>
+              <SelectItem key="standard">Standard</SelectItem>
+              <SelectItem key="executive">Executive</SelectItem>
+              <SelectItem key="junior room">Junior Room</SelectItem>
+              <SelectItem key="vip suites">VIP Suites</SelectItem>
+              <SelectItem key="two bedrooms executive">
+                Two Bedrooms Executive
+              </SelectItem>
+              <SelectItem key="family room(6)">Family Room(6)</SelectItem>
+              <SelectItem key="family room(7)">Family Room(7)</SelectItem>
             </Select>
           </div>
 
@@ -124,6 +131,15 @@ export default function RoomForm({
             name="description"
             labelPlacement="outside"
             placeholder="Briefly describe the hotel room..."
+            variant="bordered"
+          />
+          <Textarea
+            radius="none"
+            className="w-full"
+            label="Remarks"
+            name="remarks"
+            labelPlacement="outside"
+            placeholder="Room remarks..."
             variant="bordered"
           />
 

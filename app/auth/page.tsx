@@ -34,7 +34,7 @@ export default function Auth() {
     if (roles.includes("admin")) router.push("/admin");
     else if (roles.includes("front-office")) router.push("/front-office");
     else if (roles.includes("housekeeping")) router.push("/housekeeping");
-    else router.push("/housekeeping");
+    else router.push("/guest");
   }
 
   return (

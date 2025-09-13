@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchRoom } from "@/features/room/room-thunk";
 import { statusColorMap } from "../_components/table/constants";
+import { formatPHP } from "@/lib/format-php";
 
 export default function RoomDetails() {
   const { id } = useParams();
@@ -40,14 +41,15 @@ export default function RoomDetails() {
               <span className="font-medium">Type:</span> {room.room_type}
             </p>
             <p>
-              <span className="font-medium">Area:</span> {room.area} m²
+              <span className="font-medium">Area:</span> {room.area}
             </p>
             <p>
               <span className="font-medium">Max Guests:</span> {room.max_guest}
             </p>
             <p>
-              <span className="font-medium">Base Price:</span> $
-              {room.base_price}
+              <span className="font-medium">Base Price:</span>
+
+              {formatPHP(Number(room.base_price))}
             </p>
             <p className="text-gray-400">{room.description}</p>
           </div>
@@ -67,27 +69,26 @@ export default function RoomDetails() {
               ))}
             </div>
           </div>
-        </div>
-
-        <div>
-          <h2 className="font-semibold mb-2">Beds</h2>
-          <div className="flex flex-wrap gap-2">
-            {room.beds?.map((bed: string, i: number) => (
-              <Chip key={i} radius="sm" variant="bordered" color="primary">
-                {bed}
-              </Chip>
-            ))}
+          <div>
+            <h2 className="font-semibold mb-2">Beds</h2>
+            <div className="flex flex-wrap gap-2">
+              {room.beds?.map((bed: string, i: number) => (
+                <Chip key={i} radius="sm">
+                  {bed}
+                </Chip>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div>
-          <h2 className="font-semibold mb-2">Facilities & Services</h2>
-          <div className="flex flex-wrap gap-2">
-            {room.facilities?.map((fac: string, i: number) => (
-              <Chip key={i} radius="sm" variant="bordered" color="secondary">
-                {fac}
-              </Chip>
-            ))}
+          <div>
+            <h2 className="font-semibold mb-2">Facilities & Services</h2>
+            <div className="flex flex-wrap gap-2">
+              {room.facilities?.map((fac: string, i: number) => (
+                <Chip key={i} radius="sm">
+                  {fac}
+                </Chip>
+              ))}
+            </div>
           </div>
         </div>
       </div>

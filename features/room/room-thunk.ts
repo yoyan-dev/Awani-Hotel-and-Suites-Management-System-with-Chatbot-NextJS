@@ -1,26 +1,37 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { Room } from "@/types/room";
+import type { FetchRoomsParams, Room, RoomPagination } from "@/types/room";
 import { addToast } from "@heroui/react";
 
-export const fetchRooms = createAsyncThunk<Room[]>(
-  "room/fetchRooms",
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await fetch("/api/rooms");
-      const data = await res.json();
+export const fetchRooms = createAsyncThunk<
+  { data: Room[]; pagination: RoomPagination },
+  FetchRoomsParams | undefined
+>("room/fetchRooms", async (params, { rejectWithValue }) => {
+  try {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append("page", String(params.page));
+    if (params?.query) searchParams.append("q", params.query);
+    if (params?.roomType) searchParams.append("roomType", params.roomType);
+    if (params?.minPrice !== undefined)
+      searchParams.append("minPrice", String(params.minPrice));
+    if (params?.maxPrice !== undefined)
+      searchParams.append("maxPrice", String(params.maxPrice));
 
-      if (!res.ok || !data.success) {
-        addToast(data.message);
-        return rejectWithValue(
-          data.message?.description ?? "Failed to fetch rooms"
-        );
-      }
-      return data.data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    const res = await fetch(`/api/rooms?${searchParams.toString()}`);
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      addToast(data.message ?? "Failed to fetch rooms");
+      return rejectWithValue(data.message ?? "Failed to fetch rooms");
     }
+
+    return data as {
+      data: Room[];
+      pagination: RoomPagination;
+    };
+  } catch (error: any) {
+    return rejectWithValue(error.message);
   }
-);
+});
 
 export const fetchRoom = createAsyncThunk<Room, string>(
   "room/fetchRoom",

@@ -14,7 +14,6 @@ export const columns: ColumnType[] = [
 
 export const rolesOptions = [
   { name: "Admin", uid: "admin" },
-  { name: "Front Office", uid: "front_office" },
   { name: "Housekeeping", uid: "housekeeping" },
   { name: "Guest", uid: "guest" },
 ];
