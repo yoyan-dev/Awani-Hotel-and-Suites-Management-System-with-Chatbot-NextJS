@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchRooms } from "@/features/room/room-thunk";
 import { RoomsList } from "./_components/room-list";
-import { FetchRoomsParams } from "@/types/room";
+import { FetchRoomsParams, RoomPagination } from "@/types/room";
 import Header from "./_components/header";
 
 export default function Page() {
@@ -37,7 +37,7 @@ export default function Page() {
         query={query}
         setQuery={setQuery}
         fetchQuery={fetchQuery}
-        pagination={pagination}
+        pagination={pagination as RoomPagination}
       />
     </div>
   );
