@@ -29,3 +29,10 @@ export interface RoomState {
   isLoading: boolean;
   error?: string;
 }
+
+export interface FetchRoomsParams {
+  query?: string;
+  roomType?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}

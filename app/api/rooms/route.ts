@@ -6,9 +6,32 @@ import { ApiResponse } from "@/types/response";
 
 let rooms: Room[];
 
-export async function GET(): Promise<NextResponse<ApiResponse>> {
-  const { data: roomData, error } = await supabase.from("rooms").select("*");
+export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
+  const { searchParams } = new URL(req.url);
 
+  const query = searchParams.get("q") || "";
+  const roomType = searchParams.get("roomType") || "";
+  const minPrice = searchParams.get("minPrice");
+  const maxPrice = searchParams.get("maxPrice");
+
+  let q = supabase.from("rooms").select("*");
+
+  // Search by query if provided
+  if (query) {
+    q = q.or(`name.ilike.%${query}%,room_type.ilike.%${query}%`);
+  }
+
+  if (roomType) {
+    q = q.eq("room_type", roomType);
+  }
+
+  if (minPrice) q = q.gte("base_price", Number(minPrice));
+  if (maxPrice && Number(maxPrice) !== 0)
+    q = q.lte("base_price", Number(maxPrice));
+
+  const { data: roomData, error } = await q.order("base_price", {
+    ascending: true,
+  });
   if (error) {
     console.error("Error fetching rooms:", error.message);
     return NextResponse.json(
