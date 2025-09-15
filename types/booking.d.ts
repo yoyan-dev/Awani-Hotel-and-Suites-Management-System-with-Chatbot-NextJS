@@ -16,9 +16,9 @@ export interface Booking {
   user_id: string;
   check_in: string;
   check_out: string;
-  places_last_visited?: string[];
+  places_last_visited?: string;
   purpose?: string;
-  recent_sickness?: string;
+  recent_sickness?: string[];
   special_requests: string;
   status: BookingStatus;
   rooms?: any;

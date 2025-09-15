@@ -73,7 +73,7 @@ export const RoomsAndSuites: React.FC<RoomProps> = ({ rooms, isLoading }) => {
                       <Button
                         color="primary"
                         as={Link}
-                        href={`/guest/room/${room.id}`}
+                        href={`/guest/rooms/${room.id}`}
                       >
                         <ArrowUpRight />
                       </Button>

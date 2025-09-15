@@ -18,7 +18,7 @@ import type { RootState, AppDispatch } from "@/store/store";
 
 export default function RoomTable() {
   const dispatch = useDispatch<AppDispatch>();
-  const { rooms, isLoading, error } = useSelector(
+  const { rooms, pagination, isLoading, error } = useSelector(
     (state: RootState) => state.room
   );
 
@@ -28,15 +28,14 @@ export default function RoomTable() {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<any>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [page, setPage] = React.useState(1);
 
   React.useEffect(() => {
     dispatch(fetchRooms());
-    console.log(error);
+    console.log(pagination);
   }, [dispatch, error]);
 
-  const pages = Math.ceil(rooms.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
@@ -84,9 +83,9 @@ export default function RoomTable() {
           hasSearchFilter={hasSearchFilter}
           page={page}
           setPage={setPage}
-          pages={pages}
+          pages={pagination?.totalPages ?? 0}
           selectedKeys={selectedKeys}
-          itemsLength={items.length}
+          roomsCount={pagination?.total}
         />
       }
       bottomContentPlacement="outside"
@@ -102,7 +101,7 @@ export default function RoomTable() {
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
-          usersCount={rooms.length}
+          roomsCount={pagination?.total}
           selectedKeys={selectedKeys}
         />
       }

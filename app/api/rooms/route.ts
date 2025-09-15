@@ -18,7 +18,7 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  let q = supabase.from("rooms").select("*");
+  let q = supabase.from("rooms").select("*", { count: "exact" });
 
   // Search by query if provided
   if (query) {

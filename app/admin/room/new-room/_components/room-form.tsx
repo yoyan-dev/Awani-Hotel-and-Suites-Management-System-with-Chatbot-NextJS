@@ -84,7 +84,7 @@ export default function RoomForm({
               placeholder="Select Room Type"
               variant="bordered"
             >
-              <SelectItem key="delux">Delux</SelectItem>
+              <SelectItem key="deluxe">Deluxe</SelectItem>
               <SelectItem key="standard">Standard</SelectItem>
               <SelectItem key="executive">Executive</SelectItem>
               <SelectItem key="junior room">Junior Room</SelectItem>

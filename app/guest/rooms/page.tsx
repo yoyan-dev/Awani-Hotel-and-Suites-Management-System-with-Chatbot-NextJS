@@ -29,7 +29,7 @@ export default function Page() {
   }, [dispatch, query.roomType]);
 
   return (
-    <div className="m-0 md:m-4 p-4 bg-white dark:bg-gray-800">
+    <div className="m-0 md:m-4 p-4 bg-white dark:bg-gray-800 space-y-4">
       <Header />
       <RoomsList
         rooms={rooms}

@@ -99,12 +99,12 @@ export const siteConfig = {
       href: "/guest",
     },
     {
-      label: "About Us",
-      href: "/guest/about",
-    },
-    {
       label: "Rooms",
       href: "/guest/rooms",
+    },
+    {
+      label: "About Us",
+      href: "/guest/about",
     },
     {
       label: "Contact",

@@ -7,7 +7,7 @@ interface Props {
   setPage: (val: number) => void;
   pages: number;
   selectedKeys: any;
-  itemsLength: number;
+  roomsCount: any;
 }
 
 export const TableBottomContent: React.FC<Props> = ({
@@ -16,7 +16,7 @@ export const TableBottomContent: React.FC<Props> = ({
   setPage,
   pages,
   selectedKeys,
-  itemsLength,
+  roomsCount,
 }) => {
   return (
     <div className="py-2 px-2 flex justify-between items-center">
@@ -32,7 +32,7 @@ export const TableBottomContent: React.FC<Props> = ({
       <span className="text-small text-default-400">
         {selectedKeys === "all"
           ? "All items selected"
-          : `${selectedKeys.size} of ${itemsLength} selected`}
+          : `${selectedKeys.size} of ${roomsCount} selected`}
       </span>
     </div>
   );
