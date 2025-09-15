@@ -124,7 +124,7 @@ export const RoomsList: React.FC<RoomProps> = ({
                 radius="md"
                 key={room.id}
                 as={Link}
-                href={`/guest/room/${room.id}`}
+                href={`/guest/rooms/${room.id}`}
                 className="hover:shadow-md transition-shadow"
               >
                 <CardBody className="overflow-hidden p-0 dark:bg-gray-900">
@@ -167,7 +167,7 @@ export const RoomsList: React.FC<RoomProps> = ({
               </Card>
             ))}
           </div>
-          {pagination && (
+          {pagination && pagination.page <= pagination.totalPages && (
             <div className="flex gap-2 mt-4">
               <button
                 disabled={pagination.page <= 1}
