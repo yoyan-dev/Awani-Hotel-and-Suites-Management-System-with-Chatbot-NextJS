@@ -1,39 +1,45 @@
-import { formatPHP } from "@/lib/format-php";
-import { Card, CardBody, CardHeader, Image } from "@heroui/react";
-import { UserCircle, Bed, Wifi, Tv } from "lucide-react";
 import React from "react";
+import { formatPHP } from "@/lib/format-php";
+import { Room } from "@/types/room";
+import { Image, Spinner } from "@heroui/react";
+import { UserCircle, Bed, Wifi, Tv } from "lucide-react";
+interface SelectedRoomProps {
+  room: Room;
+  isLoading: boolean;
+}
 
-export default function SelectedRoom() {
+const SelectedRoom: React.FC<SelectedRoomProps> = ({ room, isLoading }) => {
+  if (isLoading || !room) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Spinner size="lg" label="Loading room details..." />
+      </div>
+    );
+  }
   return (
-    <Card isHoverable className="max-w-2xl shadow-lg">
-      <CardHeader className="flex flex-col items-start gap-2">
+    <div className="flex-1 ">
+      <div className="flex flex-col items-start gap-2">
         <div className="flex justify-between items-center flex-wrap  w-full">
-          <h2 className="text-2xl font-semibold">Deluxe Room</h2>
-          <p className="text-xl font-semibold">{formatPHP(1000)}</p>
+          <h2 className="text-2xl font-semibold capitalize">
+            {room.room_type}
+          </h2>
+          <p className="text-xl font-semibold">
+            {formatPHP(Number(room.base_price))}
+          </p>
         </div>
-        <p className="text-gray-500 text-sm">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit amet
-          accusantium voluptatibus.
-        </p>
-      </CardHeader>
+        <p className="text-gray-500 text-sm">{room.description}</p>
+      </div>
 
-      <CardBody className="space-y-6">
+      <div className="space-y-6">
         <div className="flex gap-2 overflow-x-auto">
-          <Image
-            src="/bg.jpg"
-            alt="room image"
-            className="rounded-lg w-40 h-28 object-cover"
-          />
-          <Image
-            src="/bg.jpg"
-            alt="room image"
-            className="rounded-lg w-40 h-28 object-cover"
-          />
-          <Image
-            src="/bg.jpg"
-            alt="room image"
-            className="rounded-lg w-40 h-28 object-cover"
-          />
+          {room.images?.map((img, index) => (
+            <Image
+              key={index}
+              src={img}
+              alt="room image"
+              className="rounded-lg w-40 h-28 object-cover"
+            />
+          ))}
         </div>
 
         <div>
@@ -53,7 +59,9 @@ export default function SelectedRoom() {
             </div>
           </div>
         </div>
-      </CardBody>
-    </Card>
+      </div>
+    </div>
   );
-}
+};
+
+export default SelectedRoom;
