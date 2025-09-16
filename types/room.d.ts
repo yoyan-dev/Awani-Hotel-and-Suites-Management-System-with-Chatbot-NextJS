@@ -8,6 +8,23 @@ export type RoomStatus =
   | "maintenance"
   | "out_of_service";
 
+export interface RoomType {
+  id?: string;
+  image?: string;
+  name?: string;
+  description?: string;
+  amenities?: string[];
+  room_size?: string;
+  price?: number;
+}
+
+export interface RoomTypeState {
+  room_types: Room[];
+  room_type: Room;
+  isLoading: boolean;
+  error?: string;
+}
+
 export interface Room {
   id?: string;
   room_id?: string;
