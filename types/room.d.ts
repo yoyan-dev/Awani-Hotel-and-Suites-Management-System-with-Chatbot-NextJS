@@ -19,8 +19,8 @@ export interface RoomType {
 }
 
 export interface RoomTypeState {
-  room_types: Room[];
-  room_type: Room;
+  room_types: RoomType[];
+  room_type: RoomType;
   isLoading: boolean;
   error?: string;
 }
