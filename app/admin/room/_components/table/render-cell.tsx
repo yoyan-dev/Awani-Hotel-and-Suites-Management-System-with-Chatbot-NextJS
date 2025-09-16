@@ -45,6 +45,8 @@ export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
       );
     case "base_price":
       return formatPHP(room.base_price || 0);
+    case "room_type":
+      return room.room_type?.name;
     case "status":
       return (
         <div>

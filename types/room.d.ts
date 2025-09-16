@@ -29,8 +29,8 @@ export interface Room {
   id?: string;
   room_id?: string;
   room_number?: number;
-  room_type?: string;
-  name?: string;
+  room_type_id?: string;
+  room_type?: any;
   area?: string;
   description?: string;
   max_guest?: number;

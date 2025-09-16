@@ -50,7 +50,7 @@ export default function RoomTable() {
 
     if (hasSearchFilter) {
       filteredRooms = filteredRooms.filter((room) =>
-        room.name?.toLowerCase().includes(filterValue.toLowerCase())
+        room.room_type?.name?.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
