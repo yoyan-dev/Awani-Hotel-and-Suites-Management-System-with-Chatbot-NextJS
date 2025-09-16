@@ -11,7 +11,10 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/store";
 import { RoomType } from "@/types/room";
-import { deleteRoomType } from "@/features/room-types/room-types-thunk";
+import {
+  deleteRoomType,
+  fetchRoomTypes,
+} from "@/features/room-types/room-types-thunk";
 
 interface DeleteModalProps {
   room_type: RoomType;
@@ -25,14 +28,17 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ room_type }) => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  function handleDelete() {
-    dispatch(deleteRoomType(room_type.id || ""));
+  async function handleDelete() {
+    await dispatch(deleteRoomType(room_type.id || ""));
+    dispatch(fetchRoomTypes());
   }
 
-  console.log(room_type);
+  console.log(room_type.id);
   return (
     <>
-      <div onClick={onOpen}>Delete</div>
+      <div onClick={onOpen} className="text-danger">
+        Delete
+      </div>
       <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

@@ -51,7 +51,7 @@ export const TableTopContent: React.FC<Props> = ({
           onValueChange={onSearchChange}
         />
         <div className="flex gap-3">
-          <Dropdown>
+          {/* <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
               <Button
                 endContent={<ChevronDown className="text-small" />}
@@ -75,7 +75,7 @@ export const TableTopContent: React.FC<Props> = ({
                 </DropdownItem>
               ))}
             </DropdownMenu>
-          </Dropdown>
+          </Dropdown> */}
           <AddModal />
         </div>
       </div>
@@ -84,7 +84,7 @@ export const TableTopContent: React.FC<Props> = ({
           Total {itemsCount} room types
         </span>
         <label className="flex items-center text-default-400 text-small">
-          Rows per page: 10
+          Rows per page: 5
         </label>
       </div>
     </div>

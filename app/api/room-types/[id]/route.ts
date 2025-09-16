@@ -11,7 +11,7 @@ export async function PUT(
   const body = await req.json();
 
   const { data, error } = await supabase
-    .from("inventory")
+    .from("room_types")
     .update(body)
     .eq("id", id)
     .select()
@@ -51,7 +51,7 @@ export async function PUT(
     success: true,
     message: {
       title: "Success",
-      description: "Item in inventory updated successfully",
+      description: "Room types updated successfully",
       color: "success",
     },
     data: data,
@@ -65,7 +65,10 @@ export async function DELETE(
 ): Promise<NextResponse<ApiResponse>> {
   const { id } = await context.params;
 
-  const { error } = await supabase.from("inventory").delete().eq("id", id);
+  const { data, error } = await supabase
+    .from("room_types")
+    .delete()
+    .eq("id", id);
 
   if (error) {
     console.error("Delete error:", error);
@@ -87,9 +90,10 @@ export async function DELETE(
       success: true,
       message: {
         title: "Success",
-        description: "Item deleted successfully",
+        description: "Room types deleted successfully",
         color: "success",
       },
+      data: data,
     },
     { status: 200 }
   );

@@ -155,7 +155,9 @@ export const RoomsList: React.FC<RoomProps> = ({
 
                 <CardFooter className="text-sm text-left dark:bg-gray-900 p-3">
                   <div className="flex flex-col gap-1">
-                    <b className="capitalize text-base">{room.room_type}</b>
+                    <b className="capitalize text-base">
+                      {room.room_type?.name ?? ""}
+                    </b>
                     <span className="text-gray-500 line-clamp-2">
                       {room.description}
                     </span>
