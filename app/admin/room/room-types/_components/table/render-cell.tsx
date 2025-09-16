@@ -48,9 +48,9 @@ export const RenderCell: React.FC<RenderCellProps> = ({
             </DropdownTrigger>
             <DropdownMenu>
               <DropdownItem key="view">View</DropdownItem>
-              {/* <DropdownItem key="edit">
-                <UpdateModal inventory={inventory} />
-              </DropdownItem> */}
+              <DropdownItem key="edit">
+                <UpdateModal room_type={room_type} />
+              </DropdownItem>
               <DropdownItem key="delete">
                 <DeleteModal room_type={room_type} />
               </DropdownItem>

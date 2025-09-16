@@ -83,8 +83,6 @@ export default function RoomTypesTable() {
         />
       }
       bottomContentPlacement="outside"
-      selectedKeys={selectedKeys}
-      selectionMode="multiple"
       topContent={
         <TableTopContent
           filterValue={filterValue}

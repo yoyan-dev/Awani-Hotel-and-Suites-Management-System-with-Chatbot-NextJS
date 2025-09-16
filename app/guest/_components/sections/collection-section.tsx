@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
-import { Room } from "@/types/room";
+import { RoomType } from "@/types/room";
 import { Button, Card, CardBody, Image, Link, Spinner } from "@heroui/react";
 import { ArrowUpRight, Bed, Tv, UserCircle, Wifi } from "lucide-react";
 import { formatPHP } from "@/lib/format-php";
 import SkeletonLoader from "../skeleton-loader";
 
 interface RoomProps {
-  rooms: Room[];
+  rooms: RoomType[];
   isLoading: boolean;
 }
 export const RoomsAndSuites: React.FC<RoomProps> = ({ rooms, isLoading }) => {
@@ -30,19 +30,13 @@ export const RoomsAndSuites: React.FC<RoomProps> = ({ rooms, isLoading }) => {
             <h1 className="text-2xl">Explore Rooms And Suites</h1>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
-            {randomRooms.map((room: Room) => (
+            {randomRooms.map((room) => (
               <Card key={room.id} isHoverable>
                 <CardBody className="dark:bg-gray-900">
-                  <Image
-                    src="/bg.jpg"
-                    alt={room.room_type}
-                    className="rounded-lg"
-                  />
+                  <Image src="/bg.jpg" alt={room.name} className="rounded-lg" />
                   <div className="mt-4 flex flex-col h-full gap-4 justify-between">
                     <div>
-                      <p className="font-semibold capitalize">
-                        {room.room_type}
-                      </p>
+                      <p className="font-semibold capitalize">{room.name}</p>
                       <p className="font-light text-gray-500">
                         {room.description}
                       </p>
@@ -68,7 +62,7 @@ export const RoomsAndSuites: React.FC<RoomProps> = ({ rooms, isLoading }) => {
                     </div>
                     <div className="flex justify-between items-center">
                       <p className="text-gray-700">
-                        {formatPHP(Number(room.base_price))}
+                        {formatPHP(Number(room.price))}
                       </p>
                       <Button
                         color="primary"

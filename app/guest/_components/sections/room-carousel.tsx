@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Room } from "@/types/room";
+import { RoomType } from "@/types/room";
 import {
   Button,
   Card,
@@ -17,7 +17,7 @@ import { Carousel, CarouselItem } from "@/components/ui/carousel";
 import SkeletonLoader from "../skeleton-loader";
 
 interface RoomProps {
-  rooms: Room[];
+  rooms: RoomType[];
   isLoading: boolean;
 }
 export const RoomsCarousel: React.FC<RoomProps> = ({ rooms, isLoading }) => {
@@ -110,22 +110,18 @@ export const RoomsCarousel: React.FC<RoomProps> = ({ rooms, isLoading }) => {
                     removeWrapper
                     alt="Relaxing app background"
                     className="z-0 w-full h-full object-cover"
-                    src={room.images?.[0] || "/bg.jpg"}
+                    src={room.image || "/bg.jpg"}
                   />
                   <CardFooter className="absolute flex gap-2 bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
                     <div className="flex grow gap-2 items-center">
                       <Image
                         alt="Breathing app icon"
                         className="rounded-full w-10 h-10 bg-black"
-                        src={
-                          room.images?.[
-                            Math.floor(Math.random() * room.images?.length)
-                          ] || "/bg.jpg"
-                        }
+                        src={room.image || "/bg.jpg"}
                       />
                       <div className="flex flex-col">
                         <p className="text-tiny text-white/60 capitalize">
-                          {room.room_type}
+                          {room.name}
                         </p>
                         <p className="text-tiny text-white/60">
                           {room.description}
@@ -133,7 +129,7 @@ export const RoomsCarousel: React.FC<RoomProps> = ({ rooms, isLoading }) => {
                       </div>
                     </div>
                     <span className="px-2 bg-white dark:bg-gray-800 dark:text-white">
-                      {formatPHP(Number(room.base_price))}
+                      {formatPHP(Number(room.price))}
                     </span>
                   </CardFooter>
                 </Card>
