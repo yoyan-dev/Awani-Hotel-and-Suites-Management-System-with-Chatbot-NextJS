@@ -1,4 +1,18 @@
-import { Bed, Home, Inbox, LogOut, Settings, User } from "lucide-react";
+import {
+  Bed,
+  BrushCleaning,
+  ChartPie,
+  Home,
+  icons,
+  Inbox,
+  LogOut,
+  Notebook,
+  Settings,
+  ShieldUser,
+  ShoppingCart,
+  User,
+  Users,
+} from "lucide-react";
 
 export type SiteConfig = typeof siteConfig;
 
@@ -9,22 +23,56 @@ export const siteConfig = {
     {
       label: "Dashboard",
       href: "/admin",
+      isExpandable: false,
+      icon: ChartPie,
     },
     {
-      label: "Rooms",
+      label: "Room Management",
       href: "/admin/room",
+      isExpandable: true,
+      icon: Bed,
     },
     {
       label: "Inventory",
       href: "/admin/inventory",
+      isExpandable: false,
+      icon: ShoppingCart,
     },
     {
       label: "Bookings",
       href: "/admin/booking",
+      isExpandable: false,
+      icon: Notebook,
     },
     {
       label: "Housekeeping",
-      href: "/housekeeping",
+      href: "/admin/housekeeping",
+      isExpandable: false,
+      icon: BrushCleaning,
+    },
+    {
+      label: "Guest",
+      href: "/admin/guest",
+      isExpandable: false,
+      icon: Users,
+    },
+    {
+      label: "Account Management",
+      href: "/admin/account",
+      isExpandable: false,
+      icon: ShieldUser,
+    },
+    {
+      label: "Settings",
+      href: "/admin/settings",
+      isExpandable: false,
+      icon: Settings,
+    },
+    {
+      label: "Log out",
+      href: "/",
+      isExpandable: false,
+      icon: LogOut,
     },
   ],
   navMenuItems: [

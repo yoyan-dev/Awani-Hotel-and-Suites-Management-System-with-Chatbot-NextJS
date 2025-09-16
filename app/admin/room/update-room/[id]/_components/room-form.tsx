@@ -7,7 +7,7 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
-import { Room } from "@/types/room";
+import { Room, RoomType } from "@/types/room";
 import BedsInput from "./beds-input";
 import FacilitiesInput from "./facilities-input";
 import ImagesUpload from "./image-upload";
@@ -22,6 +22,8 @@ interface RoomFormProps {
   setFacilities: React.Dispatch<React.SetStateAction<string[]>>;
   images: any[];
   setImages: React.Dispatch<React.SetStateAction<any[]>>;
+  roomTypes: RoomType[];
+  roomTypeIsLoading: boolean;
   isLoading: boolean;
 }
 
@@ -35,6 +37,8 @@ export default function RoomForm({
   setFacilities,
   images,
   setImages,
+  roomTypes,
+  roomTypeIsLoading,
   isLoading,
 }: RoomFormProps) {
   return (
@@ -48,18 +52,6 @@ export default function RoomForm({
         <div className="flex-1 flex flex-col gap-4">
           <h1>Basic Information</h1>
           <hr className="border border-gray-400" />
-
-          <Input
-            className="w-full"
-            label="Room Name"
-            value={formData?.name ?? ""}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Enter room name"
-            name="name"
-            variant="bordered"
-            radius="none"
-            labelPlacement="outside"
-          />
 
           <div className="flex flex-col gap-4 md:flex-row">
             <Input
@@ -92,32 +84,32 @@ export default function RoomForm({
               radius="none"
               labelPlacement="outside"
             />
-            <Select
-              radius="none"
-              className="flex-1 w-full min-w-40"
-              name="room_type"
-              label="Room type"
-              value={formData?.room_type ?? ""}
-              defaultSelectedKeys={[formData.room_type || ""]}
-              onChange={(e) =>
-                setFormData({ ...formData, room_type: e.target.value })
-              }
-              labelPlacement="outside"
-              placeholder="Select Room Type"
-              variant="bordered"
-            >
-              <SelectItem key="delux">Delux</SelectItem>
-              <SelectItem key="standard">Standard</SelectItem>
-              <SelectItem key="executive">Executive</SelectItem>
-              <SelectItem key="junior room">Junior Room</SelectItem>
-              <SelectItem key="vip suites">VIP Suites</SelectItem>
-              <SelectItem key="two bedrooms executive">
-                Two Bedrooms Executive
-              </SelectItem>
-              <SelectItem key="family room(6)">Family Room(6)</SelectItem>
-              <SelectItem key="family room(7)">Family Room(7)</SelectItem>
-            </Select>
           </div>
+          <Select
+            isLoading={roomTypeIsLoading}
+            radius="none"
+            className="flex-1 w-full min-w-40"
+            name="room_type"
+            label="Room type"
+            defaultSelectedKeys={[formData.room_type_id || ""]}
+            onChange={(e) =>
+              setFormData({ ...formData, room_type_id: e.target.value })
+            }
+            labelPlacement="outside"
+            placeholder="Select Room Type"
+            variant="bordered"
+          >
+            {roomTypes.map((type) => (
+              <SelectItem key={type.id} textValue={type.name}>
+                <div className="flex flex-col">
+                  <span className="text-small">{type.name}</span>
+                  <span className="text-tiny text-gray-600 dark:text-gray-300">
+                    {type.amenities?.map((amenity) => `${amenity}, `)}
+                  </span>
+                </div>
+              </SelectItem>
+            ))}
+          </Select>
 
           <div className="flex gap-4">
             <Input

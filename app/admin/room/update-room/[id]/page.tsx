@@ -9,11 +9,15 @@ import { uploadRoomImage } from "@/lib/upload-room-image";
 import { setLoading } from "@/features/room/room-slice";
 import RoomForm from "./_components/room-form";
 import Header from "./_components/header";
+import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
 
 export default function Page() {
   const { id } = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const { room, isLoading } = useSelector((state: RootState) => state.room);
+  const { room_types, isLoading: roomTypeIsLoading } = useSelector(
+    (state: RootState) => state.room_type
+  );
 
   const [formData, setFormData] = useState<Room>({});
   const [images, setImages] = useState<any[]>([]);
@@ -22,7 +26,8 @@ export default function Page() {
 
   useEffect(() => {
     if (id) dispatch(fetchRoom(id as string));
-  }, [dispatch, id]);
+    dispatch(fetchRoomTypes());
+  }, [dispatch, id, fetchRoomTypes]);
 
   useEffect(() => {
     if (room) {
@@ -76,6 +81,8 @@ export default function Page() {
         setFacilities={setFacilities}
         images={images}
         setImages={setImages}
+        roomTypes={room_types}
+        roomTypeIsLoading={roomTypeIsLoading}
         isLoading={isLoading}
       />
     </div>

@@ -18,7 +18,33 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  let q = supabase.from("rooms").select("*", { count: "exact" });
+  let q = supabase.from("rooms").select(
+    `
+    id,
+    room_id,
+    room_number,
+    room_type_id,
+    room_type:room_type_id (
+      id,
+      image,
+      name,
+      description,
+      amenities,
+      room_size,
+      price
+    ),
+    area,
+    description,
+    max_guest,
+    base_price,
+    beds,
+    facilities,
+    status,
+    images,
+    remarks
+  `,
+    { count: "exact" }
+  );
 
   // Search by query if provided
   if (query) {
@@ -54,6 +80,12 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   }
 
   console.log("Room data:", roomData);
+  const normalizedRooms: Room[] = roomData.map((room) => ({
+    ...room,
+    room_type: Array.isArray(room.room_type)
+      ? room.room_type[0]
+      : room.room_type,
+  }));
   rooms = roomData || [];
   return NextResponse.json(
     {

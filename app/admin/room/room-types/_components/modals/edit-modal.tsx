@@ -1,0 +1,147 @@
+import React from "react";
+import {
+  Form,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+  Checkbox,
+  Input,
+  Link,
+  Select,
+  SelectItem,
+  Image,
+  Textarea,
+} from "@heroui/react";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch, type RootState } from "@/store/store";
+import { UpdateItem } from "@/features/inventory/inventory-thunk";
+import { Plus } from "lucide-react";
+import { Inventory } from "@/types/inventory";
+interface UpdateModalProps {
+  inventory: Inventory;
+}
+
+const UpdateModal: React.FC<UpdateModalProps> = ({ inventory }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, error } = useSelector(
+    (state: RootState) => state.inventory
+  );
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+  const [item, setItem] = React.useState<Inventory>(inventory);
+  const [submitted, setSubmitted] = React.useState(null);
+
+  async function onSubmit(
+    e: React.FormEvent<HTMLFormElement>,
+    payload: Inventory
+  ) {
+    e.preventDefault();
+
+    await dispatch(UpdateItem(payload));
+    onClose();
+  }
+
+  return (
+    <>
+      <div onClick={onOpen} className="text-success">
+        Edit
+      </div>
+      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Updae Item
+              </ModalHeader>
+              <ModalBody>
+                <Form
+                  className="w-full space-y-4"
+                  onReset={() => setSubmitted(null)}
+                  onSubmit={(e) => onSubmit(e, item)}
+                >
+                  <div className="flex gap-2 w-full">
+                    <div className="flex-1 w-full p-4 border-l border-gray-500 space-y-8">
+                      <div className="flex gap-4 w-full">
+                        <Input
+                          className="flex-1 w-full"
+                          label="Name"
+                          placeholder="Item name"
+                          value={item.name}
+                          onChange={(e) =>
+                            setItem({ ...item, name: e.target.value })
+                          }
+                          name="name"
+                          variant="bordered"
+                          labelPlacement="outside"
+                        />
+                        <Input
+                          className="flex-1 w-full"
+                          label="Quantity"
+                          placeholder="Item quantity"
+                          name="quantity"
+                          value={item.quantity.toString() ?? ""}
+                          onChange={(e) =>
+                            setItem({
+                              ...item,
+                              quantity: Number(e.target.value),
+                            })
+                          }
+                          variant="bordered"
+                          labelPlacement="outside"
+                        />
+                      </div>
+                      <Textarea
+                        name="description"
+                        value={item.description}
+                        onChange={(e) =>
+                          setItem({ ...item, description: e.target.value })
+                        }
+                        placeholder="Item description"
+                        label="Description"
+                        labelPlacement="outside"
+                        variant="bordered"
+                      />
+                      <Select
+                        className="flex-1 w-full"
+                        name="status"
+                        label="Item status"
+                        labelPlacement="outside"
+                        placeholder="Select Item status"
+                        variant="bordered"
+                        defaultSelectedKeys={[item.status || "in-stock"]}
+                        value={item.status}
+                        onChange={(e) =>
+                          setItem({
+                            ...item,
+                            status: e.target.value as Inventory["status"],
+                          })
+                        }
+                      >
+                        <SelectItem key="in-stock">In stock</SelectItem>
+                        <SelectItem key="out-of-stock">Out of stock</SelectItem>
+                        <SelectItem key="unavailable">unavailable</SelectItem>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-4 w-full">
+                    <Button onPress={onClose} variant="bordered">
+                      Cancel
+                    </Button>
+                    <Button color="primary" type="submit" isLoading={isLoading}>
+                      Submit
+                    </Button>
+                  </div>
+                </Form>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
+
+export default UpdateModal;

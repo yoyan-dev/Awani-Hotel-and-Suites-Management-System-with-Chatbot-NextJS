@@ -13,7 +13,16 @@ import {
   BrushCleaning,
   Users,
 } from "lucide-react";
-import { Listbox, ListboxItem, cn, User } from "@heroui/react";
+import {
+  Listbox,
+  ListboxItem,
+  cn,
+  User,
+  Accordion,
+  AccordionItem,
+} from "@heroui/react";
+import { siteConfig } from "@/config/site";
+import { useState } from "react";
 
 export const ListboxWrapper = ({ children }: any) => {
   return (
@@ -24,6 +33,7 @@ export const ListboxWrapper = ({ children }: any) => {
 };
 
 export default function Sidebar() {
+  const [openItem, setOpenItem] = useState<string | null>(null);
   const pathname = usePathname();
 
   return (
@@ -41,127 +51,28 @@ export default function Sidebar() {
             name="Jane Doe"
           />
         </NextLink>
-        <Listbox aria-label="Listbox menu with icons" variant="faded">
-          <ListboxItem
-            className={
-              pathname === "/admin"
-                ? "bg-primary-400 text-white dark:text-primary-50"
-                : ""
-            }
-            as={NextLink}
-            href="/admin"
-            key="home"
-            startContent={<ChartPie />}
-          >
-            Dashboard
-          </ListboxItem>
-          <ListboxItem
-            className={
-              pathname.includes("admin/room") || pathname === "/admin/room"
-                ? "bg-primary-400 text-white dark:text-primary-50"
-                : ""
-            }
-            as={NextLink}
-            href="/admin/room"
-            key="room"
-            startContent={<Bed />}
-          >
-            Rooms
-          </ListboxItem>
-          <ListboxItem
-            className={
-              pathname === "/admin/inventory"
-                ? "bg-primary-400 text-white dark:text-primary-50"
-                : ""
-            }
-            as={NextLink}
-            href="/admin/inventory"
-            key="inventory"
-            startContent={<ShoppingCart />}
-          >
-            Inventory
-          </ListboxItem>
-          <ListboxItem
-            className={
-              pathname === "/admin/booking"
-                ? "bg-primary-400 text-white dark:text-primary-50"
-                : ""
-            }
-            as={NextLink}
-            href="/admin/booking"
-            key="booking"
-            startContent={<Notebook />}
-          >
-            Bookings
-          </ListboxItem>
-          {/* <ListboxItem  as={NextLink} href="/admin/feedback"
-            key="feedback"
-            startContent={<Bookmark />}
-          >
-            Feedbacks
-          </ListboxItem> */}
-          <ListboxItem
-            className={
-              pathname === "/admin/housekeeping"
-                ? "bg-primary-400 text-white dark:text-primary-50"
-                : ""
-            }
-            as={NextLink}
-            href="/admin/housekeeping"
-            key="housekeeping"
-            startContent={<BrushCleaning />}
-          >
-            Housekeeping
-          </ListboxItem>
-          <ListboxItem
-            className={
-              pathname === "/admin/guest"
-                ? "bg-primary-400 text-white dark:text-primary-50"
-                : ""
-            }
-            as={NextLink}
-            href="/admin/guest"
-            key="guest"
-            startContent={<Users />}
-          >
-            Guest
-          </ListboxItem>
-          <ListboxItem
-            className={
-              pathname === "/admin/account"
-                ? "bg-primary-400 text-white dark:text-primary-50"
-                : ""
-            }
-            as={NextLink}
-            href="/admin/account"
-            key="account"
-            startContent={<ShieldUser />}
-          >
-            Account Management
-          </ListboxItem>
-          <ListboxItem
-            className={
-              pathname === "/admin/setting"
-                ? "bg-primary-400 text-white dark:text-primary-50"
-                : ""
-            }
-            as={NextLink}
-            href="/admin/settings"
-            key="setting"
-            showDivider
-            startContent={<Settings />}
-          >
-            Settings
-          </ListboxItem>
-          <ListboxItem
-            as={NextLink}
-            href="/admin"
-            key="logout"
-            color="danger"
-            startContent={<CircleArrowOutDownLeft />}
-          >
-            Log out
-          </ListboxItem>
+        <Listbox
+          items={siteConfig.navItems}
+          aria-label="Listbox menu with icons"
+          variant="faded"
+        >
+          {(item) => (
+            <ListboxItem
+              key={item.href}
+              as={NextLink}
+              href={item.href}
+              className={
+                pathname === item.href
+                  ? "bg-primary-400 text-white dark:text-primary-50"
+                  : item.label === "Logout"
+                    ? "text-warning"
+                    : ""
+              }
+              startContent={<item.icon />}
+            >
+              {item.label}
+            </ListboxItem>
+          )}
         </Listbox>
       </ListboxWrapper>
     </div>

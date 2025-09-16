@@ -13,13 +13,13 @@ import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchRooms } from "@/features/room/room-thunk";
 import type { RootState, AppDispatch } from "@/store/store";
+import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
 
-export default function RoomTable() {
+export default function RoomTypesTable() {
   const dispatch = useDispatch<AppDispatch>();
-  const { rooms, pagination, isLoading, error } = useSelector(
-    (state: RootState) => state.room
+  const { room_types, isLoading, error } = useSelector(
+    (state: RootState) => state.room_type
   );
 
   const [filterValue, setFilterValue] = React.useState("");
@@ -27,15 +27,15 @@ export default function RoomTable() {
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [statusFilter, setStatusFilter] = React.useState<any>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(1);
 
   React.useEffect(() => {
-    dispatch(fetchRooms());
-    console.log(pagination);
+    dispatch(fetchRoomTypes());
+    console.log(error);
   }, [dispatch, error]);
 
+  const pages = Math.ceil(room_types.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
@@ -46,22 +46,16 @@ export default function RoomTable() {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredRooms = [...rooms];
+    let filteredRoomTypes = [...room_types];
 
     if (hasSearchFilter) {
-      filteredRooms = filteredRooms.filter((room) =>
-        room.room_type?.name?.toLowerCase().includes(filterValue.toLowerCase())
+      filteredRoomTypes = filteredRoomTypes.filter((item) =>
+        item.name?.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
-    if (statusFilter !== "all" && Array.from(statusFilter).length) {
-      filteredRooms = filteredRooms.filter((room) =>
-        Array.from(statusFilter).includes(room.status)
-      );
-    }
-
-    return filteredRooms;
-  }, [rooms, filterValue, statusFilter, hasSearchFilter]);
+    return filteredRoomTypes;
+  }, [room_types, filterValue, hasSearchFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -75,17 +69,17 @@ export default function RoomTable() {
 
   return (
     <Table
-      aria-label="Rooms Table"
       isHeaderSticky
       classNames={{ wrapper: ["shadow-none", "dark:bg-gray-900", "p-0"] }}
+      aria-label="Rooms Table"
       bottomContent={
         <TableBottomContent
           hasSearchFilter={hasSearchFilter}
           page={page}
           setPage={setPage}
-          pages={pagination?.totalPages ?? 0}
+          pages={pages}
           selectedKeys={selectedKeys}
-          roomsCount={pagination?.total}
+          itemsLength={items.length}
         />
       }
       bottomContentPlacement="outside"
@@ -96,12 +90,10 @@ export default function RoomTable() {
           filterValue={filterValue}
           onSearchChange={setFilterValue}
           setFilterValue={setFilterValue}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
-          roomsCount={pagination?.total}
+          itemsCount={room_types.length}
           selectedKeys={selectedKeys}
         />
       }
@@ -122,15 +114,14 @@ export default function RoomTable() {
       <TableBody
         isLoading={isLoading}
         loadingContent={<Spinner label="Loading..." />}
-        emptyContent="No rooms found"
+        emptyContent="No room types found"
         items={items}
-        className="overflow-x-auto"
       >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell className="capitalize">
-                <RenderCell room={item} columnKey={columnKey as string} />
+                <RenderCell room_type={item} columnKey={columnKey as string} />
               </TableCell>
             )}
           </TableRow>
