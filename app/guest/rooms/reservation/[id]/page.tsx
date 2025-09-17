@@ -2,33 +2,47 @@
 
 import BookingForm from "./_components/booking-form";
 import SelectedRoom from "./_components/selected-room";
-import AvailableRooms from "./_components/available-rooms";
 import { Card, CardBody, CardHeader } from "@heroui/react";
 import { useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fetchRoom } from "@/features/room/room-thunk";
+import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
+import { RoomType } from "@/types/room";
 
 export default function Page() {
   const { id } = useParams();
   const dispatch = useDispatch<AppDispatch>();
-  const { room, isLoading } = useSelector((state: RootState) => state.room);
+  const [selectedRoom, setSelectedRoom] = useState(id || null);
+  const { room_types, isLoading } = useSelector(
+    (state: RootState) => state.room_type
+  );
 
   useEffect(() => {
-    if (id) {
-      dispatch(fetchRoom(id as string));
+    dispatch(fetchRoomTypes());
+  }, [dispatch]);
+
+  const room = useMemo(() => {
+    if (selectedRoom) {
+      return room_types.find((room) => room.id === selectedRoom);
     }
-  }, [dispatch, id]);
+    return null;
+  }, [room_types]);
   return (
     <div>
       <Card className="border-none shadow-none">
         <CardHeader className="text-xl font-semibold text-center dark:bg-gray-900 ">
           Hotel Reservation
         </CardHeader>
-        <CardBody className="dark:bg-gray-900  w-full flex flex-col lg:flex-row justify-center items-start gap-8">
-          <BookingForm />
-          <SelectedRoom room={room} isLoading={isLoading} />
+        <CardBody className="dark:bg-gray-900  w-full flex flex-col lg:flex-row items-start gap-8">
+          <BookingForm
+            room_types={room_types}
+            isLoading={isLoading}
+            selectedRoom={selectedRoom}
+            setSelectedRoom={setSelectedRoom}
+          />
+          {room ? <SelectedRoom room={room} isLoading={isLoading} /> : null}
         </CardBody>
       </Card>
     </div>

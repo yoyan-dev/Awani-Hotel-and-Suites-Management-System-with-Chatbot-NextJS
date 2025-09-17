@@ -10,7 +10,7 @@ import {
 } from "@heroui/react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/store";
-import { deleteRoom } from "@/features/room/room-thunk";
+import { deleteRoom, fetchRooms } from "@/features/room/room-thunk";
 
 export default function DeleteModal(room: any) {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,8 +18,9 @@ export default function DeleteModal(room: any) {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  function handleDelete() {
-    dispatch(deleteRoom(room.room.id));
+  async function handleDelete() {
+    await dispatch(deleteRoom(room.room.id));
+    dispatch(fetchRooms());
   }
 
   console.log(room);

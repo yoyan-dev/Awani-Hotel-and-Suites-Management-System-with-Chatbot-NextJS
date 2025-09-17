@@ -3,22 +3,16 @@
 import { Card, CardBody, Image } from "@heroui/react";
 import { formatPHP } from "@/lib/format-php";
 import React from "react";
+import { RoomType } from "@/types/room";
 
-interface Room {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
+interface AvailableRoomProps {
+  rooms: RoomType[];
+  isLoading: boolean;
 }
-
-const rooms: Room[] = [
-  { id: "1", name: "Standard Room", price: 800, image: "/bg.jpg" },
-  { id: "2", name: "Deluxe Room", price: 1000, image: "/bg.jpg" },
-  { id: "3", name: "Suite Room", price: 1500, image: "/bg.jpg" },
-  { id: "4", name: "Suite Room", price: 1500, image: "/bg.jpg" },
-];
-
-export default function AvailableRooms() {
+export const AvailableRooms: React.FC<AvailableRoomProps> = ({
+  rooms,
+  isLoading,
+}) => {
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-semibold">Available Rooms</h3>
@@ -33,7 +27,9 @@ export default function AvailableRooms() {
               />
               <div className="flex flex-col">
                 <p className="font-medium">{room.name}</p>
-                <p className="text-gray-500 text-sm">{formatPHP(room.price)}</p>
+                <p className="text-gray-500 text-sm">
+                  {formatPHP(Number(room.price))}
+                </p>
               </div>
             </CardBody>
           </Card>
@@ -41,4 +37,4 @@ export default function AvailableRooms() {
       </div>
     </div>
   );
-}
+};
