@@ -15,8 +15,10 @@ import {
 } from "@heroui/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import React, { useState } from "react";
+import ViewModal from "./modals/view-modal";
 interface BookingFormProps {
   room_types: RoomType[];
+  room: RoomType | null;
   isLoading: boolean;
   selectedRoom: any;
   setSelectedRoom: React.Dispatch<React.SetStateAction<any>>;
@@ -24,6 +26,7 @@ interface BookingFormProps {
 
 const BookingForm: React.FC<BookingFormProps> = ({
   room_types,
+  room,
   isLoading,
   selectedRoom,
   setSelectedRoom,
@@ -54,6 +57,11 @@ const BookingForm: React.FC<BookingFormProps> = ({
             </Chip>
             -Booking Details
           </h1>
+          {room ? (
+            <div className="flex w-full justify-end md:hidden">
+              <ViewModal room={room} />
+            </div>
+          ) : null}
           <div className="pt-4">
             <Select
               fullWidth
@@ -62,6 +70,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               className="flex-1 w-full min-w-40"
               name="room_type_id"
               label="Room type"
+              value={selectedRoom}
               defaultSelectedKeys={[selectedRoom || ""]}
               onChange={(e) => setSelectedRoom(e.target.value)}
               labelPlacement="outside"
@@ -73,7 +82,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                   <div className="flex flex-col">
                     <span className="text-small">{type.name}</span>
                     <span className="text-tiny text-gray-600 dark:text-gray-300">
-                      {type.amenities?.map((amenity) => `${amenity}, `)}
+                      {type.description}
                     </span>
                   </div>
                 </SelectItem>

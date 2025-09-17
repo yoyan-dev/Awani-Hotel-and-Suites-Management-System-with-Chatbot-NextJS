@@ -11,13 +11,13 @@ interface SelectedRoomProps {
 const SelectedRoom: React.FC<SelectedRoomProps> = ({ room, isLoading }) => {
   if (isLoading || !room) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="items-center justify-center h-64 hidden md:flex">
         <Spinner size="lg" label="Loading room details..." />
       </div>
     );
   }
   return (
-    <div className="flex-1 ">
+    <div className="flex-1 hidden md:block">
       <div className="flex flex-col items-start gap-2">
         <div className="flex gap-2 overflow-x-auto">
           <Image src={room.image} alt="room image" width="100%" />

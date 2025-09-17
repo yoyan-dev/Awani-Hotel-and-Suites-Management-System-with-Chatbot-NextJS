@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { fetchRoom } from "@/features/room/room-thunk";
 import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
 import { RoomType } from "@/types/room";
+import AvailableRooms from "./_components/available-rooms";
 
 export default function Page() {
   const { id } = useParams();
@@ -28,7 +29,7 @@ export default function Page() {
       return room_types.find((room) => room.id === selectedRoom);
     }
     return null;
-  }, [room_types]);
+  }, [room_types, selectedRoom]);
   return (
     <div>
       <Card className="border-none shadow-none">
@@ -38,11 +39,20 @@ export default function Page() {
         <CardBody className="dark:bg-gray-900  w-full flex flex-col lg:flex-row items-start gap-8">
           <BookingForm
             room_types={room_types}
+            room={room || null}
             isLoading={isLoading}
             selectedRoom={selectedRoom}
             setSelectedRoom={setSelectedRoom}
           />
-          {room ? <SelectedRoom room={room} isLoading={isLoading} /> : null}
+          {room ? (
+            <SelectedRoom room={room} isLoading={isLoading} />
+          ) : (
+            <AvailableRooms
+              rooms={room_types}
+              isLoading={isLoading}
+              setSelectedRoom={setSelectedRoom}
+            />
+          )}
         </CardBody>
       </Card>
     </div>
