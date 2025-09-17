@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase-client";
+
 import { ApiResponse } from "@/types/response";
+import { createClient } from "@/lib/supabase/server";
 
 /**
  * GET current logged-in user
  */
 export async function GET(): Promise<NextResponse<ApiResponse>> {
+  const supabase = await createClient();
   const {
     data: { user },
     error,
@@ -20,7 +22,6 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
           description: error.message,
           color: "danger",
         },
-        data: null,
       },
       { status: 500 }
     );
@@ -44,6 +45,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
  * CREATE user account
  */
 export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
+  const supabase = await createClient();
   try {
     const { email, password, ...metadata } = await req.json();
 
@@ -88,6 +90,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
  * UPDATE current user (email / password / metadata)
  */
 export async function PUT(req: Request): Promise<NextResponse<ApiResponse>> {
+  const supabase = await createClient();
   try {
     const body = await req.json();
 
@@ -129,6 +132,7 @@ export async function PUT(req: Request): Promise<NextResponse<ApiResponse>> {
  * Kung admin-level delete user account, dapat Supabase Admin API key ang gamit mo.
  */
 export async function DELETE(): Promise<NextResponse<ApiResponse>> {
+  const supabase = await createClient();
   try {
     // Sign out current session
     const { error } = await supabase.auth.signOut();

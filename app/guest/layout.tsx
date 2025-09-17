@@ -4,8 +4,6 @@ import Footer from "./_components/footer";
 import Navbar from "./_components/navbar";
 import { User } from "@/types/users";
 import { supabase } from "@/lib/supabase/supabase-client";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
 import { getCurrentUser } from "@/features/auth/auth-thunk";
 
 export default function HousekeepingLayout({
@@ -13,25 +11,35 @@ export default function HousekeepingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const dispatch = useDispatch<AppDispatch>();
-  const { user, isLoading } = useSelector(
-    (state: RootState) => state.auth_user
+  const [state, setState] = useState<{ user: User | null; isLoading: boolean }>(
+    { user: null, isLoading: true }
   );
 
   useEffect(() => {
-    dispatch(getCurrentUser());
-  }, [dispatch]);
+    async function getCurrentUser() {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      setState({ user: (user as User) ?? null, isLoading: false });
+    }
 
-  const enhancedChildren = React.Children.map(children, (child) =>
-    React.isValidElement(child)
-      ? React.cloneElement(child, { user, isLoading })
-      : child
-  );
+    getCurrentUser();
+  }, []);
+
+  // const enhancedChildren = React.Children.map(children, (child) =>
+  //   React.isValidElement(child)
+  //     ? React.cloneElement(child, {
+  //         user: state.user,
+  //         isLoading: state.isLoading,
+  //       })
+  //     : child
+  // );
   return (
     <div className="flex gap-4 h-screen text-surface-600 bg-gray-50 dark:bg-gray-800">
       <main className="w-full min-h-screen space-y-4">
-        <Navbar user={user} isLoading={isLoading} />
-        <div className="dark:bg-gray-800 rounded">{enhancedChildren}</div>
+        <Navbar user={state.user} isLoading={state.isLoading} />
+        <div className="dark:bg-gray-800 rounded">{children}</div>
         <Footer />
       </main>
     </div>
