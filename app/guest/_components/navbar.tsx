@@ -7,15 +7,21 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@heroui/navbar";
-import { Button, Image } from "@heroui/react";
+import { Button, Image, Spinner, User } from "@heroui/react";
 import { Link } from "@heroui/link";
 import NextLink from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { usePathname } from "next/navigation";
+import { User as UserType } from "@/types/users";
 
-export default function AdminNavbar() {
+interface NavbarProps {
+  user: UserType | null;
+  isLoading: boolean;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
   const pathname = usePathname();
   return (
     <HeroUINavbar
@@ -56,9 +62,23 @@ export default function AdminNavbar() {
       >
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
-          <Button as={Link} href="/auth" color="primary" variant="bordered">
-            Sign Up
-          </Button>
+          {isLoading ? (
+            <Spinner />
+          ) : user?.id ? (
+            <User
+              avatarProps={{
+                src:
+                  user?.user_metadata?.image ||
+                  "https://i.pravatar.cc/150?u=a04258114e29026702d",
+              }}
+              description={user?.app_metadata?.roles?.[0]}
+              name={user?.user_metadata?.name}
+            />
+          ) : (
+            <Button as={Link} href="/auth" color="primary" variant="bordered">
+              Sign Up
+            </Button>
+          )}
         </NavbarItem>
       </NavbarContent>
 
@@ -86,4 +106,6 @@ export default function AdminNavbar() {
       </NavbarMenu>
     </HeroUINavbar>
   );
-}
+};
+
+export default Navbar;

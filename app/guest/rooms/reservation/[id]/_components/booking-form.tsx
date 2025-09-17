@@ -17,38 +17,29 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import React, { useState } from "react";
 import ViewModal from "./modals/view-modal";
 interface BookingFormProps {
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   room_types: RoomType[];
   room: RoomType | null;
   isLoading: boolean;
   selectedRoom: any;
   setSelectedRoom: React.Dispatch<React.SetStateAction<any>>;
+  bookingIsLoading: boolean;
 }
 
-const BookingForm: React.FC<BookingFormProps> = ({
+export default function BookingForm({
+  onSubmit,
   room_types,
   room,
   isLoading,
   selectedRoom,
   setSelectedRoom,
-}) => {
-  const [formData, setFormData] = useState<Partial<Booking>>({});
+  bookingIsLoading,
+}: BookingFormProps) {
   const [selectedPurpose, SetSelectedPurpose] = useState<string>("");
   const [step, setStep] = useState(1);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Booking Data:", formData);
-  };
-
   return (
-    <Form onSubmit={handleSubmit} className="flex-1 px-4 w-full space-y-4">
+    <Form onSubmit={onSubmit} className="flex-1 px-4 w-full space-y-4">
       {step === 1 ? (
         <div className="space-y-4 w-full">
           <h1>
@@ -64,6 +55,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
           ) : null}
           <div className="pt-4">
             <Select
+              isRequired
               fullWidth
               isLoading={isLoading}
               radius="none"
@@ -89,7 +81,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               ))}
             </Select>
           </div>
-          <div>
+          {/* <div>
             <Input
               fullWidth
               variant="underlined"
@@ -98,7 +90,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               name="fullName"
               placeholder="Enter your name"
             />
-          </div>
+          </div> */}
 
           <div className="flex gap-4">
             <Input
@@ -108,8 +100,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
               type="date"
               label="Check-in Date"
               name="check_in"
-              value={formData.check_in}
-              onChange={handleChange}
             />
 
             <Input
@@ -119,8 +109,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
               type="date"
               label="Check-out Date"
               name="check_out"
-              value={formData.check_out}
-              onChange={handleChange}
             />
           </div>
 
@@ -130,8 +118,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
             label="Number of Guests"
             type="number"
             min={1}
-            name="guests"
-            onChange={handleChange}
+            name="number_of_guests"
           />
           <div className="flex justify-end">
             <Button
@@ -157,7 +144,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
             labelPlacement="outside"
             variant="bordered"
             name="places_last_visited"
-            value={formData.places_last_visited}
             placeholder="Please separate it with commas."
           />
           <RadioGroup
@@ -166,6 +152,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
             label="Purpose of Travel"
             orientation="horizontal"
             color="primary"
+            name="purpose"
             value={selectedPurpose}
             onValueChange={SetSelectedPurpose}
           >
@@ -186,8 +173,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
               variant="underlined"
               className="max-w-xs mt-2"
               name="purpose"
-              value={formData.purpose}
-              onChange={handleChange}
             />
           )}
           <CheckboxGroup
@@ -195,10 +180,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
             color="secondary"
             label="Please check if you have any of the following at the present or during the past 30 days."
             orientation="horizontal"
-            value={formData.recent_sickness}
-            onChange={(values) =>
-              setFormData({ ...formData, recent_sickness: values })
-            }
           >
             <Checkbox value="fever">Fever</Checkbox>
             <Checkbox value="sore throat">Sore Throat</Checkbox>
@@ -247,7 +228,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
             <Button color="primary" onPress={() => setStep(step - 1)}>
               <ArrowLeft />
             </Button>
-            <Button type="submit" color="primary">
+            <Button isLoading={bookingIsLoading} type="submit" color="primary">
               Submit
             </Button>
           </div>
@@ -255,6 +236,4 @@ const BookingForm: React.FC<BookingFormProps> = ({
       ) : null}
     </Form>
   );
-};
-
-export default BookingForm;
+}

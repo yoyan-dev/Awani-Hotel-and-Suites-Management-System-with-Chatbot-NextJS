@@ -11,9 +11,11 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
       booking_id,
       room_id,
       user_id,
+      room_type_id,
       check_in,
       check_out,
       special_requests,
+      number_of_guests,
       status,
       created_at,
       rooms:room_id (
@@ -70,9 +72,12 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
 export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
     const formData = await req.formData();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     const formObj = Object.fromEntries(formData.entries());
-    const newData = { ...formObj };
+    const newData = { ...formObj, user_id: user ? user.id : null };
     const { data, error } = await supabase
       .from("bookings")
       .insert([newData])
