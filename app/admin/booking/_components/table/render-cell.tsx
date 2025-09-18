@@ -23,10 +23,12 @@ export const RenderCell = (booking: Booking, columnKey: string) => {
   const nights = getNights(booking.check_in, booking.check_out);
 
   switch (columnKey) {
+    case "room":
+      return booking.rooms?.room_number || "No yet assigned";
     case "guest_name":
-      return booking.users.full_name;
+      return booking.users?.full_name || "undefined";
     case "room_type":
-      return booking.rooms.room_type;
+      return booking.room_type?.name;
     case "nights":
       return nights;
     case "check_in":

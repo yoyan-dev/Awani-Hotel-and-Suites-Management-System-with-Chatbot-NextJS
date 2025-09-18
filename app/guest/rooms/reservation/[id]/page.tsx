@@ -39,7 +39,7 @@ export default function Page() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     console.log(formData);
-    // await dispatch(addBooking(formData));
+    await dispatch(addBooking(formData));
   }
 
   return (

@@ -8,7 +8,6 @@ let bookings: Booking[];
 export async function GET(): Promise<NextResponse<ApiResponse>> {
   const { data: booking, error } = await supabase.from("bookings").select(`
       id,
-      booking_id,
       room_id,
       user_id,
       room_type_id,
@@ -18,11 +17,12 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
       number_of_guests,
       status,
       created_at,
+      room_type:room_type_id(*),
       rooms:room_id (
         id,
         room_id,
         room_number,
-        room_type,
+        room_type_id,
         area,
         base_price,
         status,

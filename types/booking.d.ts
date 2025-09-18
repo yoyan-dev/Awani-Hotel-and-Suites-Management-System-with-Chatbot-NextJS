@@ -11,7 +11,6 @@ export type BookingStatus =
 
 export interface Booking {
   id: string;
-  booking_id: string;
   user_id: string;
   room_id: string;
   room_type_id: string;
@@ -25,6 +24,7 @@ export interface Booking {
   status: BookingStatus;
   rooms?: any;
   users?: any;
+  room_type?: any;
   created_at: any;
 }
 

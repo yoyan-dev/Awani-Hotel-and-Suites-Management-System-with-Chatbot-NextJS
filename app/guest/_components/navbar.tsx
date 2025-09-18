@@ -30,8 +30,10 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
       className="top-0 z-50 bg-white dark:bg-gray-900 "
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarMenuToggle />
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
+        <div className="sm:hidden">
+          <NavbarMenuToggle />
+        </div>
+        <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Image alt="Awani logo" src="/awani-logo.png" width={50} />
             <div>
@@ -66,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
           {isLoading ? (
             <div className="max-w-[300px] w-full flex items-center gap-3">
               <div>
-                <Skeleton className="flex rounded-full w-12 h-12" />
+                <Skeleton className="flex rounded-full w-10 h-10" />
               </div>
               <div className="w-full flex flex-col gap-2">
                 <Skeleton className="h-3 w-3/5 rounded-lg" />
@@ -95,7 +97,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
         <ThemeSwitch />
 
         {isLoading ? (
-          <Skeleton className="flex rounded-full w-12 h-12" />
+          <Skeleton className="flex rounded-full w-10 h-10" />
         ) : user?.id ? (
           <User
             avatarProps={{

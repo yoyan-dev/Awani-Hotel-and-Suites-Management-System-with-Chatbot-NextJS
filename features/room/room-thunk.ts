@@ -10,7 +10,9 @@ export const fetchRooms = createAsyncThunk<
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append("page", String(params.page));
     if (params?.query) searchParams.append("q", params.query);
-    if (params?.roomType) searchParams.append("roomType", params.roomType);
+    if (params?.roomTypeID)
+      searchParams.append("roomTypeID", params.roomTypeID);
+    if (params?.status) searchParams.append("status", params.status);
     if (params?.minPrice !== undefined)
       searchParams.append("minPrice", String(params.minPrice));
     if (params?.maxPrice !== undefined)
