@@ -1,6 +1,13 @@
-import { Button } from "@heroui/react";
+import { User } from "@/types/users";
+import { Button, Link } from "@heroui/react";
+import LoginPromptModal from "../modals/login-prompt-modal";
 
-export default function HeroBanner() {
+interface Props {
+  user: User | null;
+  isLoading: boolean;
+}
+
+export const HeroBanner: React.FC<Props> = ({ user, isLoading }) => {
   return (
     <section
       className="h-[500px] flex flex-col items-center justify-center text-center text-white bg-cover bg-center"
@@ -11,9 +18,20 @@ export default function HeroBanner() {
         Welcome to Our Luxurious Hotel & Resort
       </h1>
       <p className="text-gray-200 mt-2">Modern Luxury and Timeless Elegance</p>
-      <Button className="mt-6" color="primary">
-        Book Apartments
-      </Button>
+      {user?.id && !isLoading ? (
+        <Button
+          className="mt-6"
+          color="primary"
+          as={Link}
+          href="/guest/rooms/reservation/null"
+        >
+          Book Apartments
+        </Button>
+      ) : (
+        <LoginPromptModal />
+      )}
     </section>
   );
-}
+};
+
+export default HeroBanner;

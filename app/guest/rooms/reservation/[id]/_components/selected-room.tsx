@@ -1,47 +1,44 @@
 import React from "react";
 import { formatPHP } from "@/lib/format-php";
-import { Room } from "@/types/room";
+import { RoomType } from "@/types/room";
 import { Image, Spinner } from "@heroui/react";
 import { UserCircle, Bed, Wifi, Tv } from "lucide-react";
 interface SelectedRoomProps {
-  room: Room;
+  room: RoomType;
   isLoading: boolean;
 }
 
 const SelectedRoom: React.FC<SelectedRoomProps> = ({ room, isLoading }) => {
   if (isLoading || !room) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="items-center justify-center h-64 hidden md:flex">
         <Spinner size="lg" label="Loading room details..." />
       </div>
     );
   }
   return (
-    <div className="flex-1 ">
+    <div className="flex-1 hidden md:block">
       <div className="flex flex-col items-start gap-2">
+        <div className="flex gap-2 overflow-x-auto">
+          <Image src={room.image} alt="room image" width="100%" />
+        </div>
         <div className="flex justify-between items-center flex-wrap  w-full">
-          <h2 className="text-2xl font-semibold capitalize">
-            {room.room_type}
-          </h2>
+          <div className="flex gap-2">
+            <h2 className="text-2xl font-semibold capitalize">{room.name}</h2>
+            <span className="text-gray-500 dark:text-gray-300 ">
+              ({room.room_size})
+            </span>
+          </div>
           <p className="text-xl font-semibold">
-            {formatPHP(Number(room.base_price))}
+            {formatPHP(Number(room.price))}
           </p>
         </div>
-        <p className="text-gray-500 text-sm">{room.description}</p>
+        <p className="text-gray-500 dark:text-gray-300 text-sm">
+          {room.description}
+        </p>
       </div>
 
       <div className="space-y-6">
-        <div className="flex gap-2 overflow-x-auto">
-          {room.images?.map((img, index) => (
-            <Image
-              key={index}
-              src={img}
-              alt="room image"
-              className="rounded-lg w-40 h-28 object-cover"
-            />
-          ))}
-        </div>
-
         <div>
           <h3 className="text-lg font-medium mb-2">Room Features</h3>
           <div className="flex gap-4 text-gray-700 flex-wrap">

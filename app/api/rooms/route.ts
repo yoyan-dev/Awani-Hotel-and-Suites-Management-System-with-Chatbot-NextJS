@@ -10,7 +10,8 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   const { searchParams } = new URL(req.url);
 
   const query = searchParams.get("q") || "";
-  const roomType = searchParams.get("roomType") || "";
+  const roomTypeID = searchParams.get("roomTypeID") || "";
+  const status = searchParams.get("status") || "";
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
   const page = Number(searchParams.get("page") || "1");
@@ -51,8 +52,12 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     q = q.or(`name.ilike.%${query}%,room_type.ilike.%${query}%`);
   }
 
-  if (roomType) {
-    q = q.eq("room_type", roomType);
+  if (roomTypeID) {
+    q = q.eq("room_type_id", roomTypeID);
+  }
+
+  if (status) {
+    q = q.eq("status", status);
   }
 
   if (minPrice) q = q.gte("base_price", Number(minPrice));

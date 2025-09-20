@@ -2,7 +2,7 @@ import { ColumnType } from "@/types/column";
 
 export const columns: ColumnType[] = [
   { name: "ID", uid: "id" },
-  { name: "BOOKING ID", uid: "booking_id" },
+  { name: "ROOM", uid: "room" },
   { name: "GUEST NAME", uid: "guest_name" },
   { name: "ROOM TYPE", uid: "room_type" },
   { name: "AREA", uid: "area" },
@@ -42,6 +42,7 @@ export const bookingStatusColorMap: Record<
 
 export const INITIAL_VISIBLE_COLUMNS = [
   "booking_id",
+  "room",
   "guest_name",
   "room_type",
   "nights",

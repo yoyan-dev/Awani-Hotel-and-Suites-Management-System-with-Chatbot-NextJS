@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchRoom, updateRoom } from "@/features/room/room-thunk";
@@ -13,6 +13,7 @@ import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
 
 export default function Page() {
   const { id } = useParams();
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { room, isLoading } = useSelector((state: RootState) => state.room);
   const { room_types, isLoading: roomTypeIsLoading } = useSelector(
@@ -65,7 +66,8 @@ export default function Page() {
       images: [...uploadedUrls],
     };
 
-    dispatch(updateRoom(updatedRoom));
+    await dispatch(updateRoom(updatedRoom));
+    router.push("/admin/room");
   }
 
   return (

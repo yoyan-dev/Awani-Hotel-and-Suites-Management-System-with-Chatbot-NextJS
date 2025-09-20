@@ -10,7 +10,7 @@ import {
 } from "@heroui/react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/store";
-import { deleteRooms } from "@/features/room/room-thunk";
+import { deleteRooms, fetchRooms } from "@/features/room/room-thunk";
 
 interface DeleteSelectedModalProps {
   selectedKeys: Set<number> | "all";
@@ -24,8 +24,9 @@ export default function DeleteSelectedModal({
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  function handleDelete() {
-    dispatch(deleteRooms({ selectedValues: selectedKeys }));
+  async function handleDelete() {
+    await dispatch(deleteRooms({ selectedValues: selectedKeys }));
+    dispatch(fetchRooms());
     onOpenChange();
   }
 

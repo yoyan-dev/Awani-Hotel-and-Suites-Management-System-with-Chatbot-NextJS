@@ -1,20 +1,85 @@
 import { NextResponse } from "next/server";
-import type { User } from "@/types/users";
 import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
-import { uploadUserImage } from "@/lib/upload-user-image";
-import { createClient } from "@/lib/supabase/server";
-import { supabaseAdmin } from "@/lib/supabase-admin";
-
-let users: User[];
+import { Guest } from "@/types/guest";
 
 export async function GET(): Promise<NextResponse<ApiResponse>> {
-  try {
-    const supabase = await createClient();
+  const { data: guest, error } = await supabase.from("guest").select("*");
 
-    const { data, error } = await supabase.auth.admin.listUsers();
+  if (error) {
+    console.error("Error fetching guests:", error.message);
+    return NextResponse.json(
+      {
+        success: false,
+        message: {
+          title: "Error",
+          description: error.message,
+          color: "danger",
+        },
+      },
+      { status: 500 }
+    );
+  }
+
+  console.log("Guests data:", guest);
+  return NextResponse.json(
+    {
+      success: true,
+      message: {
+        title: "success",
+        description: "",
+        color: "success",
+      },
+      data: guest || [],
+    },
+    { status: 201 }
+  );
+}
+
+// CREATE
+export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
+  try {
+    const formData = await req.formData();
+
+    const {
+      id,
+      full_name,
+      contact_number,
+      address,
+      nationality,
+      gender,
+      email,
+    } = Object.fromEntries(formData.entries());
+
+    const newData = {
+      id,
+      full_name,
+      contact_number,
+      address,
+      nationality,
+      gender,
+      email,
+    };
+    const { data, error } = await supabase
+      .from("guest")
+      .insert([newData])
+      .select();
 
     if (error) {
+      console.error("Supabase insert error:", error);
+      if (error.code === "23505") {
+        return NextResponse.json(
+          {
+            success: false,
+            message: {
+              title: "Error",
+              description: "Guest already exists.",
+              color: "danger",
+            },
+          },
+          { status: 400 }
+        );
+      }
       return NextResponse.json(
         {
           success: false,
@@ -24,7 +89,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
             color: "danger",
           },
         },
-        { status: 400 }
+        { status: 500 }
       );
     }
 
@@ -32,11 +97,11 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
       {
         success: true,
         message: {
-          title: "Success",
-          description: "",
+          title: "Success!",
+          description: "Account created successfully.",
           color: "success",
         },
-        data: data.users,
+        data: data[0] || {},
       },
       { status: 201 }
     );
@@ -56,79 +121,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
   }
 }
 
-// CREATE
-export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
-  try {
-    const formData = await req.formData();
-    const formObj = Object.fromEntries(formData.entries());
-    const image = formData.get("image") as File;
-
-    const { email, password, name, phone, gender, address, birthday, roles } =
-      formObj;
-
-    const userData = {
-      full_name: name,
-      phone,
-      gender,
-      address,
-      birthday,
-      image: image ? await uploadUserImage(image) : "",
-    };
-    const { data, error } = await supabaseAdmin.auth.admin.createUser({
-      email: email as string,
-      password: password as string,
-      email_confirm: true,
-      user_metadata: userData,
-      app_metadata: {
-        roles: (roles as string)?.split(",") ?? ["guest"],
-        department: (formObj.department as string) ?? "General",
-        permissions: ["create", "update"],
-      },
-    });
-
-    if (error) {
-      console.error("Supabase create error:", error);
-      return NextResponse.json(
-        {
-          success: false,
-          message: {
-            title: "Supabase Error",
-            description: error.message,
-            color: "danger",
-          },
-        },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: {
-          title: "Success",
-          description: "Account created successfully.",
-          color: "success",
-        },
-        data: data.user,
-      },
-      { status: 201 }
-    );
-  } catch (err: any) {
-    console.error("Unexpected error:", err);
-    return NextResponse.json(
-      {
-        success: false,
-        message: {
-          title: "Api Error",
-          description: err.message,
-          color: "danger",
-        },
-      },
-      { status: 500 }
-    );
-  }
-}
-
+//DELETE SELECTED
 export async function DELETE(
   request: Request
 ): Promise<NextResponse<ApiResponse>> {
@@ -136,7 +129,7 @@ export async function DELETE(
     const body = await request.json();
     const selectedValues: number[] | "all" = body.selectedValues;
 
-    let query = supabase.from("users").delete();
+    let query = supabase.from("guest").delete();
 
     if (selectedValues === "all") {
     } else if (Array.isArray(selectedValues) && selectedValues.length > 0) {
@@ -163,7 +156,7 @@ export async function DELETE(
           success: false,
           message: {
             title: "Error",
-            description: "Failed to delete users",
+            description: "Failed to delete items.",
             color: "error",
           },
           error: error.message,
@@ -178,11 +171,11 @@ export async function DELETE(
         title: "Success",
         description:
           selectedValues === "all"
-            ? "All users deleted successfully"
-            : "Selected users deleted successfully",
+            ? "All items deleted successfully"
+            : "Selected items deleted successfully",
         color: "success",
       },
-      data: data,
+      data,
     });
   } catch (err: any) {
     return NextResponse.json(
@@ -190,7 +183,7 @@ export async function DELETE(
         success: false,
         message: {
           title: "Error",
-          description: "Something went wrong",
+          description: err.message,
           color: "error",
         },
         error: err.message,

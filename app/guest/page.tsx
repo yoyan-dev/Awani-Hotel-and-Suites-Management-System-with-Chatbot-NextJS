@@ -13,23 +13,35 @@ import HotelPoolSection from "./_components/sections/pool-section";
 import FAQSection from "./_components/sections/faq-section";
 import Testimonials from "./_components/sections/review-section";
 import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
+import { User } from "@/types/users";
+import { supabase } from "@/lib/supabase/supabase-client";
 
 export default function page() {
-  const { rooms, isLoading, error } = useSelector(
-    (state: RootState) => state.room
-  );
   const { room_types, isLoading: roomTypeIsLoading } = useSelector(
     (state: RootState) => state.room_type
   );
   const dispatch = useDispatch<AppDispatch>();
+  const [state, setState] = React.useState<{
+    user: User | null;
+    isLoading: boolean;
+  }>({ user: null, isLoading: true });
 
   React.useEffect(() => {
+    async function getCurrentUser() {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      setState({ user: (user as User) ?? null, isLoading: false });
+    }
+
+    getCurrentUser();
     dispatch(fetchRooms());
     dispatch(fetchRoomTypes());
   }, [dispatch]);
   return (
     <div>
-      <HeroBanner />
+      <HeroBanner user={state.user} isLoading={state.isLoading} />
       <About />
       <Stats />
       <RoomsCarousel rooms={room_types} isLoading={roomTypeIsLoading} />

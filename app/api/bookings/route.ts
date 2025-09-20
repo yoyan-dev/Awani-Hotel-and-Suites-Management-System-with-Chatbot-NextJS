@@ -8,31 +8,18 @@ let bookings: Booking[];
 export async function GET(): Promise<NextResponse<ApiResponse>> {
   const { data: booking, error } = await supabase.from("bookings").select(`
       id,
-      booking_id,
       room_id,
-      user_id,
+      guest_id,
+      room_type_id,
       check_in,
       check_out,
       special_requests,
+      number_of_guests,
       status,
       created_at,
-      rooms:room_id (
-        id,
-        room_id,
-        room_number,
-        room_type,
-        area,
-        base_price,
-        status,
-        images
-      ),
-      users:user_id (
-        id,
-        full_name,
-        email,
-        role,
-        phone
-      )
+      room_type:room_type_id(*),
+      room:room_id (*),
+      user:guest_id (*)
     `);
 
   if (error) {
@@ -66,11 +53,10 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
   );
 }
 
-// CREATE room
+// CREATE
 export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
     const formData = await req.formData();
-
     const formObj = Object.fromEntries(formData.entries());
     const newData = { ...formObj };
     const { data, error } = await supabase

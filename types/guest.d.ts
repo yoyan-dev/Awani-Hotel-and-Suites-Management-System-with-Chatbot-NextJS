@@ -2,20 +2,18 @@ export type GuestStatus = "active" | "inactive" | "vip" | "banned";
 
 export interface Guest {
   id: string;
-  name: string;
+  full_name: string;
   email?: string;
-  phone?: string;
+  contact_number?: string;
   address?: string;
   nationality?: string;
-  id_number?: string;
-  status: GuestStatus;
   created_at: string;
-  updated_at?: string;
   bookings?: string[];
 }
 
 export interface GuestState {
   guests: Guest[];
+  guest: Guest;
   isLoading: boolean;
-  error: string | null;
+  error: string | undefined;
 }

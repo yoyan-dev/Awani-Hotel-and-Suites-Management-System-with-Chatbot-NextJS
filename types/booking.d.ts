@@ -11,18 +11,20 @@ export type BookingStatus =
 
 export interface Booking {
   id: string;
-  booking_id: string;
+  guest_id: string;
   room_id: string;
-  user_id: string;
+  room_type_id: string;
   check_in: string;
   check_out: string;
   places_last_visited?: string;
   purpose?: string;
+  number_of_guests?: number;
   recent_sickness?: string[];
   special_requests: string;
   status: BookingStatus;
-  rooms?: any;
-  users?: any;
+  room?: any;
+  user?: any;
+  room_type?: any;
   created_at: any;
 }
 
