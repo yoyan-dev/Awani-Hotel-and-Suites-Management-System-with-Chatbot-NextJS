@@ -50,8 +50,8 @@ export default function UserTable() {
     let filteredUsers = [...users];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((item) =>
-        item.user_metadata.name
+      filteredUsers = filteredUsers.filter((user) =>
+        user.user_metadata.full_name
           ?.toLowerCase()
           .includes(filterValue.toLowerCase())
       );

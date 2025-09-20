@@ -50,7 +50,7 @@ export default function BookingTable() {
 
     if (hasSearchFilter) {
       filteredBookings = filteredBookings.filter((item) =>
-        item.users.full_name?.toLowerCase().includes(filterValue.toLowerCase())
+        item.user.full_name?.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 

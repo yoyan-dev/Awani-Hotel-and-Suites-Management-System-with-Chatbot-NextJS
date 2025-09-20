@@ -16,8 +16,6 @@ interface RoomFormProps {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   beds: string[];
   setBeds: React.Dispatch<React.SetStateAction<string[]>>;
-  facilities: string[];
-  setFacilities: React.Dispatch<React.SetStateAction<string[]>>;
   images: any[];
   setImages: React.Dispatch<React.SetStateAction<any[]>>;
   roomTypes: RoomType[];
@@ -29,8 +27,6 @@ export default function RoomForm({
   onSubmit,
   beds,
   setBeds,
-  facilities,
-  setFacilities,
   images,
   setImages,
   roomTypes,
@@ -137,8 +133,6 @@ export default function RoomForm({
             placeholder="Room remarks..."
             variant="bordered"
           />
-
-          <BedsInput beds={beds} setBeds={setBeds} />
         </div>
 
         {/* RIGHT SIDE */}
@@ -146,10 +140,11 @@ export default function RoomForm({
           <h1>Room photo</h1>
           <hr className="border border-gray-400" />
           <ImagesUpload images={images} setImages={setImages} />
-          <FacilitiesInput
+          {/* <FacilitiesInput
             facilities={facilities}
             setFacilities={setFacilities}
-          />
+          /> */}
+          {/* <BedsInput beds={beds} setBeds={setBeds} /> */}
         </div>
       </div>
 
