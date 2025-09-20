@@ -29,17 +29,17 @@ const RenderCell: React.FC<RenderCellProps> = ({ user, columnKey }) => {
           avatarProps={{ radius: "full", size: "sm", src: "" }}
           classNames={{ description: "text-default-500" }}
           description={user.email}
-          name={user.user_metadata.name}
+          name={user.user_metadata.full_name}
         />
       );
     case "role":
       return (
         <div className="flex flex-col">
           <p className="text-bold text-small capitalize">
-            {user.app_metadata.roles?.[0]}
+            {user.app_metadata.roles?.[0] || "Guest"}
           </p>
           <p className="text-bold text-tiny capitalize text-default-500">
-            {user.app_metadata.roles?.[0]}
+            {user.app_metadata.roles?.[0] || "Guest"}
           </p>
         </div>
       );
