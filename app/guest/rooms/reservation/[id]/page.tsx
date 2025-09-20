@@ -12,10 +12,15 @@ import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
 import { RoomType } from "@/types/room";
 import AvailableRooms from "./_components/available-rooms";
 import { addBooking } from "@/features/booking/booking-thunk";
+import { supabase } from "@/lib/supabase/supabase-client";
+import { fetchGuest } from "@/features/guest/guest-thunk";
 
 export default function Page() {
   const { id } = useParams();
   const dispatch = useDispatch<AppDispatch>();
+  const { guest, isLoading: guestIsLoading } = useSelector(
+    (state: RootState) => state.guests
+  );
   const [selectedRoom, setSelectedRoom] = useState(id || null);
   const { room_types, isLoading } = useSelector(
     (state: RootState) => state.room_type
@@ -23,6 +28,18 @@ export default function Page() {
   const { isLoading: bookingIsLoading } = useSelector(
     (state: RootState) => state.booking
   );
+
+  async function getCurrentUser() {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (user?.id) {
+      await dispatch(fetchGuest(user.id));
+      return;
+    }
+  }
 
   useEffect(() => {
     dispatch(fetchRoomTypes());
@@ -38,6 +55,7 @@ export default function Page() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    formData.append("guest_id", guest.id || "");
     console.log(formData);
     await dispatch(addBooking(formData));
   }
@@ -51,6 +69,7 @@ export default function Page() {
         <CardBody className="dark:bg-gray-900  w-full flex flex-col lg:flex-row items-start gap-8">
           <BookingForm
             onSubmit={handleSubmit}
+            guest={guest}
             room_types={room_types}
             room={room || null}
             isLoading={isLoading}

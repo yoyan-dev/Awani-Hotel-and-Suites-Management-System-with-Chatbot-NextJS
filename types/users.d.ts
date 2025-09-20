@@ -1,5 +1,5 @@
 export type UserMetadata = {
-  name?: string;
+  full_name?: string;
   phone?: string;
   gender?: "male" | "female";
   address?: string;

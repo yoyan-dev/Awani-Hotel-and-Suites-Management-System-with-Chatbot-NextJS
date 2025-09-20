@@ -41,7 +41,7 @@ const AvailableRooms: React.FC<AvailableRoomProps> = ({
         <div className="flex flex-col gap-2">
           {rooms.map((room) => (
             <Card key={room.id} isHoverable>
-              <CardBody>
+              <CardBody className="dark:bg-gray-800">
                 {/* responsive container */}
                 <div className="flex flex-col md:flex-row items-start gap-4">
                   {/* image responsive */}

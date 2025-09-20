@@ -1,44 +1,13 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
-import { Booking } from "@/types/booking";
-
-let bookings: Booking[];
+import { Guest } from "@/types/guest";
 
 export async function GET(): Promise<NextResponse<ApiResponse>> {
-  const { data: booking, error } = await supabase.from("bookings").select(`
-      id,
-      room_id,
-      guest_id,
-      room_type_id,
-      check_in,
-      check_out,
-      special_requests,
-      number_of_guests,
-      status,
-      created_at,
-      room_type:room_type_id(*),
-      rooms:room_id (
-        id,
-        room_id,
-        room_number,
-        room_type_id,
-        area,
-        base_price,
-        status,
-        images
-      ),
-      users:user_id (
-        id,
-        full_name,
-        email,
-        role,
-        phone
-      )
-    `);
+  const { data: guest, error } = await supabase.from("guest").select("*");
 
   if (error) {
-    console.error("Error fetching bookings:", error.message);
+    console.error("Error fetching guests:", error.message);
     return NextResponse.json(
       {
         success: false,
@@ -52,8 +21,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
     );
   }
 
-  console.log("Bookings data:", booking);
-  bookings = booking || [];
+  console.log("Guests data:", guest);
   return NextResponse.json(
     {
       success: true,
@@ -62,7 +30,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
         description: "",
         color: "success",
       },
-      data: bookings,
+      data: guest || [],
     },
     { status: 201 }
   );
@@ -72,10 +40,28 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
 export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
     const formData = await req.formData();
-    const formObj = Object.fromEntries(formData.entries());
-    const newData = { ...formObj };
+
+    const {
+      id,
+      full_name,
+      contact_number,
+      address,
+      nationality,
+      gender,
+      email,
+    } = Object.fromEntries(formData.entries());
+
+    const newData = {
+      id,
+      full_name,
+      contact_number,
+      address,
+      nationality,
+      gender,
+      email,
+    };
     const { data, error } = await supabase
-      .from("bookings")
+      .from("guest")
       .insert([newData])
       .select();
 
@@ -87,7 +73,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
             success: false,
             message: {
               title: "Error",
-              description: "Booking already exists.",
+              description: "Guest already exists.",
               color: "danger",
             },
           },
@@ -111,11 +97,11 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       {
         success: true,
         message: {
-          title: "Success",
-          description: "Reservation successfully added.",
+          title: "Success!",
+          description: "Account created successfully.",
           color: "success",
         },
-        data: data[0],
+        data: data[0] || {},
       },
       { status: 201 }
     );
@@ -135,6 +121,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   }
 }
 
+//DELETE SELECTED
 export async function DELETE(
   request: Request
 ): Promise<NextResponse<ApiResponse>> {
@@ -142,7 +129,7 @@ export async function DELETE(
     const body = await request.json();
     const selectedValues: number[] | "all" = body.selectedValues;
 
-    let query = supabase.from("bookings").delete();
+    let query = supabase.from("guest").delete();
 
     if (selectedValues === "all") {
     } else if (Array.isArray(selectedValues) && selectedValues.length > 0) {

@@ -6,6 +6,7 @@ import inventoryReducer from "@/features/inventory/inventory-slice";
 import bookingReducer from "@/features/booking/booking-slice";
 import housekeepingReducer from "@/features/housekeeping/housekeeping-slice";
 import userReducer from "@/features/users/user-slice";
+import guestReducer from "@/features/guest/guest-slice";
 import authReducer from "@/features/auth/auth-slice";
 
 export const store = configureStore({
@@ -17,6 +18,7 @@ export const store = configureStore({
     booking: bookingReducer,
     housekeeping: housekeepingReducer,
     users: userReducer,
+    guests: guestReducer,
     auth_user: authReducer,
   },
 });

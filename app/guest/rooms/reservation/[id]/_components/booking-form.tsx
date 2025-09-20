@@ -12,12 +12,16 @@ import {
   CheckboxGroup,
   Checkbox,
   Form,
+  Tooltip,
 } from "@heroui/react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Info, Link } from "lucide-react";
 import React, { useState } from "react";
 import ViewModal from "./modals/view-modal";
+import { Guest } from "@/types/guest";
+import PolicyModal from "./modals/policy-modal";
 interface BookingFormProps {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  guest: Guest;
   room_types: RoomType[];
   room: RoomType | null;
   isLoading: boolean;
@@ -28,6 +32,7 @@ interface BookingFormProps {
 
 export default function BookingForm({
   onSubmit,
+  guest,
   room_types,
   room,
   isLoading,
@@ -36,17 +41,76 @@ export default function BookingForm({
   bookingIsLoading,
 }: BookingFormProps) {
   const [selectedPurpose, SetSelectedPurpose] = useState<string>("");
-  const [step, setStep] = useState(1);
+  const [policySignature, setPolicySignature] = useState("");
 
   return (
     <Form onSubmit={onSubmit} className="flex-1 px-4 w-full space-y-4">
       <div className="space-y-4 w-full">
+        <div className="flex justify-between flex-wrap">
+          <h1>
+            <Chip color="primary" className="text-sm">
+              1
+            </Chip>
+            -Personal Information
+          </h1>
+          <div className="flex">
+            <Link color="primary" href="#">
+              Primary
+            </Link>
+            <Tooltip
+              content="This field is automatically filled from your account. To change it, go to Account Settings."
+              color="warning"
+            >
+              <Info />
+            </Tooltip>
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row gap-4">
+          <Input
+            fullWidth
+            variant="bordered"
+            radius="none"
+            isReadOnly
+            isDisabled
+            labelPlacement="outside"
+            label="Full Name"
+            value={guest.full_name}
+            placeholder="Enter your name"
+          />
+          <Input
+            fullWidth
+            variant="bordered"
+            isReadOnly
+            isDisabled
+            labelPlacement="outside"
+            radius="none"
+            label="Contact Number"
+            value={guest.contact_number}
+            placeholder="Enter your name"
+          />
+        </div>
+        <Textarea
+          fullWidth
+          variant="bordered"
+          isReadOnly
+          isDisabled
+          radius="none"
+          labelPlacement="outside"
+          label="Address"
+          value={guest.address}
+          placeholder="Enter your name"
+        />
+      </div>
+      <div className="space-y-4 w-full">
         <h1>
           <Chip color="primary" className="text-sm">
-            1
+            2
           </Chip>
           -Booking Details
         </h1>
+        <p className="text-xs text-gray-500 dark:text-gray-300 mb-3">
+          Fill in your booking preferences below. All fields are editable.
+        </p>
         {room ? (
           <div className="flex w-full justify-end md:hidden">
             <ViewModal room={room} />
@@ -112,26 +176,25 @@ export default function BookingForm({
         </div>
 
         <Input
-          variant="underlined"
+          variant="bordered"
           isRequired
+          radius="none"
+          placeholder="e.g (1 adult, 1 child)"
           label="Number of Guests"
-          type="number"
-          min={1}
           name="number_of_guests"
         />
-        <div className="flex justify-end">
-          <Button color="primary" onPress={() => setStep(step + 1)} isIconOnly>
-            <ArrowRight />
-          </Button>
-        </div>
       </div>
       <div className="space-y-4">
         <h1>
           <Chip color="primary" className="text-sm">
-            2
+            3
           </Chip>
           -Health Declaration
         </h1>
+        <p className="text-xs text-gray-500 dark:text-gray-300 mb-3">
+          Please complete this section honestly. These answers are required for
+          your safety and for compliance with health regulations. <br />
+        </p>
         <Textarea
           classNames={{ label: "text-gray-600 dark:text-gray-300" }}
           label="City/Country work visited and transited in the last 30 days."
@@ -148,6 +211,7 @@ export default function BookingForm({
           color="primary"
           name="purpose"
           value={selectedPurpose}
+          size="sm"
           onValueChange={SetSelectedPurpose}
         >
           <Radio value="Visiting friends and family">
@@ -171,9 +235,10 @@ export default function BookingForm({
         )}
         <CheckboxGroup
           classNames={{ label: "text-gray-600 dark:text-gray-300" }}
-          color="secondary"
+          color="primary"
           label="Please check if you have any of the following at the present or during the past 30 days."
           orientation="horizontal"
+          size="sm"
         >
           <Checkbox value="fever">Fever</Checkbox>
           <Checkbox value="sore throat">Sore Throat</Checkbox>
@@ -184,36 +249,25 @@ export default function BookingForm({
           </Checkbox>
           <Checkbox value="severe diarhea">Severe Diarhea</Checkbox>
         </CheckboxGroup>
-        <div className="flex justify-between">
-          <Button color="primary" onPress={() => setStep(step - 1)} isIconOnly>
-            <ArrowLeft />
-          </Button>
-          <Button color="primary" onPress={() => setStep(step + 1)} isIconOnly>
-            <ArrowRight />
-          </Button>
-        </div>
       </div>
       <div className="space-y-4">
         <h1 className="px-2 bg-primary text-white md:text-xl">Declaration</h1>
         <div>
-          <p>
+          <p className="text-sm text-gray-600">
             The information I have given is true, correct and complete. I
             understand failure to answer any question may have serious
-            consequences,(Article 171&172 of the revised penal code of the
-            Philippines)
+            consequences.
           </p>
-          <p>Notes and Regulations</p>
-          <ol>
-            <li>1. First item</li>
-            <li>2. Second item</li>
-            <li>3. Third item</li>
-          </ol>
         </div>
         <div className="flex justify-between">
-          <Button color="primary" onPress={() => setStep(step - 1)}>
-            <ArrowLeft />
-          </Button>
-          <Button isLoading={bookingIsLoading} type="submit" color="primary">
+          <PolicyModal onConfirm={(sig) => setPolicySignature(sig)} />
+
+          <Button
+            isLoading={bookingIsLoading}
+            isDisabled={policySignature ? false : true}
+            type="submit"
+            color="primary"
+          >
             Submit
           </Button>
         </div>

@@ -79,11 +79,11 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
             <User
               avatarProps={{
                 src:
-                  user?.user_metadata?.image ||
-                  "https://i.pravatar.cc/150?u=a04258114e29026702d",
+                  user?.user_metadata?.image ??
+                  "https://www.bing.com/ck/a?!&&p=0cce35addb0ad145ee7f6c78e5bb7f91bc1b501db82614a39415208ae0ebf729JmltdHM9MTc1ODMyNjQwMA&ptn=3&ver=2&hsh=4&fclid=28034f8f-5cb8-698d-278e-59955dac6878&u=a1L2ltYWdlcy9zZWFyY2g_cT1kZWZhdWx0K3VzZXIraW1hZ2UmaWQ9MEE3NEI0ODAwNDYyRjE0Q0E4ODVEMEVBQzVFQ0JBN0M0MjRDNDhCRiZGT1JNPUlBQ0ZJUg&ntb=1",
               }}
-              description={user?.app_metadata?.roles?.[0]}
-              name={user?.user_metadata?.name}
+              description={user?.app_metadata?.roles?.[0] || "Guest"}
+              name={user?.user_metadata?.full_name}
             />
           ) : (
             <Button as={Link} href="/auth" color="primary" variant="bordered">
@@ -102,8 +102,8 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
           <User
             avatarProps={{
               src:
-                user?.user_metadata?.image ||
-                "https://i.pravatar.cc/150?u=a04258114e29026702d",
+                user?.user_metadata?.image ??
+                "https://www.bing.com/ck/a?!&&p=0cce35addb0ad145ee7f6c78e5bb7f91bc1b501db82614a39415208ae0ebf729JmltdHM9MTc1ODMyNjQwMA&ptn=3&ver=2&hsh=4&fclid=28034f8f-5cb8-698d-278e-59955dac6878&u=a1L2ltYWdlcy9zZWFyY2g_cT1kZWZhdWx0K3VzZXIraW1hZ2UmaWQ9MEE3NEI0ODAwNDYyRjE0Q0E4ODVEMEVBQzVFQ0JBN0M0MjRDNDhCRiZGT1JNPUlBQ0ZJUg&ntb=1",
             }}
             description=""
             name=""

@@ -67,7 +67,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       formObj;
 
     const userData = {
-      name,
+      full_name: name,
       phone,
       gender,
       address,
