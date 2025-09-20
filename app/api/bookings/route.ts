@@ -18,23 +18,8 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
       status,
       created_at,
       room_type:room_type_id(*),
-      rooms:room_id (
-        id,
-        room_id,
-        room_number,
-        room_type_id,
-        area,
-        base_price,
-        status,
-        images
-      ),
-      users:user_id (
-        id,
-        full_name,
-        email,
-        role,
-        phone
-      )
+      room:room_id (*),
+      user:guest_id (*)
     `);
 
   if (error) {

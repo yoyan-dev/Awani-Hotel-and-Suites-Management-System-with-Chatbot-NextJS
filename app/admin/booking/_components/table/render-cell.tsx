@@ -24,9 +24,9 @@ export const RenderCell = (booking: Booking, columnKey: string) => {
 
   switch (columnKey) {
     case "room":
-      return booking.rooms?.room_number || "No yet assigned";
+      return booking.room?.room_number || "No yet assigned";
     case "guest_name":
-      return booking.users?.full_name || "undefined";
+      return booking.user?.full_name || "undefined";
     case "room_type":
       return booking.room_type?.name;
     case "nights":

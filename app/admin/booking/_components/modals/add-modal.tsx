@@ -1,7 +1,9 @@
 import { addBooking } from "@/features/booking/booking-thunk";
+import { fetchGuests } from "@/features/guest/guest-thunk";
 import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
 import { fetchRooms } from "@/features/room/room-thunk";
 import { AppDispatch, RootState } from "@/store/store";
+import { Guest } from "@/types/guest";
 import {
   Modal,
   ModalContent,
@@ -23,7 +25,7 @@ import {
   CheckboxGroup,
 } from "@heroui/react";
 import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function AddModal() {
@@ -38,11 +40,16 @@ export default function AddModal() {
   const { rooms, isLoading: roomIsLoading } = useSelector(
     (state: RootState) => state.room
   );
+  const { guests, isLoading: guestIsLoading } = useSelector(
+    (state: RootState) => state.guests
+  );
+  const [selectedGuest, SetSelectedGuest] = useState<string>();
   const [selectedPurpose, SetSelectedPurpose] = useState<string>();
   const [selectedRoomType, SetSelectedRoomType] = useState<string>();
 
   useEffect(() => {
     dispatch(fetchRoomTypes());
+    dispatch(fetchGuests());
   }, [dispatch]);
 
   useEffect(() => {
@@ -52,6 +59,13 @@ export default function AddModal() {
       );
     }
   }, [dispatch, selectedRoomType]);
+
+  const filteredGuest = useMemo(
+    () =>
+      guests.find((guest) => guest.id === selectedGuest) ||
+      ({ full_name: "", contact_number: "", address: "" } as Guest),
+    [selectedGuest]
+  );
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -85,6 +99,113 @@ export default function AddModal() {
               </ModalHeader>
               <ModalBody>
                 <div className="flex-1 px-4 w-full space-y-4 py-4">
+                  <div className="space-y-4 w-full">
+                    <h1>
+                      <Chip color="primary" className="text-sm">
+                        1
+                      </Chip>
+                      -Guest Information
+                    </h1>
+                    <Select
+                      isRequired
+                      fullWidth
+                      isLoading={isLoading}
+                      radius="none"
+                      className="flex-1 w-full min-w-40 mt-4"
+                      name="guest_id"
+                      label="Guest"
+                      onChange={(e) => SetSelectedGuest(e.target.value)}
+                      labelPlacement="outside"
+                      placeholder="Select Guest"
+                      variant="bordered"
+                      items={[
+                        ...guests,
+                        {
+                          id: "new",
+                          full_name: "Register new guest",
+                          email: "",
+                        },
+                      ]}
+                    >
+                      {(guest) => (
+                        <SelectItem key={guest.id} textValue={guest.full_name}>
+                          <div className="flex flex-col">
+                            <span className="text-small">
+                              {guest.full_name}
+                            </span>
+                            <span className="text-tiny text-gray-600 dark:text-gray-300">
+                              {guest.email}
+                            </span>
+                          </div>
+                        </SelectItem>
+                      )}
+                    </Select>
+                    {selectedGuest ? (
+                      <div className="space-y-4">
+                        <div className="flex flex-col md:flex-row gap-4">
+                          <Input
+                            fullWidth
+                            variant="bordered"
+                            radius="none"
+                            isReadOnly={selectedGuest !== "new"}
+                            isDisabled={selectedGuest !== "new"}
+                            labelPlacement="outside"
+                            label="Full Name"
+                            value={filteredGuest?.full_name}
+                            placeholder="Enter guest fullname"
+                          />
+                          <Input
+                            fullWidth
+                            variant="bordered"
+                            isReadOnly={selectedGuest !== "new"}
+                            isDisabled={selectedGuest !== "new"}
+                            labelPlacement="outside"
+                            radius="none"
+                            value={filteredGuest?.contact_number}
+                            label="Contact Number"
+                            placeholder="Enter guest contact number"
+                          />
+                        </div>
+                        <Textarea
+                          fullWidth
+                          variant="bordered"
+                          isReadOnly={selectedGuest !== "new"}
+                          isDisabled={selectedGuest !== "new"}
+                          radius="none"
+                          labelPlacement="outside"
+                          value={filteredGuest?.address}
+                          label="Address"
+                          placeholder="Enter guest address"
+                        />
+                        {selectedGuest === "new" ? (
+                          <div className="flex flex-col md:flex-row gap-4">
+                            <Input
+                              fullWidth
+                              variant="bordered"
+                              radius="none"
+                              labelPlacement="outside"
+                              label="Nationality"
+                              placeholder="e.g. Filipino"
+                              className="flex-1"
+                            />
+                            <Select
+                              fullWidth
+                              label="Gender"
+                              labelPlacement="outside"
+                              radius="none"
+                              placeholder="Select gender"
+                              isRequired
+                              variant="bordered"
+                              className="flex-1"
+                            >
+                              <SelectItem key="male">Male</SelectItem>
+                              <SelectItem key="female">Female</SelectItem>
+                            </Select>
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </div>
                   <div className="space-y-4 w-full">
                     <h1>
                       <Chip color="primary" className="text-sm">
@@ -184,8 +305,8 @@ export default function AddModal() {
                       isRequired
                       variant="bordered"
                       label="Number of Guests"
-                      type="number"
-                      min={1}
+                      placeholder="e.g. (1 adult, 1 child"
+                      labelPlacement="outside"
                       name="number_of_guests"
                     />
                   </div>

@@ -22,8 +22,8 @@ export interface Booking {
   recent_sickness?: string[];
   special_requests: string;
   status: BookingStatus;
-  rooms?: any;
-  users?: any;
+  room?: any;
+  user?: any;
   room_type?: any;
   created_at: any;
 }
