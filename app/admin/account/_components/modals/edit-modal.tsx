@@ -80,7 +80,7 @@ const EditModal: React.FC<EditModalProps> = ({ user }) => {
                   <div className="grid grid-cols-2 gap-4">
                     <Input
                       label="Name"
-                      value={user.user_metadata.name}
+                      value={user.user_metadata.full_name}
                       name="name"
                       placeholder="Full name"
                       required

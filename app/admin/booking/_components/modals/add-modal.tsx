@@ -111,7 +111,7 @@ export default function AddModal() {
                       fullWidth
                       isLoading={isLoading}
                       radius="none"
-                      className="flex-1 w-full min-w-40 mt-4"
+                      className="flex-1 w-full min-w-40 pt-4"
                       name="guest_id"
                       label="Guest"
                       onChange={(e) => SetSelectedGuest(e.target.value)}
