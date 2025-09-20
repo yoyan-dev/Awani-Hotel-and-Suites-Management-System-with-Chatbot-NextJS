@@ -33,8 +33,6 @@ export default function Page() {
   useEffect(() => {
     if (room) {
       setFormData(room);
-      setBeds(room.beds || []);
-      setFacilities(room.facilities || []);
       setImages([
         ...(room.images?.map((url) => ({ file: null, preview: url })) ?? []),
         ...images,
@@ -61,8 +59,6 @@ export default function Page() {
 
     const updatedRoom: Room = {
       ...formData,
-      beds,
-      facilities,
       images: [...uploadedUrls],
     };
 

@@ -19,7 +19,7 @@ export default function Page() {
 
   const [images, setImages] = useState<any[]>([]);
   const [beds, setBeds] = useState<string[]>([]);
-  const [facilities, setFacilities] = useState<string[]>([]);
+  // const [facilities, setFacilities] = useState<string[]>([]);
 
   useEffect(() => {
     dispatch(fetchRoomTypes());
@@ -29,11 +29,11 @@ export default function Page() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    formData.append("beds", JSON.stringify(beds));
+    // formData.append("beds", JSON.stringify(beds));
     images.forEach((img) => {
       formData.append("images", img.file);
     });
-    formData.append("facilities", JSON.stringify(facilities));
+    // formData.append("facilities", JSON.stringify(facilities));
     dispatch(addRoom(formData));
   }
 
@@ -44,8 +44,6 @@ export default function Page() {
         onSubmit={handleSubmit}
         beds={beds}
         setBeds={setBeds}
-        facilities={facilities}
-        setFacilities={setFacilities}
         images={images}
         setImages={setImages}
         roomTypes={room_types}

@@ -172,7 +172,7 @@ export default function RoomForm({
             placeholder="Room remarks..."
             variant="bordered"
           />
-          <BedsInput beds={beds} setBeds={setBeds} />
+          {/* <BedsInput beds={beds} setBeds={setBeds} /> */}
         </div>
 
         {/* RIGHT SIDE */}
@@ -180,10 +180,10 @@ export default function RoomForm({
           <h1>Room photo</h1>
           <hr className="border border-gray-400" />
           <ImagesUpload images={images} setImages={setImages} />
-          <FacilitiesInput
+          {/* <FacilitiesInput
             facilities={facilities}
             setFacilities={setFacilities}
-          />
+          /> */}
         </div>
       </div>
 

@@ -25,15 +25,7 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     room_id,
     room_number,
     room_type_id,
-    room_type:room_type_id (
-      id,
-      image,
-      name,
-      description,
-      amenities,
-      room_size,
-      price
-    ),
+    room_type:room_type_id (*),
     area,
     description,
     max_guest,
@@ -119,8 +111,8 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     const roomNumber = Number(formData.get("room_number"));
     const formObj = Object.fromEntries(formData.entries());
 
-    const beds = JSON.parse(formObj.beds as string);
-    const facilities = JSON.parse(formObj.facilities as string);
+    // const beds = JSON.parse(formObj.beds as string);
+    // const facilities = JSON.parse(formObj.facilities as string);
     const images = formData.getAll("images") as File[];
 
     const imageUrls = await Promise.all(
@@ -135,8 +127,6 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     const newRoom = {
       ...formObj,
       room_id: `RM-${roomNumber}`,
-      beds: beds,
-      facilities: facilities,
       images: imageUrls,
       status: "available",
     };
