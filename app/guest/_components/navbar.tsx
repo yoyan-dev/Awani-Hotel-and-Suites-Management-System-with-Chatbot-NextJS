@@ -15,6 +15,7 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { usePathname } from "next/navigation";
 import { User as UserType } from "@/types/users";
+import { AvatarPopover } from "./avatar";
 
 interface NavbarProps {
   user: UserType | null;
@@ -76,15 +77,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
               </div>
             </div>
           ) : user?.id ? (
-            <User
-              avatarProps={{
-                src:
-                  user?.user_metadata?.image ??
-                  "https://www.bing.com/ck/a?!&&p=0cce35addb0ad145ee7f6c78e5bb7f91bc1b501db82614a39415208ae0ebf729JmltdHM9MTc1ODMyNjQwMA&ptn=3&ver=2&hsh=4&fclid=28034f8f-5cb8-698d-278e-59955dac6878&u=a1L2ltYWdlcy9zZWFyY2g_cT1kZWZhdWx0K3VzZXIraW1hZ2UmaWQ9MEE3NEI0ODAwNDYyRjE0Q0E4ODVEMEVBQzVFQ0JBN0M0MjRDNDhCRiZGT1JNPUlBQ0ZJUg&ntb=1",
-              }}
-              description={user?.app_metadata?.roles?.[0] || "Guest"}
-              name={user?.user_metadata?.full_name}
-            />
+            <AvatarPopover user={user} />
           ) : (
             <Button as={Link} href="/auth" color="primary" variant="bordered">
               Sign Up
@@ -99,15 +92,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
         {isLoading ? (
           <Skeleton className="flex rounded-full w-10 h-10" />
         ) : user?.id ? (
-          <User
-            avatarProps={{
-              src:
-                user?.user_metadata?.image ??
-                "https://www.bing.com/ck/a?!&&p=0cce35addb0ad145ee7f6c78e5bb7f91bc1b501db82614a39415208ae0ebf729JmltdHM9MTc1ODMyNjQwMA&ptn=3&ver=2&hsh=4&fclid=28034f8f-5cb8-698d-278e-59955dac6878&u=a1L2ltYWdlcy9zZWFyY2g_cT1kZWZhdWx0K3VzZXIraW1hZ2UmaWQ9MEE3NEI0ODAwNDYyRjE0Q0E4ODVEMEVBQzVFQ0JBN0M0MjRDNDhCRiZGT1JNPUlBQ0ZJUg&ntb=1",
-            }}
-            description=""
-            name=""
-          />
+          <AvatarPopover user={user} />
         ) : (
           <Button as={Link} href="/auth" color="primary" variant="bordered">
             Sign Up

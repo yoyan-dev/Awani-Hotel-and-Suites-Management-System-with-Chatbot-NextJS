@@ -4,6 +4,7 @@ import { Button, Card, CardBody, Image, Skeleton } from "@heroui/react";
 import { formatPHP } from "@/lib/format-php";
 import React from "react";
 import { RoomType } from "@/types/room";
+import ViewModal from "./modals/view-modal";
 
 interface AvailableRoomProps {
   rooms: RoomType[];
@@ -42,17 +43,15 @@ const AvailableRooms: React.FC<AvailableRoomProps> = ({
           {rooms.map((room) => (
             <Card key={room.id} isHoverable>
               <CardBody className="dark:bg-gray-800">
-                {/* responsive container */}
                 <div className="flex flex-col md:flex-row items-start gap-4">
-                  {/* image responsive */}
-                  <Image
-                    src={room.image}
-                    alt={room.name}
-                    width={300}
-                    className="w-full md:w-48 h-auto object-cover rounded-md"
-                  />
-
-                  {/* content responsive */}
+                  {room.image ? (
+                    <Image
+                      src={room.image}
+                      alt={room.name}
+                      width={300}
+                      className="w-full md:w-48 h-auto object-cover rounded-md"
+                    />
+                  ) : null}
                   <div className="flex flex-col justify-between h-full w-full space-y-2">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-1">
                       <div className="flex flex-wrap items-center gap-2">
@@ -72,7 +71,7 @@ const AvailableRooms: React.FC<AvailableRoomProps> = ({
                       {room.description}
                     </p>
 
-                    <div>
+                    <div className="flex gap-4 flex-wrap">
                       <Button
                         color="primary"
                         size="sm"
@@ -80,6 +79,7 @@ const AvailableRooms: React.FC<AvailableRoomProps> = ({
                       >
                         Choose
                       </Button>
+                      <ViewModal room={room} />
                     </div>
                   </div>
                 </div>

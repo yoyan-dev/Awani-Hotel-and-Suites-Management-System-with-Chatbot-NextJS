@@ -43,6 +43,7 @@ export default function Page() {
 
   useEffect(() => {
     dispatch(fetchRoomTypes());
+    getCurrentUser();
   }, [dispatch]);
 
   const room = useMemo(() => {
@@ -70,6 +71,7 @@ export default function Page() {
           <BookingForm
             onSubmit={handleSubmit}
             guest={guest}
+            guestIsLoading={guestIsLoading}
             room_types={room_types}
             room={room || null}
             isLoading={isLoading}

@@ -11,11 +11,11 @@ function randomString(length = 12) {
 }
 
 export async function uploadRoomImage(file: File, roomNumber: string | number) {
+  if (!file) return null;
   const ext = file.name.split(".").pop();
   const newName = `${Date.now()}-${randomString()}.${ext}`;
 
   const filePath = `room-${roomNumber}/${newName}`;
-
   const { error } = await supabase.storage
     .from("room-images")
     .upload(filePath, file);

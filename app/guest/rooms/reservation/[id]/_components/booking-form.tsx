@@ -13,6 +13,7 @@ import {
   Checkbox,
   Form,
   Tooltip,
+  Spinner,
 } from "@heroui/react";
 import { ArrowLeft, ArrowRight, Info, Link } from "lucide-react";
 import React, { useState } from "react";
@@ -22,6 +23,7 @@ import PolicyModal from "./modals/policy-modal";
 interface BookingFormProps {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   guest: Guest;
+  guestIsLoading: boolean;
   room_types: RoomType[];
   room: RoomType | null;
   isLoading: boolean;
@@ -33,6 +35,7 @@ interface BookingFormProps {
 export default function BookingForm({
   onSubmit,
   guest,
+  guestIsLoading,
   room_types,
   room,
   isLoading,
@@ -54,9 +57,6 @@ export default function BookingForm({
             -Personal Information
           </h1>
           <div className="flex">
-            <Link color="primary" href="#">
-              Primary
-            </Link>
             <Tooltip
               content="This field is automatically filled from your account. To change it, go to Account Settings."
               color="warning"
@@ -65,41 +65,49 @@ export default function BookingForm({
             </Tooltip>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row gap-4">
-          <Input
-            fullWidth
-            variant="bordered"
-            radius="none"
-            isReadOnly
-            isDisabled
-            labelPlacement="outside"
-            label="Full Name"
-            value={guest.full_name}
-            placeholder="Enter your name"
-          />
-          <Input
-            fullWidth
-            variant="bordered"
-            isReadOnly
-            isDisabled
-            labelPlacement="outside"
-            radius="none"
-            label="Contact Number"
-            value={guest.contact_number}
-            placeholder="Enter your name"
-          />
-        </div>
-        <Textarea
-          fullWidth
-          variant="bordered"
-          isReadOnly
-          isDisabled
-          radius="none"
-          labelPlacement="outside"
-          label="Address"
-          value={guest.address}
-          placeholder="Enter your name"
-        />
+        {guestIsLoading ? (
+          <div className="w-full flex justify-between">
+            <Spinner />
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col md:flex-row gap-4">
+              <Input
+                fullWidth
+                variant="bordered"
+                radius="none"
+                isReadOnly
+                isDisabled
+                labelPlacement="outside"
+                label="Full Name"
+                value={guest.full_name}
+                placeholder="Enter your name"
+              />
+              <Input
+                fullWidth
+                variant="bordered"
+                isReadOnly
+                isDisabled
+                labelPlacement="outside"
+                radius="none"
+                label="Contact Number"
+                value={guest.contact_number}
+                placeholder="Enter your name"
+              />
+            </div>
+            <Textarea
+              fullWidth
+              variant="bordered"
+              isReadOnly
+              isDisabled
+              radius="none"
+              labelPlacement="outside"
+              label="Address"
+              value={guest.address}
+              placeholder="Enter your name"
+            />
+          </>
+        )}
       </div>
       <div className="space-y-4 w-full">
         <h1>
