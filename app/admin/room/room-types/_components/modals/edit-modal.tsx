@@ -45,9 +45,10 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ room_type }) => {
       updateRoomType({
         ...formData,
         amenities: amenities,
-        image: file
-          ? await uploadRoomImage(file, "type-image")
-          : formData.image,
+        image:
+          file && file.size > 0
+            ? await uploadRoomImage(file, "type-image")
+            : formData.image,
       })
     );
     onClose();

@@ -52,7 +52,10 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     const newData = {
       ...formObj,
       amenities: amenities,
-      image: image ? await uploadRoomImage(image, "type-image") : "",
+      image:
+        image && image.size > 0
+          ? await uploadRoomImage(image, "type-image")
+          : "",
     };
     const { data, error } = await supabase
       .from("room_types")
