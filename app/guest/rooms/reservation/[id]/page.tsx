@@ -29,6 +29,10 @@ export default function Page() {
     (state: RootState) => state.booking
   );
 
+  const [specialRequests, setSpecialRequests] = useState<
+    { name: string; price: string; quantity: number }[]
+  >([]);
+
   async function getCurrentUser() {
     const {
       data: { user },
@@ -43,6 +47,7 @@ export default function Page() {
 
   useEffect(() => {
     dispatch(fetchRoomTypes());
+    getCurrentUser();
   }, [dispatch]);
 
   const room = useMemo(() => {
@@ -52,10 +57,26 @@ export default function Page() {
     return null;
   }, [room_types, selectedRoom]);
 
+  useEffect(() => {
+    if (room?.add_ons) {
+      setSpecialRequests(
+        room.add_ons.map((item: any) => ({
+          name: item.name,
+          price: item.price,
+          quantity: 0,
+        }))
+      );
+    } else {
+      setSpecialRequests([]);
+    }
+  }, [room]);
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+
     formData.append("guest_id", guest.id || "");
+    formData.append("special_requests", JSON.stringify(specialRequests));
     console.log(formData);
     await dispatch(addBooking(formData));
   }
@@ -70,11 +91,14 @@ export default function Page() {
           <BookingForm
             onSubmit={handleSubmit}
             guest={guest}
+            guestIsLoading={guestIsLoading}
             room_types={room_types}
             room={room || null}
             isLoading={isLoading}
             selectedRoom={selectedRoom}
             setSelectedRoom={setSelectedRoom}
+            specialRequests={specialRequests}
+            setSpecialRequests={setSpecialRequests}
             bookingIsLoading={bookingIsLoading}
           />
           {room ? (

@@ -11,6 +11,7 @@ function randomString(length = 12) {
 }
 
 export async function uploadUserImage(file: File) {
+  if (!file) return "";
   const ext = file.name.split(".").pop();
   const newName = `${Date.now()}-${randomString()}.${ext}`;
   const filePath = newName;

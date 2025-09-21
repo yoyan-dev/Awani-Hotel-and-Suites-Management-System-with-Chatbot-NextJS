@@ -16,12 +16,15 @@ export interface Booking {
   room_type_id: string;
   check_in: string;
   check_out: string;
+  company?: string;
+  special_requests: any;
   places_last_visited?: string;
   purpose?: string;
   number_of_guests?: number;
   recent_sickness?: string[];
-  special_requests: string;
   status: BookingStatus;
+  total_add_ons: string;
+  total: string;
   room?: any;
   user?: any;
   room_type?: any;

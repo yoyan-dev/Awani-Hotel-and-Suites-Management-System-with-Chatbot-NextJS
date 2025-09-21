@@ -13,11 +13,8 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, type RootState } from "@/store/store";
 import { Plus, Upload } from "lucide-react";
-import AmenitiesInput from "../amenities-input";
-import {
-  addRoomType,
-  updateRoomType,
-} from "@/features/room-types/room-types-thunk";
+import AddOnsInput from "../add-ons-input";
+import { updateRoomType } from "@/features/room-types/room-types-thunk";
 import { RoomType } from "@/types/room";
 import { uploadRoomImage } from "@/lib/upload-room-image";
 
@@ -30,8 +27,8 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ room_type }) => {
   const { isLoading } = useSelector((state: RootState) => state.inventory);
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [formData, setFormData] = useState<RoomType>(room_type);
-  const [amenities, setAmenities] = useState<string[]>(
-    room_type.amenities ?? []
+  const [addOns, setAddOns] = useState<{ name: string; price: string }[]>(
+    room_type.add_ons ?? []
   );
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -44,10 +41,11 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ room_type }) => {
     await dispatch(
       updateRoomType({
         ...formData,
-        amenities: amenities,
-        image: file
-          ? await uploadRoomImage(file, "type-image")
-          : formData.image,
+        add_ons: addOns,
+        image:
+          file && file.size > 0
+            ? await uploadRoomImage(file, "type-image")
+            : formData.image,
       })
     );
     onClose();
@@ -189,13 +187,28 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ room_type }) => {
                         className="hidden"
                         onChange={handleFileChange}
                       />
+                      <Input
+                        className="flex-1"
+                        label="Max Guest"
+                        name="max_guest"
+                        type="number"
+                        variant="bordered"
+                        radius="none"
+                        value={formData.max_guest?.toString() ?? ""}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            max_guest: Number(e.target.value),
+                          })
+                        }
+                        labelPlacement="outside"
+                        min={1}
+                        placeholder="0"
+                      />
                     </div>
                   </div>
 
-                  <AmenitiesInput
-                    amenities={amenities}
-                    setAmenities={setAmenities}
-                  />
+                  <AddOnsInput addOns={addOns} setAddOns={setAddOns} />
 
                   <div className="flex justify-end gap-4 w-full">
                     <Button onPress={onClose} variant="bordered">

@@ -104,7 +104,7 @@ export default function RoomForm({
                 <div className="flex flex-col">
                   <span className="text-small">{type.name}</span>
                   <span className="text-tiny text-gray-600 dark:text-gray-300">
-                    {type.amenities?.map((amenity) => `${amenity}, `)}
+                    {type.description}
                   </span>
                 </div>
               </SelectItem>

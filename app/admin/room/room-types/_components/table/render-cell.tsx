@@ -15,6 +15,8 @@ import UpdateModal from "../modals/edit-modal";
 import DeleteModal from "../modals/delete-modal";
 import { RoomType } from "@/types/room";
 import { formatPHP } from "@/lib/format-php";
+import ViewAddOns from "../popover/view-add-ons";
+import ViewModal from "../modals/view-modal";
 
 interface RenderCellProps {
   room_type: RoomType;
@@ -30,8 +32,12 @@ export const RenderCell: React.FC<RenderCellProps> = ({
   switch (columnKey) {
     case "image":
       return <Image src={room_type.image} width={200} />;
-    case "amenities":
-      return room_type.amenities?.map((amenity) => `${amenity}, `);
+    case "add_ons":
+      return room_type.add_ons && room_type.add_ons.length > 0 ? (
+        <ViewAddOns addOns={room_type.add_ons ?? []} />
+      ) : (
+        "no add ons"
+      );
     case "price":
       return formatPHP(Number(room_type.price));
     case "actions":
@@ -47,7 +53,9 @@ export const RenderCell: React.FC<RenderCellProps> = ({
               </Button>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem key="view">View</DropdownItem>
+              <DropdownItem key="view">
+                <ViewModal room={room_type} />
+              </DropdownItem>
               <DropdownItem key="edit">
                 <UpdateModal room_type={room_type} />
               </DropdownItem>

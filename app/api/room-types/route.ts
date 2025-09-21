@@ -47,12 +47,15 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
 
     const formObj = Object.fromEntries(formData.entries());
     const image = formData.get("image") as File;
-    const amenities = JSON.parse(formObj.amenities as string);
+    const add_ons = JSON.parse(formObj.add_ons as string);
 
     const newData = {
       ...formObj,
-      amenities: amenities,
-      image: image ? await uploadRoomImage(image, "type-image") : "",
+      add_ons: add_ons,
+      image:
+        image && image.size > 0
+          ? await uploadRoomImage(image, "type-image")
+          : "",
     };
     const { data, error } = await supabase
       .from("room_types")
