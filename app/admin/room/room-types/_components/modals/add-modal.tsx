@@ -13,20 +13,20 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, type RootState } from "@/store/store";
 import { Plus, Upload } from "lucide-react";
-import AmenitiesInput from "../amenities-input";
+import AddOnsInput from "../add-ons-input";
 import { addRoomType } from "@/features/room-types/room-types-thunk";
 
 export default function AddModal() {
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading } = useSelector((state: RootState) => state.inventory);
+  const { isLoading } = useSelector((state: RootState) => state.room_type);
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-  const [amenities, setAmenities] = useState<string[]>([]);
+  const [addOns, setAddOns] = useState<{ name: string; price: string }[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    formData.append("amenities", JSON.stringify(amenities));
+    formData.append("add_ons", JSON.stringify(addOns));
 
     await dispatch(addRoomType(formData));
     onClose();
@@ -71,6 +71,7 @@ export default function AddModal() {
                         placeholder="Item room type"
                         name="name"
                         variant="bordered"
+                        radius="none"
                         labelPlacement="outside"
                       />
                       <div className="flex flex-col sm:flex-row gap-4">
@@ -80,6 +81,7 @@ export default function AddModal() {
                           placeholder="Room size"
                           name="room_size"
                           variant="bordered"
+                          radius="none"
                           labelPlacement="outside"
                         />
                         <Input
@@ -88,6 +90,7 @@ export default function AddModal() {
                           name="price"
                           type="number"
                           variant="bordered"
+                          radius="none"
                           labelPlacement="outside"
                           placeholder="0.00"
                           startContent={
@@ -103,6 +106,7 @@ export default function AddModal() {
                         label="Description"
                         labelPlacement="outside"
                         variant="bordered"
+                        radius="none"
                       />
                     </div>
 
@@ -137,16 +141,24 @@ export default function AddModal() {
                         className="hidden"
                         onChange={handleFileChange}
                       />
+                      <Input
+                        className="flex-1"
+                        label="Max Guest"
+                        name="max_guest"
+                        type="number"
+                        variant="bordered"
+                        radius="none"
+                        labelPlacement="outside"
+                        min={1}
+                        placeholder="0"
+                      />
                     </div>
                   </div>
 
-                  <AmenitiesInput
-                    amenities={amenities}
-                    setAmenities={setAmenities}
-                  />
+                  <AddOnsInput addOns={addOns} setAddOns={setAddOns} />
 
                   <div className="flex justify-end gap-4 w-full">
-                    <Button onPress={onClose} variant="bordered">
+                    <Button onPress={onClose} variant="bordered" radius="none">
                       Cancel
                     </Button>
                     <Button color="primary" type="submit" isLoading={isLoading}>

@@ -21,9 +21,7 @@ const ViewModal: React.FC<ViewModalProps> = ({ room }) => {
 
   return (
     <>
-      <div onClick={onOpen} className="text-primary cursor-pointer">
-        View room details.
-      </div>
+      <div onClick={onOpen}>View room details.</div>
       <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -32,11 +30,14 @@ const ViewModal: React.FC<ViewModalProps> = ({ room }) => {
                 {room.name}
               </ModalHeader>
               <ModalBody>
-                <div>
+                <div className="pb-4 space-y-8">
                   <div className="flex flex-col items-start gap-2">
                     <div className="flex gap-2 overflow-x-auto">
                       <Image src={room.image} alt="room image" width="100%" />
                     </div>
+                    <span className="text-gray-600 dark:text-gray-400 text-sm">
+                      Max guest {room.max_guest || 1}
+                    </span>
                     <div className="flex justify-between items-center flex-wrap  w-full">
                       <div className="flex gap-2">
                         <h2 className="text-2xl font-semibold capitalize">
@@ -46,33 +47,32 @@ const ViewModal: React.FC<ViewModalProps> = ({ room }) => {
                           ({room.room_size})
                         </span>
                       </div>
-                      <p className="text-xl font-semibold">
-                        {formatPHP(Number(room.price))}
-                      </p>
                     </div>
                     <p className="text-gray-500 dark:text-gray-300 text-sm">
                       {room.description}
+                    </p>
+                    <p className="text-xl font-semibold text-primary">
+                      {formatPHP(Number(room.price))}
                     </p>
                   </div>
 
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-lg font-medium mb-2">
-                        Room Features
-                      </h3>
+                      <h3 className="text-lg font-medium">Room Add Ons</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-300">
+                        Available add ons for {room.name}
+                      </p>
                       <div className="flex gap-4 text-gray-700 flex-wrap">
-                        <div className="flex items-center gap-2">
-                          <UserCircle size={20} /> 2 Guests
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Bed size={20} /> 1 Queen Bed
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Wifi size={20} /> Free WiFi
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Tv size={20} /> Smart TV
-                        </div>
+                        {room.add_ons && room.add_ons.length > 0
+                          ? room.add_ons.map((item: any) => (
+                              <div
+                                className="flex items-center gap-2"
+                                key={item.name}
+                              >
+                                {item.name} - {formatPHP(Number(item.price))}
+                              </div>
+                            ))
+                          : "no add ons"}
                       </div>
                     </div>
                   </div>

@@ -13,8 +13,9 @@ export interface RoomType {
   image?: string;
   name?: string;
   description?: string;
-  amenities?: string[];
+  add_ons?: any;
   room_size?: string;
+  max_guest?: number;
   price?: number;
 }
 

@@ -14,12 +14,14 @@ import {
   Form,
   Tooltip,
   Spinner,
+  cn,
 } from "@heroui/react";
 import { ArrowLeft, ArrowRight, Info, Link } from "lucide-react";
 import React, { useState } from "react";
 import ViewModal from "./modals/view-modal";
 import { Guest } from "@/types/guest";
 import PolicyModal from "./modals/policy-modal";
+import { formatPHP } from "@/lib/format-php";
 interface BookingFormProps {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   guest: Guest;
@@ -162,7 +164,17 @@ export default function BookingForm({
               placeholder="Enter your name"
             />
           </div> */}
-
+        <Input
+          fullWidth
+          variant="bordered"
+          isReadOnly
+          isDisabled
+          name="company"
+          labelPlacement="outside"
+          radius="none"
+          label="Company (Optional)"
+          placeholder="Company name"
+        />
         <div className="flex gap-4">
           <Input
             fullWidth
@@ -182,6 +194,29 @@ export default function BookingForm({
             name="check_out"
           />
         </div>
+        {room ? (
+          <CheckboxGroup
+            classNames={{ label: "text-gray-600 dark:text-gray-300" }}
+            color="primary"
+            label="Special Request"
+            orientation="horizontal"
+            size="sm"
+            name="special_requests"
+          >
+            {room.add_ons.map((item: any) => (
+              <Checkbox key={item.name} value={item.name}>
+                <div className="flex items-center gap-4 ">
+                  <span className="text-tiny text-default-700 dark:text-default-400">
+                    {item.name}
+                  </span>
+                  <Chip color="success" size="sm" variant="flat">
+                    {formatPHP(Number(item.price || 0))}
+                  </Chip>
+                </div>
+              </Checkbox>
+            ))}
+          </CheckboxGroup>
+        ) : null}
 
         <Input
           variant="bordered"

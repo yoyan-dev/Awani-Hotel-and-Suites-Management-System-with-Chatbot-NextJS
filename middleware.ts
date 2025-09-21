@@ -1,18 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { createServerClient } from "@supabase/ssr";
-import { createClient } from "./lib/supabase/server";
+import { getCurrentUser } from "./lib/auth/index";
 
 export async function middleware(req: NextRequest) {
   // Create a response so Supabase can attach refreshed cookies if needed
   let res = NextResponse.next();
 
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const { user, error } = await getCurrentUser();
 
   console.log("Middleware user:", user, "Error:", error);
 
@@ -60,26 +54,9 @@ export async function middleware(req: NextRequest) {
   //   }
   // }
 
-  // if (pathname.startsWith("/front_office")) {
-  //   if (
-  //     !user ||
-  //     !(user.app_metadata?.roles || user.user_metadata?.roles)?.includes(
-  //       "front_office"
-  //     )
-  //   ) {
-  //     return NextResponse.redirect(new URL("/auth", req.url));
-  //   }
-  // }
-
   return res;
 }
 
 export const config = {
-  matcher: [
-    "/",
-    "/auth",
-    "/admin/:path*",
-    "/housekeeping/:path*",
-    "/front_office/:path*",
-  ],
+  matcher: ["/", "/auth", "/admin/:path*", "/housekeeping/:path*"],
 };

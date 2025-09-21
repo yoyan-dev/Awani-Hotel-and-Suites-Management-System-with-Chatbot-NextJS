@@ -11,7 +11,7 @@ function randomString(length = 12) {
 }
 
 export async function uploadRoomImage(file: File, roomNumber: string | number) {
-  if (!file) return null;
+  if (!file) return "";
   const ext = file.name.split(".").pop();
   const newName = `${Date.now()}-${randomString()}.${ext}`;
 

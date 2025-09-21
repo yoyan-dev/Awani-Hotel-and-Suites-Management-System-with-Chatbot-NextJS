@@ -26,8 +26,6 @@ export default function Auth() {
 
     if (error) setMessage({ error: true, message: error.message });
     else setMessage({ error: false, message: "Logged in successfully!" });
-
-    setIsLoading(false);
     console.log(data);
 
     const roles = data?.user?.app_metadata?.roles || [];
@@ -35,6 +33,7 @@ export default function Auth() {
     else if (roles?.includes("front-office")) router?.push("/front-office");
     else if (roles?.includes("housekeeping")) router?.push("/housekeeping");
     else router.push("/guest");
+    setIsLoading(false);
   }
 
   return (
