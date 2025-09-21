@@ -29,6 +29,10 @@ export default function Page() {
     (state: RootState) => state.booking
   );
 
+  const [specialRequests, setSpecialRequests] = useState<
+    { name: string; price: string; quantity: number }[]
+  >([]);
+
   async function getCurrentUser() {
     const {
       data: { user },
@@ -53,10 +57,26 @@ export default function Page() {
     return null;
   }, [room_types, selectedRoom]);
 
+  useEffect(() => {
+    if (room?.add_ons) {
+      setSpecialRequests(
+        room.add_ons.map((item: any) => ({
+          name: item.name,
+          price: item.price,
+          quantity: 0,
+        }))
+      );
+    } else {
+      setSpecialRequests([]);
+    }
+  }, [room]);
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+
     formData.append("guest_id", guest.id || "");
+    formData.append("special_requests", JSON.stringify(specialRequests));
     console.log(formData);
     await dispatch(addBooking(formData));
   }
@@ -77,6 +97,8 @@ export default function Page() {
             isLoading={isLoading}
             selectedRoom={selectedRoom}
             setSelectedRoom={setSelectedRoom}
+            specialRequests={specialRequests}
+            setSpecialRequests={setSpecialRequests}
             bookingIsLoading={bookingIsLoading}
           />
           {room ? (

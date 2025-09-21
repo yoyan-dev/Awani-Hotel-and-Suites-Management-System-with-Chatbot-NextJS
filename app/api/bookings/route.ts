@@ -16,6 +16,8 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
       special_requests,
       number_of_guests,
       status,
+      total_add_ons,
+      total,
       created_at,
       room_type:room_type_id(*),
       room:room_id (*),
@@ -58,7 +60,19 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
     const formData = await req.formData();
     const formObj = Object.fromEntries(formData.entries());
-    const newData = { ...formObj };
+    const specialRequests = JSON.parse(formObj.special_requests as string);
+
+    const totalAddOnsPrice = specialRequests.reduce(
+      (acc: number, item: { price: string; quantity: number }) =>
+        acc + Number(item.price) * (item.quantity || 0),
+      0
+    );
+
+    const newData = {
+      ...formObj,
+      special_requests: specialRequests,
+      total_add_ons: totalAddOnsPrice,
+    };
     const { data, error } = await supabase
       .from("bookings")
       .insert([newData])

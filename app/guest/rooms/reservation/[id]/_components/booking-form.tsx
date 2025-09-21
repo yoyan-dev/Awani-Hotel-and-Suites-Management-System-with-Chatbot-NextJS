@@ -16,7 +16,7 @@ import {
   Spinner,
   cn,
 } from "@heroui/react";
-import { ArrowLeft, ArrowRight, Info, Link } from "lucide-react";
+import { ArrowLeft, ArrowRight, Info, Link, Minus, Plus } from "lucide-react";
 import React, { useState } from "react";
 import ViewModal from "./modals/view-modal";
 import { Guest } from "@/types/guest";
@@ -31,6 +31,10 @@ interface BookingFormProps {
   isLoading: boolean;
   selectedRoom: any;
   setSelectedRoom: React.Dispatch<React.SetStateAction<any>>;
+  specialRequests: { name: string; price: string; quantity: number }[];
+  setSpecialRequests: React.Dispatch<
+    React.SetStateAction<{ name: string; price: string; quantity: number }[]>
+  >;
   bookingIsLoading: boolean;
 }
 
@@ -43,6 +47,8 @@ export default function BookingForm({
   isLoading,
   selectedRoom,
   setSelectedRoom,
+  specialRequests,
+  setSpecialRequests,
   bookingIsLoading,
 }: BookingFormProps) {
   const [selectedPurpose, SetSelectedPurpose] = useState<string>("");
@@ -126,7 +132,7 @@ export default function BookingForm({
             <ViewModal room={room} />
           </div>
         ) : null}
-        <div className="pt-4">
+        <div className="py-4">
           <Select
             isRequired
             fullWidth
@@ -154,21 +160,10 @@ export default function BookingForm({
             ))}
           </Select>
         </div>
-        {/* <div>
-            <Input
-              fullWidth
-              variant="underlined"
-              isRequired
-              label="Full Name"
-              name="fullName"
-              placeholder="Enter your name"
-            />
-          </div> */}
+
         <Input
           fullWidth
           variant="bordered"
-          isReadOnly
-          isDisabled
           name="company"
           labelPlacement="outside"
           radius="none"
@@ -194,29 +189,67 @@ export default function BookingForm({
             name="check_out"
           />
         </div>
-        {room ? (
-          <CheckboxGroup
-            classNames={{ label: "text-gray-600 dark:text-gray-300" }}
-            color="primary"
-            label="Special Request"
-            orientation="horizontal"
-            size="sm"
-            name="special_requests"
-          >
-            {room.add_ons.map((item: any) => (
-              <Checkbox key={item.name} value={item.name}>
-                <div className="flex items-center gap-4 ">
-                  <span className="text-tiny text-default-700 dark:text-default-400">
-                    {item.name}
-                  </span>
-                  <Chip color="success" size="sm" variant="flat">
-                    {formatPHP(Number(item.price || 0))}
-                  </Chip>
-                </div>
-              </Checkbox>
-            ))}
-          </CheckboxGroup>
-        ) : null}
+        <div>
+          <label>Special requests</label>
+          <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">
+            Select optional add-ons for this room. Use the plus/minus buttons to
+            adjust the quantity.
+          </p>
+
+          <div className="flex gap-4 flex-wrap py-4">
+            {specialRequests
+              ? specialRequests.map((request: any) => (
+                  <div
+                    className="flex flex-col gap-2 items-center"
+                    key={request.name}
+                  >
+                    <div className="flex items-center gap-4 ">
+                      <span className="text-tiny text-default-700 dark:text-default-400">
+                        {request.name}
+                      </span>
+                      <Chip color="success" size="sm" variant="flat">
+                        {formatPHP(Number(request.price || 0))}
+                      </Chip>
+                    </div>
+                    <div className="flex justify-center gap-2">
+                      <Button
+                        size="sm"
+                        isIconOnly
+                        isDisabled={request.quantity === 0}
+                        onPress={() =>
+                          setSpecialRequests((prev) =>
+                            prev.map((req) =>
+                              req.name === request.name
+                                ? { ...req, quantity: req.quantity - 1 }
+                                : req
+                            )
+                          )
+                        }
+                      >
+                        <Minus size={8} />
+                      </Button>
+                      {request.quantity}
+                      <Button
+                        size="sm"
+                        isIconOnly
+                        onPress={() =>
+                          setSpecialRequests((prev) =>
+                            prev.map((req) =>
+                              req.name === request.name
+                                ? { ...req, quantity: req.quantity + 1 }
+                                : req
+                            )
+                          )
+                        }
+                      >
+                        <Plus size={8} />
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              : null}
+          </div>
+        </div>
 
         <Input
           variant="bordered"
