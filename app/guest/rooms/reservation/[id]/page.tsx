@@ -75,8 +75,15 @@ export default function Page() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
+    const filtereSpecialRequest = specialRequests.filter(
+      (req) => req.quantity > 0
+    );
+
     formData.append("guest_id", guest.id || "");
-    formData.append("special_requests", JSON.stringify(specialRequests));
+    formData.append(
+      "special_requests",
+      JSON.stringify(filtereSpecialRequest || [])
+    );
     console.log(formData);
     await dispatch(addBooking(formData));
   }

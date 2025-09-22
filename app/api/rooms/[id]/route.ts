@@ -12,7 +12,20 @@ export async function GET(
 
   const { data: room, error } = await supabase
     .from("rooms")
-    .select("*")
+    .select(
+      `
+    id,
+    room_id,
+    room_number,
+    room_type_id,
+    room_type:room_type_id (*),
+    area,
+    description,
+    status,
+    images,
+    remarks
+  `
+    )
     .eq("id", id)
     .single();
 
