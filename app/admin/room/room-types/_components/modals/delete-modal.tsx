@@ -17,31 +17,32 @@ import {
 } from "@/features/room-types/room-types-thunk";
 
 interface DeleteModalProps {
-  room_type: RoomType;
+  room: RoomType;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const DeleteModal: React.FC<DeleteModalProps> = ({ room_type }) => {
+const DeleteModal: React.FC<DeleteModalProps> = ({ room, isOpen, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const isLoading = useSelector(
-    (state: RootState) => state.room_type.isLoading
-  );
-
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const isLoading = useSelector((state: RootState) => state.room.isLoading);
 
   async function handleDelete() {
-    await dispatch(deleteRoomType(room_type.id || ""));
+    await dispatch(deleteRoomType(room.id || ""));
     dispatch(fetchRoomTypes());
   }
 
-  console.log(room_type.id);
+  console.log(room.id);
   return (
     <>
-      <div onClick={onOpen} className="text-danger">
-        Delete
-      </div>
-      <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        backdrop="blur"
+        isOpen={isOpen}
+        onOpenChange={(open) => !open && onClose()}
+        placement="top-center"
+        radius="sm"
+      >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 Confirm Delete

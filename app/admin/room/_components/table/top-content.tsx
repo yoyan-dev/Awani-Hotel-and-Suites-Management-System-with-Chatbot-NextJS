@@ -21,7 +21,6 @@ interface Props {
   setStatusFilter: (val: any) => void;
   visibleColumns: any;
   setVisibleColumns: (val: any) => void;
-  onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   roomsCount: any;
   selectedKeys: Set<number> | "all";
 }
@@ -34,7 +33,6 @@ export const TableTopContent: React.FC<Props> = ({
   setStatusFilter,
   visibleColumns,
   setVisibleColumns,
-  onRowsPerPageChange,
   roomsCount,
   selectedKeys,
 }) => {
@@ -47,7 +45,7 @@ export const TableTopContent: React.FC<Props> = ({
             base: "w-full sm:max-w-[44%]",
             inputWrapper: "border-1",
           }}
-          placeholder="Search by name..."
+          placeholder="Search something..."
           size="sm"
           startContent={<Search className="text-default-300" />}
           value={filterValue}
@@ -106,7 +104,6 @@ export const TableTopContent: React.FC<Props> = ({
               ))}
             </DropdownMenu>
           </Dropdown>
-          {/* <AddModal /> */}
           <Button
             size="sm"
             as={Link}

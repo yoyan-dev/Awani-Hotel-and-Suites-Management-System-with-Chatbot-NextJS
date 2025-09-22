@@ -34,10 +34,6 @@ export interface Room {
   room_type?: any;
   area?: string;
   description?: string;
-  max_guest?: number;
-  base_price?: number;
-  beds?: string[];
-  facilities?: string[];
   status?: RoomStatus;
   images?: string[];
   remarks?: string;

@@ -9,26 +9,28 @@ import {
   useDisclosure,
   Input,
   Textarea,
+  ModalFooter,
 } from "@heroui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, type RootState } from "@/store/store";
-import { Plus, Upload } from "lucide-react";
+import { Copyright, Plus, Upload } from "lucide-react";
 import AddOnsInput from "../add-ons-input";
 import { updateRoomType } from "@/features/room-types/room-types-thunk";
 import { RoomType } from "@/types/room";
 import { uploadRoomImage } from "@/lib/upload-room-image";
 
 interface UpdateModalProps {
-  room_type: RoomType;
+  room: RoomType;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const UpdateModal: React.FC<UpdateModalProps> = ({ room_type }) => {
+const UpdateModal: React.FC<UpdateModalProps> = ({ room, isOpen, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading } = useSelector((state: RootState) => state.inventory);
-  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-  const [formData, setFormData] = useState<RoomType>(room_type);
+  const [formData, setFormData] = useState<RoomType>(room);
   const [addOns, setAddOns] = useState<{ name: string; price: string }[]>(
-    room_type.add_ons ?? []
+    room.add_ons ?? []
   );
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -60,21 +62,19 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ room_type }) => {
 
   return (
     <>
-      <div onClick={onOpen} className="text-success">
-        Edit
-      </div>
       <Modal
         isOpen={isOpen}
+        onOpenChange={(open) => !open && onClose()}
         placement="top-center"
-        onOpenChange={onOpenChange}
         scrollBehavior="outside"
         size="3xl"
+        radius="none"
       >
         <ModalContent>
           {() => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                Add New Room Type
+              <ModalHeader className="flex flex-col gap-1 w-full bg-primary text-white">
+                Edit Room Type
               </ModalHeader>
               <ModalBody>
                 <Form
@@ -90,6 +90,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ room_type }) => {
                         placeholder="Item room type"
                         name="name"
                         variant="bordered"
+                        radius="none"
                         labelPlacement="outside"
                         value={formData.name}
                         onChange={(e) =>
@@ -103,6 +104,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ room_type }) => {
                           placeholder="Room size"
                           name="room_size"
                           variant="bordered"
+                          radius="none"
                           labelPlacement="outside"
                           value={formData.room_size}
                           onChange={(e) =>
@@ -118,6 +120,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ room_type }) => {
                           name="price"
                           type="number"
                           variant="bordered"
+                          radius="none"
                           labelPlacement="outside"
                           placeholder="0.00"
                           startContent={
@@ -140,6 +143,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ room_type }) => {
                         label="Description"
                         labelPlacement="outside"
                         variant="bordered"
+                        radius="none"
                         value={formData.description}
                         onChange={(e) =>
                           setFormData({
@@ -210,16 +214,24 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ room_type }) => {
 
                   <AddOnsInput addOns={addOns} setAddOns={setAddOns} />
 
-                  <div className="flex justify-end gap-4 w-full">
-                    <Button onPress={onClose} variant="bordered">
+                  <div className="flex justify-end gap-4 w-full pb-4">
+                    <Button onPress={onClose} variant="bordered" radius="sm">
                       Cancel
                     </Button>
-                    <Button color="primary" type="submit" isLoading={isLoading}>
+                    <Button
+                      color="primary"
+                      type="submit"
+                      isLoading={isLoading}
+                      radius="sm"
+                    >
                       Submit
                     </Button>
                   </div>
                 </Form>
               </ModalBody>
+              <ModalFooter className="gap-1 w-full bg-primary flex justify-center items-center text-white text-sm font-thin">
+                <Copyright size={10} /> Alright reserved Ma. Awani.
+              </ModalFooter>
             </>
           )}
         </ModalContent>

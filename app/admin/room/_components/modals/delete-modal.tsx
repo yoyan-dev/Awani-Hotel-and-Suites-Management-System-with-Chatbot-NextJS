@@ -12,24 +12,29 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/store";
 import { deleteRoom, fetchRooms } from "@/features/room/room-thunk";
 
-export default function DeleteModal(room: any) {
+interface DeleteModalProps {
+  room: Room;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const DeleteModal: React.FC<DeleteModalProps> = ({ room, isOpen, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector((state: RootState) => state.room.isLoading);
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   async function handleDelete() {
-    await dispatch(deleteRoom(room.room.id));
+    await dispatch(deleteRoom(room.id || ""));
     dispatch(fetchRooms());
   }
-
-  console.log(room);
   return (
     <>
-      <div onClick={onOpen}>Delete</div>
-      <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        backdrop="blur"
+        isOpen={isOpen}
+        onOpenChange={(open) => !open && onClose()}
+      >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 Delete Room
@@ -58,4 +63,6 @@ export default function DeleteModal(room: any) {
       </Modal>
     </>
   );
-}
+};
+
+export default DeleteModal;

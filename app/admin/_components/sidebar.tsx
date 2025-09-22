@@ -23,6 +23,7 @@ import {
 } from "@heroui/react";
 import { siteConfig } from "@/config/site";
 import { useState } from "react";
+import UserPopover from "./user-popover";
 
 export const ListboxWrapper = ({ children }: any) => {
   return (
@@ -33,24 +34,14 @@ export const ListboxWrapper = ({ children }: any) => {
 };
 
 export default function Sidebar() {
-  const [openItem, setOpenItem] = useState<string | null>(null);
   const pathname = usePathname();
 
   return (
     <div className="bg-primary dark:bg-primary-100 hidden lg:block">
       <ListboxWrapper>
-        <NextLink
-          className="flex justify-start items-center gap-1 bg-white text-gray-900 dark:text-white dark:bg-gray-800 p-4 rounded"
-          href="/admin"
-        >
-          <User
-            avatarProps={{
-              src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-            }}
-            description="Admin"
-            name="Jane Doe"
-          />
-        </NextLink>
+        <div className="flex justify-start items-center gap-1 bg-white text-gray-900 dark:text-white dark:bg-gray-800 p-4 rounded">
+          <UserPopover />
+        </div>
         <Listbox
           items={siteConfig.navItems}
           aria-label="Listbox menu with icons"
@@ -68,7 +59,7 @@ export default function Sidebar() {
                     ? "text-warning"
                     : ""
               }
-              startContent={<item.icon />}
+              startContent={<item.icon size={18} />}
             >
               {item.label}
             </ListboxItem>

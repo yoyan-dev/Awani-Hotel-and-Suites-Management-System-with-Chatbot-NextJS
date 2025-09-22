@@ -28,15 +28,18 @@ export default function RoomTable() {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<any>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [page, setPage] = React.useState(1);
 
   React.useEffect(() => {
-    dispatch(fetchRooms());
+    dispatch(
+      fetchRooms({
+        page,
+        query: filterValue,
+        status: statusFilter === "all" ? "" : statusFilter,
+      })
+    );
     console.log(pagination);
-  }, [dispatch, error]);
-
-  const hasSearchFilter = Boolean(filterValue);
+  }, [dispatch, error, page, filterValue, statusFilter]);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
@@ -45,42 +48,14 @@ export default function RoomTable() {
     );
   }, [visibleColumns]);
 
-  const filteredItems = React.useMemo(() => {
-    let filteredRooms = [...rooms];
-
-    if (hasSearchFilter) {
-      filteredRooms = filteredRooms.filter((room) =>
-        room.room_type?.name?.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
-
-    if (statusFilter !== "all" && Array.from(statusFilter).length) {
-      filteredRooms = filteredRooms.filter((room) =>
-        Array.from(statusFilter).includes(room.status)
-      );
-    }
-
-    return filteredRooms;
-  }, [rooms, filterValue, statusFilter, hasSearchFilter]);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    return filteredItems.slice(start, start + rowsPerPage);
-  }, [page, filteredItems, rowsPerPage]);
-
-  const onRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setRowsPerPage(Number(e.target.value));
-    setPage(1);
-  };
-
   return (
     <Table
       aria-label="Rooms Table"
       isHeaderSticky
       classNames={{ wrapper: ["shadow-none", "dark:bg-gray-900", "p-0"] }}
+      rowHeight={40}
       bottomContent={
         <TableBottomContent
-          hasSearchFilter={hasSearchFilter}
           page={page}
           setPage={setPage}
           pages={pagination?.totalPages ?? 0}
@@ -100,7 +75,6 @@ export default function RoomTable() {
           setStatusFilter={setStatusFilter}
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
-          onRowsPerPageChange={onRowsPerPageChange}
           roomsCount={pagination?.total}
           selectedKeys={selectedKeys}
         />
@@ -123,13 +97,13 @@ export default function RoomTable() {
         isLoading={isLoading}
         loadingContent={<Spinner label="Loading..." />}
         emptyContent="No rooms found"
-        items={items}
+        items={rooms}
         className="overflow-x-auto"
       >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell className="capitalize">
+              <TableCell className="capitalize min-w-40">
                 <RenderCell room={item} columnKey={columnKey as string} />
               </TableCell>
             )}

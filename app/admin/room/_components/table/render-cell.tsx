@@ -12,13 +12,13 @@ import {
 } from "@heroui/react";
 import type { Room } from "@/types/room";
 import { statusColorMap } from "./constants";
-import { EllipsisVertical } from "lucide-react";
+import { Edit, EllipsisVertical, Eye, Trash } from "lucide-react";
 import ViewModal from "../modals/view-modal";
 import DeleteModal from "../modals/delete-modal";
-import { formatPHP } from "@/lib/format-php";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { updateRoom } from "@/features/room/room-thunk";
+import React from "react";
 
 interface RenderCellProps {
   room: Room;
@@ -29,6 +29,7 @@ export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
   const cellValue = room[columnKey as keyof Room];
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, error } = useSelector((state: RootState) => state.room);
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
 
   function handleStatusChange(e: any) {
     dispatch(updateRoom({ ...room, status: e.target.value }));
@@ -43,8 +44,6 @@ export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
           width={100}
         />
       );
-    case "base_price":
-      return formatPHP(room.base_price || 0);
     case "room_type":
       return room.room_type?.name;
     case "status":
@@ -67,42 +66,56 @@ export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
             <SelectItem key="occupied">Occupied</SelectItem>
             <SelectItem key="maintenance">Maintenance</SelectItem>
           </Select>
-          {/* <Chip
-            className="capitalize border-none gap-1 text-default-600"
-            color={
-              statusColorMap[room.status as keyof typeof statusColorMap] ||
-              "default"
-            }
-            size="sm"
-            variant="dot"
-          >
-            {room.status}
-          </Chip> */}
         </div>
       );
     case "actions":
       return (
         <div className="relative flex justify-end items-center gap-2">
-          <Dropdown
-            className="bg-background border-1 border-default-200"
-            closeOnSelect={false}
-          >
+          <DeleteModal
+            room={room}
+            isOpen={deleteOpen}
+            onClose={() => setDeleteOpen(false)}
+          />
+          <Dropdown className="bg-background border-1 border-default-200">
             <DropdownTrigger>
               <Button isIconOnly radius="full" size="sm" variant="light">
                 <EllipsisVertical className="text-default-400" />
               </Button>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem key="view">
-                <Link href={`room/${room.id}`}>View</Link>
+              <DropdownItem
+                key="view"
+                as={Link}
+                href={`room/${room.id}`}
+                color="primary"
+              >
+                <div className="flex items-center gap-2">
+                  <Eye size={15} /> View
+                </div>
               </DropdownItem>
-              <DropdownItem key="edit" color="success" className="text-success">
-                <Link href={`room/update-room/${room.id}`} color="success">
-                  Edit
-                </Link>
+              <DropdownItem
+                key="edit"
+                as={Link}
+                href={`room/update-room/${room.id}`}
+                color="success"
+                className="text-success"
+              >
+                <div className="flex items-center gap-2" color="success">
+                  <Edit size={15} /> Edit
+                </div>
               </DropdownItem>
-              <DropdownItem key="delete" color="danger" className="text-danger">
-                <DeleteModal room={room} />
+              <DropdownItem
+                key="delete"
+                className="text-danger"
+                color="danger"
+                onClick={() => {
+                  setDeleteOpen(true);
+                }}
+              >
+                <div className="flex gap-2 items-center">
+                  <Trash size={15} />
+                  Delete
+                </div>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

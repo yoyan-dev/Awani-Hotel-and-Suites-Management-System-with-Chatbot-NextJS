@@ -49,11 +49,16 @@ export default function AddModal() {
       <Button color="primary" endContent={<Plus />} size="sm" onPress={onOpen}>
         Add New
       </Button>
-      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
+      <Modal
+        isOpen={isOpen}
+        placement="top-center"
+        onOpenChange={onOpenChange}
+        radius="none"
+      >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex flex-col gap-1 w-full bg-primary text-white">
                 Add New Item
               </ModalHeader>
               <ModalBody>
@@ -63,43 +68,7 @@ export default function AddModal() {
                   onSubmit={onSubmit}
                 >
                   <div className="flex gap-2 w-full">
-                    {/* <div className="flex-1 space-y-4 flex flex-col">
-                      <div className="flex-1 flex flex-col gap-2 w-full items-start">
-                        <label className="text-sm font-medium text-gray-600">
-                          Room Image
-                        </label>
-
-                        <label
-                          htmlFor="image-upload"
-                          className="flex flex-col items-center justify-center w-full h-full border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-500 transition"
-                        >
-                          {preview ? (
-                            <img
-                              src={preview}
-                              alt="Preview"
-                              className="w-full h-full object-cover rounded-xl"
-                            />
-                          ) : (
-                            <div className="flex flex-col items-center gap-2 text-gray-400">
-                              <Upload size={32} />
-                              <span className="text-sm">
-                                Click or drag file to upload
-                              </span>
-                            </div>
-                          )}
-                        </label>
-
-                        <input
-                          id="image-upload"
-                          type="file"
-                          name="image"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={handleFileChange}
-                        />
-                      </div>
-                    </div> */}
-                    <div className="flex-1 w-full p-4 border-l border-gray-500 space-y-8">
+                    <div className="flex-1 w-full p-4 space-y-8">
                       <div className="flex gap-4 w-full">
                         <Input
                           className="flex-1 w-full"
@@ -107,6 +76,7 @@ export default function AddModal() {
                           placeholder="Item name"
                           name="name"
                           variant="bordered"
+                          radius="none"
                           labelPlacement="outside"
                         />
                         <Input
@@ -115,6 +85,7 @@ export default function AddModal() {
                           placeholder="Item quantity"
                           name="quantity"
                           variant="bordered"
+                          radius="none"
                           labelPlacement="outside"
                         />
                       </div>
@@ -124,6 +95,7 @@ export default function AddModal() {
                         label="Description"
                         labelPlacement="outside"
                         variant="bordered"
+                        radius="none"
                       />
                       <Select
                         className="flex-1 w-full"
@@ -132,6 +104,7 @@ export default function AddModal() {
                         labelPlacement="outside"
                         placeholder="Select Item status"
                         variant="bordered"
+                        radius="none"
                         defaultSelectedKeys={["in-stock"]}
                       >
                         <SelectItem key="in-stock">In stock</SelectItem>
@@ -140,11 +113,16 @@ export default function AddModal() {
                       </Select>
                     </div>
                   </div>
-                  <div className="flex justify-end gap-4 w-full">
-                    <Button onPress={onClose} variant="bordered">
+                  <div className="flex justify-end gap-4 w-full pb-4">
+                    <Button onPress={onClose} variant="bordered" radius="sm">
                       Cancel
                     </Button>
-                    <Button color="primary" type="submit" isLoading={isLoading}>
+                    <Button
+                      color="primary"
+                      type="submit"
+                      isLoading={isLoading}
+                      radius="sm"
+                    >
                       Submit
                     </Button>
                   </div>

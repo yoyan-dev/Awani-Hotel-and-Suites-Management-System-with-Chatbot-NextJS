@@ -16,6 +16,7 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { usePathname } from "next/navigation";
 import { User as UserType } from "@/types/users";
 import { AvatarPopover } from "./avatar";
+import React from "react";
 
 interface NavbarProps {
   user: UserType | null;
@@ -24,11 +25,14 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = React.useState(false);
   return (
     <HeroUINavbar
       maxWidth="xl"
       position="sticky"
       className="top-0 z-50 bg-white dark:bg-gray-900 "
+      isMenuOpen={menuOpen}
+      onMenuOpenChange={setMenuOpen}
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <div className="sm:hidden">
@@ -107,6 +111,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
               <Link
                 color={item.href === pathname ? "primary" : "foreground"}
                 href={item.href}
+                onPress={() => setMenuOpen(false)}
               >
                 {item.label}
               </Link>

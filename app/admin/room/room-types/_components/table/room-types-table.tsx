@@ -27,7 +27,7 @@ export default function RoomTypesTable() {
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [page, setPage] = React.useState(1);
 
   React.useEffect(() => {
@@ -72,6 +72,7 @@ export default function RoomTypesTable() {
       isHeaderSticky
       classNames={{ wrapper: ["shadow-none", "dark:bg-gray-900", "p-0"] }}
       aria-label="Rooms Table"
+      rowHeight={40}
       bottomContent={
         <TableBottomContent
           hasSearchFilter={hasSearchFilter}

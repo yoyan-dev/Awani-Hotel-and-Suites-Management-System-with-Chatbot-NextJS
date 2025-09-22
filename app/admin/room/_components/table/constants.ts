@@ -6,13 +6,8 @@ export const columns: ColumnType[] = [
   { name: "ROOM ID", uid: "room_id" },
   { name: "ROOM NUMBER", uid: "room_number" },
   { name: "ROOM TYPE", uid: "room_type" },
-  { name: "NAME", uid: "name" },
   { name: "AREA", uid: "area" },
   { name: "DESCRIPTION", uid: "description" },
-  { name: "BEDS", uid: "beds" },
-  { name: "FACILITIES", uid: "facilities" },
-  { name: "MAX GUEST", uid: "max_guest" },
-  { name: "BASE PRICE", uid: "base_price" },
   { name: "STATUS", uid: "status" },
   { name: "ACTIONS", uid: "actions" },
 ];

@@ -10,7 +10,7 @@ import {
   Image,
 } from "@heroui/react";
 import type { Inventory } from "@/types/inventory";
-import { EllipsisVertical } from "lucide-react";
+import { Edit, EllipsisVertical, Eye, Trash } from "lucide-react";
 import UpdateModal from "../modals/edit-modal";
 import DeleteModal from "../modals/delete-modal";
 import { RoomType } from "@/types/room";
@@ -28,6 +28,9 @@ export const RenderCell: React.FC<RenderCellProps> = ({
   columnKey,
 }) => {
   const cellValue = room_type[columnKey as keyof RoomType];
+  const [viewOpen, setViewOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
 
   switch (columnKey) {
     case "image":
@@ -43,24 +46,66 @@ export const RenderCell: React.FC<RenderCellProps> = ({
     case "actions":
       return (
         <div className="relative flex justify-end items-center gap-2">
-          <Dropdown
-            closeOnSelect={false}
-            className="bg-background border-1 border-default-200 z-10"
-          >
+          <ViewModal
+            room={room_type}
+            isOpen={viewOpen}
+            onClose={() => setViewOpen(false)}
+          />
+          <UpdateModal
+            room={room_type}
+            isOpen={editOpen}
+            onClose={() => setEditOpen(false)}
+          />
+          <DeleteModal
+            room={room_type}
+            isOpen={deleteOpen}
+            onClose={() => setDeleteOpen(false)}
+          />
+          <Dropdown className="bg-background border-1 border-default-200 ">
             <DropdownTrigger>
               <Button isIconOnly radius="full" size="sm" variant="light">
                 <EllipsisVertical className="text-default-400" />
               </Button>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem key="view">
-                <ViewModal room={room_type} />
+              <DropdownItem
+                key="view"
+                color="primary"
+                className="text-primary"
+                onClick={() => {
+                  setViewOpen(true);
+                }}
+              >
+                <div className="flex gap-2 items-center">
+                  <Eye size={15} />
+                  View
+                </div>
               </DropdownItem>
-              <DropdownItem key="edit">
-                <UpdateModal room_type={room_type} />
+              <DropdownItem
+                key="edit"
+                color="success"
+                className="text-success"
+                onClick={() => {
+                  setEditOpen(true);
+                }}
+              >
+                <div className="flex gap-2 items-center">
+                  <Edit size={15} />
+                  Edit
+                </div>
               </DropdownItem>
-              <DropdownItem key="delete">
-                <DeleteModal room_type={room_type} />
+              <DropdownItem
+                key="delete"
+                color="danger"
+                className="text-danger"
+                onClick={() => {
+                  setDeleteOpen(true);
+                }}
+              >
+                <div className="flex gap-2 items-center">
+                  <Trash size={15} />
+                  Delete
+                </div>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

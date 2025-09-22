@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -7,48 +8,23 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@heroui/navbar";
-import { Image } from "@heroui/react";
-import { Kbd } from "@heroui/kbd";
-import { Link } from "@heroui/link";
-import { Input } from "@heroui/input";
-import { link as linkStyles } from "@heroui/theme";
+import { Image, Link } from "@heroui/react";
 import NextLink from "next/link";
-import clsx from "clsx";
-
+import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { GithubIcon, SearchIcon, Logo } from "@/components/icons";
-import { User } from "@heroui/react";
-import { usePathname } from "next/navigation";
 
 export default function AdminNavbar() {
   const pathname = usePathname();
-  // const searchInput = (
-  //   <Input
-  //     aria-label="Search"
-  //     classNames={{
-  //       inputWrapper: "bg-default-100",
-  //       input: "text-sm",
-  //     }}
-  //     endContent={
-  //       <Kbd className="hidden lg:inline-block" keys={["command"]}>
-  //         K
-  //       </Kbd>
-  //     }
-  //     labelPlacement="outside"
-  //     placeholder="Search..."
-  //     startContent={
-  //       <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-  //     }
-  //     type="search"
-  //   />
-  // );
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   return (
     <HeroUINavbar
       maxWidth="xl"
       position="sticky"
-      className="top-0 z-40 bg-white dark:bg-gray-900 "
+      className="top-0 z-40 bg-white dark:bg-gray-900"
+      isMenuOpen={menuOpen}
+      onMenuOpenChange={setMenuOpen}
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
@@ -84,16 +60,18 @@ export default function AdminNavbar() {
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
-                color={pathname === item.href ? "primary" : "foreground"}
+                as={NextLink}
                 href={item.href}
+                color={pathname === item.href ? "primary" : "foreground"}
                 size="lg"
+                onPress={() => setMenuOpen(false)}
               >
                 {item.label}
               </Link>
             </NavbarMenuItem>
           ))}
           <NavbarMenuItem key="logout">
-            <Link color="danger" href="/" size="lg">
+            <Link as={NextLink} href="/" color="danger" size="lg">
               Logout
             </Link>
           </NavbarMenuItem>

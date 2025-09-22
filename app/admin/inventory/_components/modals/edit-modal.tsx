@@ -23,16 +23,20 @@ import { Plus } from "lucide-react";
 import { Inventory } from "@/types/inventory";
 interface UpdateModalProps {
   inventory: Inventory;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const UpdateModal: React.FC<UpdateModalProps> = ({ inventory }) => {
+const UpdateModal: React.FC<UpdateModalProps> = ({
+  inventory,
+  isOpen,
+  onClose,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, error } = useSelector(
     (state: RootState) => state.inventory
   );
-  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [item, setItem] = React.useState<Inventory>(inventory);
-  const [submitted, setSubmitted] = React.useState(null);
 
   async function onSubmit(
     e: React.FormEvent<HTMLFormElement>,
@@ -46,24 +50,25 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ inventory }) => {
 
   return (
     <>
-      <div onClick={onOpen} className="text-success">
-        Edit
-      </div>
-      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
+      <Modal
+        isOpen={isOpen}
+        placement="top-center"
+        onOpenChange={(open) => !open && onClose}
+        radius="none"
+      >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                Updae Item
+              <ModalHeader className="flex flex-col gap-1 w-full bg-primary text-white">
+                Update Item
               </ModalHeader>
               <ModalBody>
                 <Form
                   className="w-full space-y-4"
-                  onReset={() => setSubmitted(null)}
                   onSubmit={(e) => onSubmit(e, item)}
                 >
                   <div className="flex gap-2 w-full">
-                    <div className="flex-1 w-full p-4 border-l border-gray-500 space-y-8">
+                    <div className="flex-1 w-full p-4 space-y-8">
                       <div className="flex gap-4 w-full">
                         <Input
                           className="flex-1 w-full"
@@ -75,6 +80,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ inventory }) => {
                           }
                           name="name"
                           variant="bordered"
+                          radius="none"
                           labelPlacement="outside"
                         />
                         <Input
@@ -90,6 +96,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ inventory }) => {
                             })
                           }
                           variant="bordered"
+                          radius="none"
                           labelPlacement="outside"
                         />
                       </div>
@@ -103,6 +110,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ inventory }) => {
                         label="Description"
                         labelPlacement="outside"
                         variant="bordered"
+                        radius="none"
                       />
                       <Select
                         className="flex-1 w-full"
@@ -111,6 +119,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ inventory }) => {
                         labelPlacement="outside"
                         placeholder="Select Item status"
                         variant="bordered"
+                        radius="none"
                         defaultSelectedKeys={[item.status || "in-stock"]}
                         value={item.status}
                         onChange={(e) =>
@@ -127,10 +136,15 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ inventory }) => {
                     </div>
                   </div>
                   <div className="flex justify-end gap-4 w-full">
-                    <Button onPress={onClose} variant="bordered">
+                    <Button onPress={onClose} variant="bordered" radius="sm">
                       Cancel
                     </Button>
-                    <Button color="primary" type="submit" isLoading={isLoading}>
+                    <Button
+                      color="primary"
+                      type="submit"
+                      isLoading={isLoading}
+                      radius="sm"
+                    >
                       Submit
                     </Button>
                   </div>

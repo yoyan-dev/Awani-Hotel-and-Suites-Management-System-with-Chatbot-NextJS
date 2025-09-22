@@ -15,27 +15,33 @@ import { deleteItem } from "@/features/inventory/inventory-thunk";
 
 interface DeleteModalProps {
   inventory: Inventory;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const DeleteModal: React.FC<DeleteModalProps> = ({ inventory }) => {
+const DeleteModal: React.FC<DeleteModalProps> = ({
+  inventory,
+  isOpen,
+  onClose,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector(
     (state: RootState) => state.inventory.isLoading
   );
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   function handleDelete() {
     dispatch(deleteItem(inventory.id || ""));
   }
 
-  console.log(inventory);
   return (
     <>
-      <div onClick={onOpen}>Delete</div>
-      <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        backdrop="blur"
+        isOpen={isOpen}
+        onOpenChange={(open) => !open && onClose}
+      >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 Confirm Delete

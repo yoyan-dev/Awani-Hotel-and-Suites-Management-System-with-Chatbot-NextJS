@@ -52,7 +52,9 @@ export const RenderCell = (booking: Booking, columnKey: string) => {
         </div>
       );
     case "total_price":
-      return formatPHP(calculateBookingPrice(booking));
+      return formatPHP(
+        calculateBookingPrice(booking) + Number(booking.total_add_ons || 0)
+      );
     case "status":
       return (
         <Chip
