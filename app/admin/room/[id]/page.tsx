@@ -42,14 +42,6 @@ export default function RoomDetails() {
             <p>
               <span className="font-medium">Area:</span> {room.area}
             </p>
-            <p>
-              <span className="font-medium">Max Guests:</span> {room.max_guest}
-            </p>
-            <p>
-              <span className="font-medium">Base Price:</span>
-
-              {formatPHP(Number(room.base_price))}
-            </p>
             <p className="text-gray-400">{room.description}</p>
           </div>
 
@@ -65,27 +57,6 @@ export default function RoomDetails() {
                   width={180}
                   radius="sm"
                 />
-              ))}
-            </div>
-          </div>
-          <div>
-            <h2 className="font-semibold mb-2">Beds</h2>
-            <div className="flex flex-wrap gap-2">
-              {room.beds?.map((bed: string, i: number) => (
-                <Chip key={i} radius="sm">
-                  {bed}
-                </Chip>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h2 className="font-semibold mb-2">Facilities & Services</h2>
-            <div className="flex flex-wrap gap-2">
-              {room.facilities?.map((fac: string, i: number) => (
-                <Chip key={i} radius="sm">
-                  {fac}
-                </Chip>
               ))}
             </div>
           </div>

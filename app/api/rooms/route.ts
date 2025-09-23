@@ -28,10 +28,6 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     room_type:room_type_id (*),
     area,
     description,
-    max_guest,
-    base_price,
-    beds,
-    facilities,
     status,
     images,
     remarks
@@ -41,7 +37,12 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
 
   // Search by query if provided
   if (query) {
-    q = q.or(`name.ilike.%${query}%,room_type.ilike.%${query}%`);
+    q = q.or(`
+    room_id.ilike.%${query}%,
+    description.ilike.%${query}%,
+    remarks.ilike.%${query}%,
+    area.ilike.%${query}%
+  `);
   }
 
   if (roomTypeID) {
@@ -52,15 +53,12 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     q = q.eq("status", status);
   }
 
-  if (minPrice) q = q.gte("base_price", Number(minPrice));
-  if (maxPrice && Number(maxPrice) !== 0)
-    q = q.lte("base_price", Number(maxPrice));
-
   const {
     data: roomData,
     error,
     count,
-  } = await q.order("base_price", { ascending: true }).range(from, to);
+  } = await q.order("room_id", { ascending: false }).range(from, to);
+
   if (error) {
     console.error("Error fetching rooms:", error.message);
     return NextResponse.json(

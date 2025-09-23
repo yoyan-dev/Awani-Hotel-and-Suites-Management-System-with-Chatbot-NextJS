@@ -76,7 +76,9 @@ export default function BookingTable() {
   return (
     <Table
       isHeaderSticky
-      classNames={{ wrapper: ["shadow-none", "dark:bg-gray-900", "p-0"] }}
+      classNames={{
+        wrapper: ["shadow-none", "dark:bg-gray-900", "p-0", "table-auto"],
+      }}
       aria-label="Rooms Table"
       bottomContent={
         <TableBottomContent

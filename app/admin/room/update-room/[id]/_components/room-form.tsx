@@ -11,6 +11,7 @@ import { Room, RoomType } from "@/types/room";
 import BedsInput from "./beds-input";
 import FacilitiesInput from "./facilities-input";
 import ImagesUpload from "./image-upload";
+import { Copyright, Save } from "lucide-react";
 
 interface RoomFormProps {
   formData: Room;
@@ -44,10 +45,22 @@ export default function RoomForm({
   return (
     <Form
       onSubmit={onSubmit}
-      className="p-4 bg-white dark:bg-gray-900 rounded space-y-2 w-full"
+      className="bg-white dark:bg-gray-900 rounded space-y-2 w-full"
     >
-      <h1 className="text-2xl semi-bold">Update Room</h1>
-      <div className="flex flex-col gap-8 w-full md:flex-row">
+      <div className="flex justify-between items-center px-4 py-2 w-full bg-primary text-white">
+        <h1 className="text-xl semi-bold">New Room</h1>
+        <Button
+          radius="none"
+          type="submit"
+          className="bg-primary-200"
+          variant="bordered"
+          isLoading={isLoading}
+        >
+          <Save size={18} />
+          Save
+        </Button>
+      </div>
+      <div className="flex flex-col gap-8 w-full md:flex-row px-4">
         {/* LEFT SIDE */}
         <div className="flex-1 flex flex-col gap-4">
           <h1>Basic Information</h1>
@@ -111,41 +124,6 @@ export default function RoomForm({
             ))}
           </Select>
 
-          <div className="flex gap-4">
-            <Input
-              className="w-full"
-              label="Max guest"
-              value={formData?.max_guest?.toString() ?? ""}
-              onChange={(e) =>
-                setFormData({ ...formData, max_guest: Number(e.target.value) })
-              }
-              placeholder="room max occupancy"
-              name="max_guest"
-              type="number"
-              variant="bordered"
-              radius="none"
-              labelPlacement="outside"
-            />
-            <Input
-              name="base_price"
-              label="Base Price"
-              radius="none"
-              value={formData?.base_price?.toString() ?? ""}
-              onChange={(e) =>
-                setFormData({ ...formData, base_price: Number(e.target.value) })
-              }
-              labelPlacement="outside"
-              placeholder="0.00"
-              startContent={
-                <div className="pointer-events-none flex items-center">
-                  <span className="text-default-400 text-small">$</span>
-                </div>
-              }
-              type="number"
-              variant="bordered"
-            />
-          </div>
-
           <Textarea
             radius="none"
             className="w-full"
@@ -187,15 +165,8 @@ export default function RoomForm({
         </div>
       </div>
 
-      <div className="mt-6 flex justify-end">
-        <Button
-          radius="none"
-          type="submit"
-          color="primary"
-          isLoading={isLoading}
-        >
-          Update Room
-        </Button>
+      <div className="gap-1 w-full bg-primary flex justify-center items-center text-white text-sm font-thin py-2">
+        <Copyright size={10} /> Alright reserved Ma. Awani.
       </div>
     </Form>
   );

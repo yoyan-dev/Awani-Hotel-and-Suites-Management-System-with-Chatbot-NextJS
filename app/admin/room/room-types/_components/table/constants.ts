@@ -1,7 +1,6 @@
 import { ColumnType } from "@/types/column";
 
 export const columns: ColumnType[] = [
-  { name: "ID", uid: "id" },
   { name: "IMAGE", uid: "image" },
   { name: "NAME", uid: "name" },
   { name: "DESCRIPTION", uid: "description" },
@@ -12,7 +11,6 @@ export const columns: ColumnType[] = [
 ];
 
 export const INITIAL_VISIBLE_COLUMNS = [
-  "id",
   "image",
   "name",
   "description",

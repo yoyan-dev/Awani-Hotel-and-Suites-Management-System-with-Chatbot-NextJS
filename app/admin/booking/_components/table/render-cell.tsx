@@ -7,12 +7,14 @@ import {
   DropdownMenu,
   DropdownTrigger,
   DropdownItem,
+  Link,
 } from "@heroui/react";
 import { bookingStatusColorMap } from "./constants";
 import {
   CalendarArrowDown,
   CalendarArrowUp,
   EllipsisVertical,
+  Eye,
 } from "lucide-react";
 import { Booking } from "@/types/booking";
 import { formatPHP } from "@/lib/format-php";
@@ -52,7 +54,9 @@ export const RenderCell = (booking: Booking, columnKey: string) => {
         </div>
       );
     case "total_price":
-      return formatPHP(calculateBookingPrice(booking));
+      return formatPHP(
+        calculateBookingPrice(booking) + Number(booking.total_add_ons || 0)
+      );
     case "status":
       return (
         <Chip
@@ -74,7 +78,16 @@ export const RenderCell = (booking: Booking, columnKey: string) => {
               </Button>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem key="view">View</DropdownItem>
+              <DropdownItem
+                key="view"
+                as={Link}
+                href={`booking/${booking.id}`}
+                color="primary"
+              >
+                <div className="flex items-center gap-2">
+                  <Eye size={15} /> View
+                </div>
+              </DropdownItem>
               <DropdownItem key="edit">Edit</DropdownItem>
               <DropdownItem key="delete">Delete</DropdownItem>
             </DropdownMenu>

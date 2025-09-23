@@ -40,7 +40,7 @@ export const fetchBooking = createAsyncThunk<Booking, string>(
       return data.data;
     } catch (error: any) {
       addToast({
-        title: "Error",
+        title: "Thunk Error",
         description: error.message,
         color: "danger",
       });

@@ -13,10 +13,10 @@ export function getNights(checkIn: string, checkOut: string): number {
 }
 
 export function calculateBookingPrice(booking: Booking): number {
-  if (!booking.room) return 0;
+  if (!booking.room_type) return 0;
 
   const nights = getNights(booking.check_in, booking.check_out);
-  return booking.room.base_price * nights;
+  return booking.room_type.price * nights;
 }
 
 export function calculateTotalBookingsPrice(bookings: Booking[]): number {

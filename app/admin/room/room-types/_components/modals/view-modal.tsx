@@ -4,29 +4,32 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
-  Button,
   useDisclosure,
   Image,
+  ModalFooter,
 } from "@heroui/react";
 import { RoomType } from "@/types/room";
 import { formatPHP } from "@/lib/format-php";
-import { Bed, Tv, UserCircle, Wifi } from "lucide-react";
+import { Copyright } from "lucide-react";
 interface ViewModalProps {
   room: RoomType;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const ViewModal: React.FC<ViewModalProps> = ({ room }) => {
-  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-
+const ViewModal: React.FC<ViewModalProps> = ({ room, isOpen, onClose }) => {
   return (
     <>
-      <div onClick={onOpen}>View room details.</div>
-      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={(open) => !open && onClose()}
+        placement="top-center"
+        radius="sm"
+      >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex flex-col gap-1 w-full bg-primary text-white">
                 {room.name}
               </ModalHeader>
               <ModalBody>
@@ -35,6 +38,9 @@ const ViewModal: React.FC<ViewModalProps> = ({ room }) => {
                     <div className="flex gap-2 overflow-x-auto">
                       <Image src={room.image} alt="room image" width="100%" />
                     </div>
+                    <p className="text-xl font-semibold text-primary">
+                      {formatPHP(Number(room.price))}
+                    </p>
                     <span className="text-gray-600 dark:text-gray-400 text-sm">
                       Max guest {room.max_guest || 1}
                     </span>
@@ -51,30 +57,33 @@ const ViewModal: React.FC<ViewModalProps> = ({ room }) => {
                     <p className="text-gray-500 dark:text-gray-300 text-sm">
                       {room.description}
                     </p>
-                    <p className="text-xl font-semibold text-primary">
-                      {formatPHP(Number(room.price))}
-                    </p>
                   </div>
 
                   <div className="space-y-6">
                     <div>
                       <h3 className="text-lg font-medium mb-2">Room Add Ons</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-300">
+                        Available add ons for {room.name}
+                      </p>
                       <div className="flex gap-4 text-gray-700 flex-wrap">
-                        {room.add_ons &&
-                          room.add_ons.length > 0 &&
-                          room.add_ons.map((item: any) => (
-                            <div
-                              className="flex items-center gap-2"
-                              key={item.name}
-                            >
-                              {item.name} - {formatPHP(Number(item.price))}
-                            </div>
-                          ))}
+                        {room.add_ons && room.add_ons.length > 0
+                          ? room.add_ons.map((item: any) => (
+                              <div
+                                className="flex items-center gap-2"
+                                key={item.name}
+                              >
+                                {item.name} - {formatPHP(Number(item.price))}
+                              </div>
+                            ))
+                          : "no add ons"}
                       </div>
                     </div>
                   </div>
                 </div>
               </ModalBody>
+              <ModalFooter className="gap-1 w-full bg-primary flex justify-center items-center text-white text-sm font-thin">
+                <Copyright size={10} /> Alright reserved Ma. Awani.
+              </ModalFooter>
             </>
           )}
         </ModalContent>

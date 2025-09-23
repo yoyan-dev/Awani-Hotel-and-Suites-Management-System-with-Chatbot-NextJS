@@ -9,10 +9,11 @@ import {
   useDisclosure,
   Input,
   Textarea,
+  ModalFooter,
 } from "@heroui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, type RootState } from "@/store/store";
-import { Plus, Upload } from "lucide-react";
+import { Copyright, Plus, Upload } from "lucide-react";
 import AddOnsInput from "../add-ons-input";
 import { addRoomType } from "@/features/room-types/room-types-thunk";
 
@@ -50,11 +51,12 @@ export default function AddModal() {
         onOpenChange={onOpenChange}
         scrollBehavior="outside"
         size="3xl"
+        radius="none"
       >
         <ModalContent>
           {() => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex flex-col gap-1 w-full bg-primary text-white">
                 Add New Room Type
               </ModalHeader>
               <ModalBody>
@@ -157,7 +159,7 @@ export default function AddModal() {
 
                   <AddOnsInput addOns={addOns} setAddOns={setAddOns} />
 
-                  <div className="flex justify-end gap-4 w-full">
+                  <div className="flex justify-end gap-4 w-full pb-4">
                     <Button onPress={onClose} variant="bordered" radius="none">
                       Cancel
                     </Button>
@@ -167,6 +169,9 @@ export default function AddModal() {
                   </div>
                 </Form>
               </ModalBody>
+              <ModalFooter className="gap-1 w-full bg-primary flex justify-center items-center text-white text-sm font-thin">
+                <Copyright size={10} /> Alright reserved Ma. Awani.
+              </ModalFooter>
             </>
           )}
         </ModalContent>

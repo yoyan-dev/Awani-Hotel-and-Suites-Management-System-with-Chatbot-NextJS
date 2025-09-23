@@ -2,7 +2,6 @@ import React from "react";
 import { Pagination } from "@heroui/react";
 
 interface Props {
-  hasSearchFilter: boolean;
   page: number;
   setPage: (val: number) => void;
   pages: number;
@@ -11,7 +10,6 @@ interface Props {
 }
 
 export const TableBottomContent: React.FC<Props> = ({
-  hasSearchFilter,
   page,
   setPage,
   pages,
@@ -23,7 +21,6 @@ export const TableBottomContent: React.FC<Props> = ({
       <Pagination
         showControls
         color="primary"
-        isDisabled={hasSearchFilter}
         page={page}
         total={pages}
         variant="light"
