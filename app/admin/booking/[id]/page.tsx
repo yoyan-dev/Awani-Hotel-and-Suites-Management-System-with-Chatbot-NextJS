@@ -15,11 +15,9 @@ import {
 } from "@heroui/react";
 import { CalendarDays, Users, Tag, Info } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
-import { fetchBooking } from "@/features/booking/booking-thunk";
 import { formatPHP } from "@/lib/format-php";
 import { calculateBookingPrice, getNights } from "@/utils/pricing";
+import { useBookings } from "@/hooks/use-bookings";
 
 function formatDate(d?: string) {
   if (!d) return "—";
@@ -36,16 +34,13 @@ function formatDate(d?: string) {
 
 export default function BookingDetailsStunning() {
   const { id } = useParams();
-  const dispatch = useDispatch<AppDispatch>();
-  const { booking, isLoading, error } = useSelector(
-    (state: RootState) => state.booking
-  );
+  const { booking, isLoading, error, fetchBooking } = useBookings();
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchBooking(id as string));
+      fetchBooking(id as string);
     }
-  }, [dispatch, id, error]);
+  }, [id, error]);
 
   if (isLoading || !booking) {
     return <div className="p-6">Loading...</div>;

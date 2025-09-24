@@ -1,4 +1,3 @@
-import { Room } from "@/types/room";
 import {
   Modal,
   ModalContent,
@@ -6,12 +5,9 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
 } from "@heroui/react";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/store";
 import { Inventory } from "@/types/inventory";
-import { deleteItem } from "@/features/inventory/inventory-thunk";
+import { useInventory } from "@/hooks/use-inventory";
 
 interface DeleteModalProps {
   inventory: Inventory;
@@ -24,13 +20,10 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const isLoading = useSelector(
-    (state: RootState) => state.inventory.isLoading
-  );
+  const { isLoading, deleteItem } = useInventory();
 
   function handleDelete() {
-    dispatch(deleteItem(inventory.id || ""));
+    deleteItem(inventory.id || "");
   }
 
   return (

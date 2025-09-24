@@ -6,6 +6,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Selection,
 } from "@heroui/react";
 import { Search, ChevronDown } from "lucide-react";
 import { columns, statusOptions } from "./constants";
@@ -22,7 +23,7 @@ interface Props {
   setVisibleColumns: (val: any) => void;
   onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   itemsCount: number;
-  selectedKeys: Set<number> | "all";
+  selectedKeys: Selection;
 }
 
 export const TableTopContent: React.FC<Props> = ({

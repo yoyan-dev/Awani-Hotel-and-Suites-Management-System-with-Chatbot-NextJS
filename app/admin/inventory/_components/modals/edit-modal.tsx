@@ -5,22 +5,14 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Button,
-  useDisclosure,
-  Checkbox,
   Input,
-  Link,
   Select,
   SelectItem,
-  Image,
   Textarea,
 } from "@heroui/react";
-import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch, type RootState } from "@/store/store";
-import { UpdateItem } from "@/features/inventory/inventory-thunk";
-import { Plus } from "lucide-react";
 import { Inventory } from "@/types/inventory";
+import { useInventory } from "@/hooks/use-inventory";
 interface UpdateModalProps {
   inventory: Inventory;
   isOpen: boolean;
@@ -32,10 +24,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, error } = useSelector(
-    (state: RootState) => state.inventory
-  );
+  const { isLoading, error, UpdateItem } = useInventory();
   const [item, setItem] = React.useState<Inventory>(inventory);
 
   async function onSubmit(
@@ -44,8 +33,10 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
   ) {
     e.preventDefault();
 
-    await dispatch(UpdateItem(payload));
-    onClose();
+    await UpdateItem(payload);
+    if (!error) {
+      onClose();
+    }
   }
 
   return (

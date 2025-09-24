@@ -7,73 +7,59 @@ import {
   TableRow,
   TableCell,
   Spinner,
+  Selection,
 } from "@heroui/react";
-import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/store";
-import { fetchInventory } from "@/features/inventory/inventory-thunk";
+import { Inventory } from "@/types/inventory";
+import { ColumnType } from "@/types/column";
 
-export default function InventoryTable() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { inventory, isLoading, error } = useSelector(
-    (state: RootState) => state.inventory
-  );
+interface InventoryTableProps {
+  items: Inventory[];
+  inventory: Inventory[];
 
-  const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState<any>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-  const [statusFilter, setStatusFilter] = React.useState<any>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [page, setPage] = React.useState(1);
+  headerColumns: ColumnType[];
+  visibleColumns: Set<string>;
+  setVisibleColumns: React.Dispatch<React.SetStateAction<Set<string>>>;
 
-  React.useEffect(() => {
-    dispatch(fetchInventory());
-    console.log(error);
-  }, [dispatch, error]);
+  onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 
-  const pages = Math.ceil(inventory.length / rowsPerPage);
-  const hasSearchFilter = Boolean(filterValue);
+  hasSearchFilter: boolean;
+  filterValue: string;
+  setFilterValue: React.Dispatch<React.SetStateAction<string>>;
+  statusFilter: any;
+  setStatusFilter: React.Dispatch<React.SetStateAction<any | "all">>;
 
-  const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
-    return columns.filter((column) =>
-      Array.from(visibleColumns).includes(column.uid)
-    );
-  }, [visibleColumns]);
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  pages: number;
 
-  const filteredItems = React.useMemo(() => {
-    let filteredInventory = [...inventory];
+  selectedKeys: Selection;
+  setSelectedKeys: React.Dispatch<React.SetStateAction<Selection>>;
 
-    if (hasSearchFilter) {
-      filteredInventory = filteredInventory.filter((item) =>
-        item.name?.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
+  isLoading: boolean;
+}
 
-    if (statusFilter !== "all" && Array.from(statusFilter).length) {
-      filteredInventory = filteredInventory.filter((item) =>
-        Array.from(statusFilter).includes(item.status)
-      );
-    }
-
-    return filteredInventory;
-  }, [inventory, filterValue, statusFilter, hasSearchFilter]);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    return filteredItems.slice(start, start + rowsPerPage);
-  }, [page, filteredItems, rowsPerPage]);
-
-  const onRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setRowsPerPage(Number(e.target.value));
-    setPage(1);
-  };
-
+export default function InventoryTable({
+  items,
+  inventory,
+  headerColumns,
+  visibleColumns,
+  setVisibleColumns,
+  onRowsPerPageChange,
+  hasSearchFilter,
+  filterValue,
+  setFilterValue,
+  statusFilter,
+  setStatusFilter,
+  page,
+  setPage,
+  pages,
+  selectedKeys,
+  setSelectedKeys,
+  isLoading,
+}: InventoryTableProps) {
   return (
     <Table
       isHeaderSticky

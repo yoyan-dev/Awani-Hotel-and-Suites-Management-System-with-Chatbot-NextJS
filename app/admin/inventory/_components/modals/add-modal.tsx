@@ -5,36 +5,28 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Button,
   useDisclosure,
-  Checkbox,
   Input,
-  Link,
   Select,
   SelectItem,
-  Image,
   Textarea,
 } from "@heroui/react";
-import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch, type RootState } from "@/store/store";
-import { addItem } from "@/features/inventory/inventory-thunk";
 import { Plus } from "lucide-react";
+import { useInventory } from "@/hooks/use-inventory";
 
 export default function AddModal() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, error } = useSelector(
-    (state: RootState) => state.inventory
-  );
+  const { isLoading, error, addItem } = useInventory();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-  const [submitted, setSubmitted] = React.useState(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
 
-    await dispatch(addItem(data));
-    onClose();
+    await addItem(data);
+    if (!error) {
+      onClose();
+    }
   }
 
   // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,11 +54,7 @@ export default function AddModal() {
                 Add New Item
               </ModalHeader>
               <ModalBody>
-                <Form
-                  className="w-full space-y-4"
-                  onReset={() => setSubmitted(null)}
-                  onSubmit={onSubmit}
-                >
+                <Form className="w-full space-y-4" onSubmit={onSubmit}>
                   <div className="flex gap-2 w-full">
                     <div className="flex-1 w-full p-4 space-y-8">
                       <div className="flex gap-4 w-full">

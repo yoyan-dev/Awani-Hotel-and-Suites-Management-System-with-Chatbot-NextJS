@@ -15,49 +15,25 @@ import {
 } from "@heroui/react";
 import React from "react";
 import SkeletonLoader from "../../_components/skeleton-loader";
+import { User } from "@/types/users";
+import LoginPromptModal from "../../_components/modals/login-prompt-modal";
 
 interface RoomProps {
   rooms: RoomType[];
-  isLoading: boolean;
+  user: User | null;
+  typesLoading: boolean;
+  userLoading: boolean;
 }
 
-export const RoomsList: React.FC<RoomProps> = ({ rooms, isLoading }) => {
-  const roomTypes = [
-    { key: "all", name: "All" },
-    { key: "delux", name: "Delux" },
-    { key: "standard", name: "Standard" },
-    { key: "executive", name: "Executive" },
-    { key: "junior room", name: "Junior Room" },
-    { key: "vip suites", name: "VIP Suites" },
-    { key: "two bedrooms executive", name: "Two Bedrooms Executive" },
-    { key: "family room(6)", name: "Family Room(6)" },
-    { key: "family room(7)", name: "Family Room(7)" },
-  ];
-
+export const RoomsList: React.FC<RoomProps> = ({
+  rooms,
+  user,
+  typesLoading,
+  userLoading,
+}) => {
   return (
     <div className="md:p-4">
-      {/* <div className="overflow-x-auto mb-4">
-        <Tabs
-          onSelectionChange={(key: React.Key) =>
-            setQuery({
-              ...query,
-              roomType: key !== "all" ? (key as string) : "",
-            })
-          }
-          aria-label="Room Types"
-          color="primary"
-          variant="underlined"
-        >
-          {roomTypes.map((type) => (
-            <Tab
-              key={type.key}
-              title={<span className="whitespace-nowrap">{type.name}</span>}
-            />
-          ))}
-        </Tabs>
-      </div> */}
-
-      {isLoading ? (
+      {typesLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 md:p-4">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
             <SkeletonLoader key={index} />
@@ -98,14 +74,18 @@ export const RoomsList: React.FC<RoomProps> = ({ rooms, isLoading }) => {
                         {formatPHP(Number(room.price))} / night
                       </p>
                     </div>
-                    <Button
-                      as={Link}
-                      href={`/guest/rooms/reservation/${room.id}`}
-                      fullWidth
-                      color="primary"
-                    >
-                      Book Now
-                    </Button>
+                    {user?.id && !userLoading ? (
+                      <Button
+                        as={Link}
+                        href={`/guest/rooms/reservation/${room.id}`}
+                        fullWidth
+                        color="primary"
+                      >
+                        Book Now
+                      </Button>
+                    ) : (
+                      <LoginPromptModal name="Book Now" />
+                    )}
                   </div>
                 </CardFooter>
               </Card>
