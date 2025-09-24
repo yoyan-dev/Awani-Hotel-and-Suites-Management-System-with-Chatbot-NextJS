@@ -11,6 +11,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/store";
 import { deleteRooms, fetchRooms } from "@/features/room/room-thunk";
+import { useRooms } from "@/hooks/use-rooms";
 
 interface DeleteSelectedModalProps {
   selectedKeys: Set<number> | "all";
@@ -19,14 +20,12 @@ interface DeleteSelectedModalProps {
 export default function DeleteSelectedModal({
   selectedKeys,
 }: DeleteSelectedModalProps) {
-  const dispatch = useDispatch<AppDispatch>();
-  const isLoading = useSelector((state: RootState) => state.room.isLoading);
+  const { isLoading, deleteSelectedRooms } = useRooms();
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   async function handleDelete() {
-    await dispatch(deleteRooms({ selectedValues: selectedKeys }));
-    dispatch(fetchRooms());
+    deleteSelectedRooms(selectedKeys);
     onOpenChange();
   }
 

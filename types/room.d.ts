@@ -57,7 +57,7 @@ export interface FetchRoomsParams {
   page?: number;
   query?: string;
   roomTypeID?: string;
-  status?: string;
+  status?: string | undefined;
   minPrice?: number;
   maxPrice?: number;
 }

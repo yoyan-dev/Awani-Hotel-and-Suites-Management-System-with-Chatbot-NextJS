@@ -10,7 +10,7 @@ import {
 import { Search, ChevronDown } from "lucide-react";
 import { columns, bookingStatusOptions } from "./constants";
 import { capitalize } from "@/app/utils/capitalize";
-import AddModal from "../modals/add-modal";
+import AddModal from "../modals/add-modal/index";
 
 interface Props {
   filterValue: string;

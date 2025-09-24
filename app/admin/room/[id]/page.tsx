@@ -2,22 +2,18 @@
 import React, { useEffect } from "react";
 import { Chip, Image } from "@heroui/react";
 import { useParams } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
-import { fetchRoom } from "@/features/room/room-thunk";
 import { statusColorMap } from "../_components/table/constants";
-import { formatPHP } from "@/lib/format-php";
+import { useRooms } from "@/hooks/use-rooms";
 
 export default function RoomDetails() {
   const { id } = useParams();
-  const dispatch = useDispatch<AppDispatch>();
-  const { room, isLoading } = useSelector((state: RootState) => state.room);
+  const { room, isLoading, error, fetchRoom } = useRooms();
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchRoom(id as string));
+      fetchRoom(id as string);
     }
-  }, [dispatch, id]);
+  }, [id, error]);
 
   if (isLoading || !room) {
     return <div className="p-6">Loading...</div>;

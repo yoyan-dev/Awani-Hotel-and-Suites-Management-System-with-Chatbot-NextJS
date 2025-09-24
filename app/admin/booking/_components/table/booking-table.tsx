@@ -80,6 +80,7 @@ export default function BookingTable() {
         wrapper: ["shadow-none", "dark:bg-gray-900", "p-0", "table-auto"],
       }}
       aria-label="Rooms Table"
+      rowHeight={40}
       bottomContent={
         <TableBottomContent
           hasSearchFilter={hasSearchFilter}

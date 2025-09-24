@@ -1,24 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
-import { fetchRoom, updateRoom } from "@/features/room/room-thunk";
 import { Room } from "@/types/room";
 import { uploadRoomImage } from "@/lib/upload-room-image";
-import { setLoading } from "@/features/room/room-slice";
 import RoomForm from "./_components/room-form";
 import Header from "./_components/header";
-import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
+import { useRooms } from "@/hooks/use-rooms";
+import { useRoomTypes } from "@/hooks/use-room-types";
 
 export default function Page() {
   const { id } = useParams();
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
-  const { room, isLoading } = useSelector((state: RootState) => state.room);
-  const { room_types, isLoading: roomTypeIsLoading } = useSelector(
-    (state: RootState) => state.room_type
-  );
+  const {
+    room,
+    isLoading: roomLoading,
+    setLoading,
+    fetchRoom,
+    updateRoom,
+  } = useRooms();
+  const {
+    room_types,
+    isLoading: typesLoading,
+    error,
+    fetchRoomTypes,
+  } = useRoomTypes();
 
   const [formData, setFormData] = useState<Room>({});
   const [images, setImages] = useState<any[]>([]);
@@ -26,9 +31,9 @@ export default function Page() {
   const [facilities, setFacilities] = useState<string[]>([]);
 
   useEffect(() => {
-    if (id) dispatch(fetchRoom(id as string));
-    dispatch(fetchRoomTypes());
-  }, [dispatch, id, fetchRoomTypes]);
+    if (id) fetchRoom(id as string);
+    fetchRoomTypes();
+  }, [error, id]);
 
   useEffect(() => {
     if (room) {
@@ -42,7 +47,7 @@ export default function Page() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    dispatch(setLoading(true));
+    setLoading();
 
     const uploadedUrls = await Promise.all(
       images.map(async (img) => {
@@ -62,7 +67,7 @@ export default function Page() {
       images: [...uploadedUrls],
     };
 
-    await dispatch(updateRoom(updatedRoom));
+    await updateRoom(updatedRoom);
     router.push("/admin/room");
   }
 
@@ -80,8 +85,8 @@ export default function Page() {
         images={images}
         setImages={setImages}
         roomTypes={room_types}
-        roomTypeIsLoading={roomTypeIsLoading}
-        isLoading={isLoading}
+        typesLoading={typesLoading}
+        roomLoading={roomLoading}
       />
     </div>
   );

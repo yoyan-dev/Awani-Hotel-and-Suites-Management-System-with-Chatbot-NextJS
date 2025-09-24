@@ -190,6 +190,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   }
 }
 
+//DELETE MANY
 export async function DELETE(
   request: Request
 ): Promise<NextResponse<ApiResponse>> {
