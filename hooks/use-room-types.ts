@@ -21,8 +21,7 @@ export function useRoomTypes() {
     fetchRoomTypes: () => dispatch(fetchRoomTypes()),
     fetchRoomTType: (id: string) => dispatch(fetchRoomType(id)),
     addRoomType: (payload: FormData) => dispatch(addRoomType(payload)),
-    updateRoomType: (id: string, payload: RoomType) =>
-      dispatch(updateRoomType({ id, ...payload })),
+    updateRoomType: (payload: RoomType) => dispatch(updateRoomType(payload)),
     deleteRoomType: (id: string) => dispatch(deleteRoomType(id)),
   };
 }

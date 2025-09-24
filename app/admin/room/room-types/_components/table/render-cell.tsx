@@ -9,7 +9,6 @@ import {
   DropdownItem,
   Image,
 } from "@heroui/react";
-import type { Inventory } from "@/types/inventory";
 import { Edit, EllipsisVertical, Eye, Trash } from "lucide-react";
 import UpdateModal from "../modals/edit-modal";
 import DeleteModal from "../modals/delete-modal";
