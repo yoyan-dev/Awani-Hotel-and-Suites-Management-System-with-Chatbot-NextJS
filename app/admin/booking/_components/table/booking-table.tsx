@@ -14,6 +14,7 @@ import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
 import { Booking } from "@/types/booking";
 import { ColumnType } from "@/types/column";
+import { Room } from "@/types/room";
 
 interface BookingTableProps {
   items: Booking[];
@@ -38,7 +39,8 @@ interface BookingTableProps {
   selectedKeys: Selection;
   setSelectedKeys: React.Dispatch<React.SetStateAction<Selection>>;
 
-  isLoading: boolean;
+  bookingLoading: boolean;
+  handleSubmit: (payload: Booking) => void;
 }
 
 export default function BookingTable({
@@ -58,7 +60,8 @@ export default function BookingTable({
   pages,
   selectedKeys,
   setSelectedKeys,
-  isLoading,
+  bookingLoading,
+  handleSubmit,
 }: BookingTableProps) {
   return (
     <Table
@@ -109,16 +112,21 @@ export default function BookingTable({
         )}
       </TableHeader>
       <TableBody
-        isLoading={isLoading}
+        isLoading={bookingLoading}
         loadingContent={<Spinner label="Loading..." />}
-        emptyContent="No rooms found"
+        emptyContent="No bookings found"
         items={items}
       >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell className="capitalize">
-                {RenderCell(item, columnKey as string)}
+                <RenderCell
+                  booking={item}
+                  columnKey={columnKey as string}
+                  onAssign={handleSubmit}
+                  bookingLoading={bookingLoading}
+                />
               </TableCell>
             )}
           </TableRow>

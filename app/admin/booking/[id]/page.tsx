@@ -18,6 +18,7 @@ import { useParams } from "next/navigation";
 import { formatPHP } from "@/lib/format-php";
 import { calculateBookingPrice, getNights } from "@/utils/pricing";
 import { useBookings } from "@/hooks/use-bookings";
+import GuestModal from "./_components/modals/guest-details-modal";
 
 function formatDate(d?: string) {
   if (!d) return "—";
@@ -35,6 +36,7 @@ function formatDate(d?: string) {
 export default function BookingDetailsStunning() {
   const { id } = useParams();
   const { booking, isLoading, error, fetchBooking } = useBookings();
+  const [viewOpen, setViewOpen] = React.useState(false);
 
   useEffect(() => {
     if (id) {
@@ -46,7 +48,12 @@ export default function BookingDetailsStunning() {
     return <div className="p-6">Loading...</div>;
   }
   return (
-    <div className="w-full max-w-5xl mx-auto pb-4">
+    <div className="w-full mx-auto pb-4">
+      <GuestModal
+        isOpen={viewOpen}
+        onClose={() => setViewOpen(false)}
+        guest={booking.user}
+      />
       <div className="px-4 py-2 text-white bg-primary mb-4">
         Booking Details
       </div>
@@ -99,6 +106,17 @@ export default function BookingDetailsStunning() {
                   </span>
                 </div>
               </div>
+              <div>
+                <Button
+                  variant="light"
+                  size="sm"
+                  color="primary"
+                  className="mt-1"
+                  onPress={() => setViewOpen(true)}
+                >
+                  view guest
+                </Button>
+              </div>
             </div>
 
             <div className="mt-1">
@@ -142,7 +160,7 @@ export default function BookingDetailsStunning() {
               <div className="ml-auto hidden sm:flex items-center text-sm text-gray-500 gap-2">
                 <Tag className="w-4 h-4" />
                 {booking.room ? (
-                  <span>#{booking.room?.room_number?.slice(0, 8)}</span>
+                  <span>#{booking.room?.room_number}</span>
                 ) : (
                   <span>No room assigned</span>
                 )}
@@ -191,7 +209,7 @@ export default function BookingDetailsStunning() {
                 <div className="text-xs text-gray-500">Special requests</div>
                 <div className="flex gap-2 flex-wrap">
                   {booking.special_requests.map((req: any) => (
-                    <Chip>
+                    <Chip key={req.name}>
                       {req.name} - {req.price > 0 ? req.price : "free"}
                     </Chip>
                   ))}

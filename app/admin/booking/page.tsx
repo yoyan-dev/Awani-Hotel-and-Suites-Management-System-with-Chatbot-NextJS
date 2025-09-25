@@ -2,14 +2,21 @@
 import { useBookings } from "@/hooks/use-bookings";
 import Header from "./_components/header";
 import BookingTable from "./_components/table/booking-table";
-import React from "react";
+import React, { useState } from "react";
 import {
   columns,
   INITIAL_VISIBLE_COLUMNS,
 } from "./_components/table/constants";
+import { Booking } from "@/types/booking";
 
 export default function Room() {
-  const { bookings, isLoading, error, fetchBookings } = useBookings();
+  const {
+    bookings,
+    isLoading: bookingLoading,
+    error: bookingError,
+    fetchBookings,
+    updateBooking,
+  } = useBookings();
 
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
@@ -60,7 +67,12 @@ export default function Room() {
 
   React.useEffect(() => {
     fetchBookings();
-  }, []);
+  }, [bookingError]);
+
+  async function handleSubmit(payload: Booking) {
+    console.log(payload);
+    updateBooking(payload);
+  }
 
   return (
     <div className="p-2 md:p-4 bg-white dark:bg-gray-900 rounded space-y-2">
@@ -82,7 +94,8 @@ export default function Room() {
         pages={pages}
         selectedKeys={selectedKeys}
         setSelectedKeys={setSelectedKeys}
-        isLoading={isLoading}
+        bookingLoading={bookingLoading}
+        handleSubmit={handleSubmit}
       />
     </div>
   );
