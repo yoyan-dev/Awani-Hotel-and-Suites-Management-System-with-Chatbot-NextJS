@@ -54,7 +54,7 @@ export default function AssignRoomModal({
       fetchRooms({ roomTypeID: booking.room_type_id });
     }
     console.log(rooms);
-  }, [roomError, booking]);
+  }, [roomError, booking.room_type_id]);
 
   return (
     <Modal
@@ -143,36 +143,34 @@ export default function AssignRoomModal({
             )}
           </div>
 
-          {!roomsLoading && rooms && rooms.length > 0 && (
-            <div className="space-y-1">
-              <p className="text-xs text-default-700 dark:text-default-400">
-                Change/Select Another Room
-              </p>
-              <Select
-                isRequired
-                placeholder="Select a room"
-                name="room_id"
-                isLoading={roomsLoading}
-                value={selectedRoom}
-                defaultSelectedKeys={[booking.room?.id]}
-                onChange={(e) => setSelectedRoom(e.target.value)}
-              >
-                {rooms.map((r) => (
-                  <SelectItem key={r.id} textValue={String(r.room_number)}>
-                    <div className="flex flex-col">
-                      <span className="font-medium">Room {r.room_number}</span>
-                      <div className="flex items-center justify-between flex-wrap gap-2 w-full">
-                        <span className="text-xs text-default-700 dark:text-default-400">
-                          {r.room_type?.name}
-                        </span>
-                        <Chip size="sm">{r.status}</Chip>
-                      </div>
+          <div className="space-y-1">
+            <p className="text-xs text-default-700 dark:text-default-400">
+              Change/Select Another Room
+            </p>
+            <Select
+              isRequired
+              placeholder="Select a room"
+              name="room_id"
+              isLoading={roomsLoading}
+              value={selectedRoom}
+              defaultSelectedKeys={[booking.room?.id]}
+              onChange={(e) => setSelectedRoom(e.target.value)}
+            >
+              {rooms.map((r) => (
+                <SelectItem key={r.id} textValue={String(r.room_number)}>
+                  <div className="flex flex-col">
+                    <span className="font-medium">Room {r.room_number}</span>
+                    <div className="flex items-center justify-between flex-wrap gap-2 w-full">
+                      <span className="text-xs text-default-700 dark:text-default-400">
+                        {r.room_type?.name}
+                      </span>
+                      <Chip size="sm">{r.status}</Chip>
                     </div>
-                  </SelectItem>
-                ))}
-              </Select>
-            </div>
-          )}
+                  </div>
+                </SelectItem>
+              ))}
+            </Select>
+          </div>
         </ModalBody>
         <ModalFooter className="justify-center">
           <Button

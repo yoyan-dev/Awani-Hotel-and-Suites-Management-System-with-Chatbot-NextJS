@@ -9,19 +9,15 @@ import {
   Spinner,
   Selection,
 } from "@heroui/react";
-import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
-import RenderCell from "./render-cell";
+import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/store";
-import { fetchUsers } from "@/features/users/user-thunk";
-import { Staff } from "@/types/staff";
+import { Inventory } from "@/types/inventory";
 import { ColumnType } from "@/types/column";
 
-interface StaffTableProps {
-  items: Staff[];
-  lists: Staff[];
+interface InventoryTableProps {
+  items: Inventory[];
+  inventory: Inventory[];
 
   headerColumns: ColumnType[];
   visibleColumns: Set<string>;
@@ -32,8 +28,8 @@ interface StaffTableProps {
   hasSearchFilter: boolean;
   filterValue: string;
   setFilterValue: React.Dispatch<React.SetStateAction<string>>;
-  rolesStatusFilter: any;
-  setRolesStatusFilter: React.Dispatch<React.SetStateAction<any | "all">>;
+  statusFilter: any;
+  setStatusFilter: React.Dispatch<React.SetStateAction<any | "all">>;
 
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
@@ -45,9 +41,9 @@ interface StaffTableProps {
   isLoading: boolean;
 }
 
-export default function StaffTable({
+export default function InventoryTable({
   items,
-  lists,
+  inventory,
   headerColumns,
   visibleColumns,
   setVisibleColumns,
@@ -55,15 +51,15 @@ export default function StaffTable({
   hasSearchFilter,
   filterValue,
   setFilterValue,
-  rolesStatusFilter,
-  setRolesStatusFilter,
+  statusFilter,
+  setStatusFilter,
   page,
   setPage,
   pages,
   selectedKeys,
   setSelectedKeys,
   isLoading,
-}: StaffTableProps) {
+}: InventoryTableProps) {
   return (
     <Table
       isHeaderSticky
@@ -80,19 +76,20 @@ export default function StaffTable({
         />
       }
       bottomContentPlacement="outside"
-      // selectedKeys={selectedKeys}
-      // selectionMode="multiple"
+      selectedKeys={selectedKeys}
+      selectionMode="multiple"
       topContent={
         <TableTopContent
           filterValue={filterValue}
           onSearchChange={setFilterValue}
           setFilterValue={setFilterValue}
-          rolesStatusFilter={rolesStatusFilter}
-          setRolesStatusFilter={setRolesStatusFilter}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
-          usersCount={lists.length}
+          itemsCount={inventory.length}
+          selectedKeys={selectedKeys}
         />
       }
       topContentPlacement="outside"
@@ -119,7 +116,7 @@ export default function StaffTable({
           <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell className="capitalize">
-                <RenderCell item={item} columnKey={columnKey as string} />
+                <RenderCell inventory={item} columnKey={columnKey as string} />
               </TableCell>
             )}
           </TableRow>

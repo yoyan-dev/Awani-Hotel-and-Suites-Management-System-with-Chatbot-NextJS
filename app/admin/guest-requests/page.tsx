@@ -1,25 +1,30 @@
 "use client";
-import { useStaff } from "@/hooks/use-staff";
+import { useInventory } from "@/hooks/use-inventory";
 import Header from "./_components/header";
-import UserTable from "./_components/table/user-table";
+import InventoryTable from "./_components/table/inventory-table";
 import React from "react";
 import {
   columns,
   INITIAL_VISIBLE_COLUMNS,
 } from "./_components/table/constants";
 
-export default function Staff() {
-  const { lists, isLoading, error, fetchAllStaff } = useStaff();
+export default function Room() {
+  const { inventory, isLoading, error, fetchInventory } = useInventory();
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [rolesStatusFilter, setRolesStatusFilter] = React.useState<any>("all");
+  const [statusFilter, setStatusFilter] = React.useState<any>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(lists.length / rowsPerPage);
+  React.useEffect(() => {
+    fetchInventory();
+    console.log(error);
+  }, [error]);
+
+  const pages = Math.ceil(inventory.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
@@ -30,22 +35,22 @@ export default function Staff() {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredStaff = [...lists];
+    let filteredInventory = [...inventory];
 
     if (hasSearchFilter) {
-      filteredStaff = filteredStaff.filter((staff) =>
-        staff.full_name?.toLowerCase().includes(filterValue.toLowerCase())
+      filteredInventory = filteredInventory.filter((item) =>
+        item.name?.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
-    if (rolesStatusFilter !== "all" && Array.from(rolesStatusFilter).length) {
-      filteredStaff = filteredStaff.filter((item) =>
-        Array.from(rolesStatusFilter).includes(item.role)
+    if (statusFilter !== "all" && Array.from(statusFilter).length) {
+      filteredInventory = filteredInventory.filter((item) =>
+        Array.from(statusFilter).includes(item.status)
       );
     }
 
-    return filteredStaff;
-  }, [lists, filterValue, rolesStatusFilter, hasSearchFilter]);
+    return filteredInventory;
+  }, [inventory, filterValue, statusFilter, hasSearchFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -56,16 +61,12 @@ export default function Staff() {
     setRowsPerPage(Number(e.target.value));
     setPage(1);
   };
-
-  React.useEffect(() => {
-    fetchAllStaff;
-  }, [error]);
   return (
     <div className="p-2 bg-white dark:bg-gray-900 rounded space-y-2">
       <Header />
-      <UserTable
+      <InventoryTable
         items={items}
-        lists={lists}
+        inventory={inventory}
         headerColumns={headerColumns}
         visibleColumns={visibleColumns}
         setVisibleColumns={setVisibleColumns}
@@ -73,8 +74,8 @@ export default function Staff() {
         hasSearchFilter={hasSearchFilter}
         filterValue={filterValue}
         setFilterValue={setFilterValue}
-        rolesStatusFilter={rolesStatusFilter}
-        setRolesStatusFilter={setRolesStatusFilter}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
         page={page}
         setPage={setPage}
         pages={pages}

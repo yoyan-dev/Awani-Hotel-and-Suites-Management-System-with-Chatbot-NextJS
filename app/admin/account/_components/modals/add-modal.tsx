@@ -15,124 +15,122 @@ import {
   SelectItem,
   Textarea,
 } from "@heroui/react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
 import { addUser } from "@/features/users/user-thunk";
-import { Plus } from "lucide-react";
+import { Copyright, Plus } from "lucide-react";
+import { useStaff } from "@/hooks/use-staff";
 
 export default function AddModal() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { isLoading } = useSelector((state: RootState) => state.users);
+  const { isLoading, addStaff, error } = useStaff();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setIsSubmitting(true);
     const formData = new FormData(e.currentTarget);
 
     try {
-      await dispatch(addUser(formData));
+      await addStaff(formData);
       onClose();
       e.currentTarget.reset();
     } catch (err) {
       console.error("Failed to add user", err);
     } finally {
-      setIsSubmitting(false);
+      if (!error) {
+        onClose();
+      }
     }
   }
 
   return (
     <>
       <Button color="primary" endContent={<Plus />} size="sm" onPress={onOpen}>
-        Add New User
+        Add New Staff
       </Button>
 
-      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
+      <Modal
+        scrollBehavior="outside"
+        isOpen={isOpen}
+        placement="top-center"
+        onOpenChange={onOpenChange}
+      >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Add New User</ModalHeader>
+              <ModalHeader className="w-full bg-primary text-white">
+                Add New Staff
+              </ModalHeader>
               <ModalBody>
                 <Form className="space-y-4" onSubmit={onSubmit}>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      label="Email"
-                      name="email"
-                      type="email"
-                      placeholder="User email"
-                      required
-                    />
-                    <Input
-                      label="Password"
-                      name="password"
-                      type="password"
-                      placeholder="Password"
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      label="Name"
-                      name="name"
-                      placeholder="Full name"
-                      required
-                    />
-                    <Input
-                      label="Phone"
-                      name="phone"
-                      placeholder="Phone number"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <Select
-                      label="Gender"
-                      name="gender"
-                      placeholder="Select gender"
-                    >
-                      <SelectItem key="male">Male</SelectItem>
-                      <SelectItem key="female">Female</SelectItem>
-                    </Select>
-                    <Input label="Birthday" name="birthday" type="date" />
-                  </div>
-
-                  <Textarea
-                    label="Address"
-                    name="address"
-                    placeholder="Address"
+                  <Input
+                    radius="sm"
+                    variant="bordered"
+                    label="Full Name"
+                    name="full_name"
+                    required
                   />
 
-                  {/* <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      label="Emergency Contact Name"
-                      name="emergency_name"
-                      placeholder="Emergency contact name"
-                    />
-                    <Input
-                      label="Emergency Contact Phone"
-                      name="emergency_phone"
-                      placeholder="Emergency contact phone"
-                    />
-                  </div> */}
-
-                  <Select label="Role" name="roles" placeholder="Select role">
-                    <SelectItem key="admin">Admin</SelectItem>
-                    <SelectItem key="housekeeping">Housekeeping</SelectItem>
-                    <SelectItem key="guest">Guest</SelectItem>
+                  <Select radius="sm" label="Role" name="role">
+                    {["admin", "housekeeping"].map((role) => (
+                      <SelectItem className="capitalize" key={role}>
+                        {role}
+                      </SelectItem>
+                    ))}
                   </Select>
 
-                  <ModalFooter className="flex justify-end gap-2 w-full">
-                    <Button onPress={onClose} variant="bordered">
+                  <Input
+                    radius="sm"
+                    variant="bordered"
+                    label="Position"
+                    name="position"
+                  />
+
+                  <Input
+                    radius="sm"
+                    variant="bordered"
+                    type="email"
+                    label="Email"
+                    name="email"
+                  />
+
+                  <Input
+                    radius="sm"
+                    variant="bordered"
+                    type="tel"
+                    label="Phone"
+                    name="phone"
+                  />
+
+                  <Select radius="sm" label="Shift Type" name="shift_type">
+                    {["AM", "MID", "PM", "GY"].map((shift) => (
+                      <SelectItem key={shift}>{shift}</SelectItem>
+                    ))}
+                  </Select>
+
+                  <Input
+                    radius="sm"
+                    variant="bordered"
+                    type="password"
+                    label="Password"
+                    name="password"
+                    isRequired
+                  />
+                  <div className="flex justify-end w-full gap-4">
+                    <Button radius="sm" onPress={onClose} variant="bordered">
                       Cancel
                     </Button>
-                    <Button color="primary" type="submit" isLoading={isLoading}>
+                    <Button
+                      radius="sm"
+                      color="primary"
+                      type="submit"
+                      isLoading={isLoading}
+                    >
                       Save
                     </Button>
-                  </ModalFooter>
+                  </div>
                 </Form>
               </ModalBody>
+              <ModalFooter className="gap-1 w-full bg-primary flex justify-center items-center text-white text-sm font-thin">
+                <Copyright size={10} /> Alright reserved Ma. Awani.
+              </ModalFooter>
             </>
           )}
         </ModalContent>

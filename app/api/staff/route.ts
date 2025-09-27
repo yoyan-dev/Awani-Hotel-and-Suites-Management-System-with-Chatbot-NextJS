@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
-import { Guest } from "@/types/guest";
+import { supabaseAdmin } from "@/lib/supabase-admin";
+import { Staff } from "@/types/staff";
+import { uploadUserImage } from "@/lib/upload-user-image";
 
 export async function GET(): Promise<NextResponse<ApiResponse>> {
-  const { data: guest, error } = await supabase.from("guest").select("*");
+  const { data: guest, error } = await supabase.from("staff").select("*");
 
   if (error) {
-    console.error("Error fetching guests:", error.message);
+    console.error("Error fetching staff:", error.message);
     return NextResponse.json(
       {
         success: false,
@@ -21,7 +23,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
     );
   }
 
-  console.log("Guests data:", guest);
+  console.log("Staff data:", guest);
   return NextResponse.json(
     {
       success: true,
@@ -40,48 +42,59 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
 export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
     const formData = await req.formData();
+    const formObj = Object.fromEntries(formData.entries());
+    const image = formData.get("image") as File;
+    const { email, phone, password, role, full_name, shift_type, position } =
+      formObj;
 
-    const {
-      id,
-      full_name,
-      contact_number,
-      address,
-      nationality,
-      gender,
-      email,
-      image,
-    } = Object.fromEntries(formData.entries());
+    const imageUrl = image ? await uploadUserImage(image) : "";
 
-    const newData = {
-      id,
-      full_name,
-      contact_number,
-      address,
-      nationality,
-      gender,
-      email,
-      image,
+    // create auth user
+    const { data, error: AuthError } =
+      await supabaseAdmin.auth.admin.createUser({
+        email: email as string,
+        password: password as string,
+        email_confirm: true,
+        user_metadata: {},
+        app_metadata: {
+          full_name,
+          image: imageUrl,
+          role: (role as string) ?? "guest",
+        },
+      });
+
+    if (AuthError) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: {
+            title: "Error",
+            description: AuthError.message,
+            color: "danger",
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    const newStaff = {
+      id: data.user.id,
+      full_name: full_name as string,
+      email: email as string,
+      phone: phone as string,
+      role: (role as string) || "guest",
+      shift_type: shift_type || "N/A",
+      position: position as string,
+      image: imageUrl,
+      status: "active",
     };
-    const { data, error } = await supabase
-      .from("guest")
-      .insert([newData])
+
+    const { data: staff, error } = await supabase
+      .from("staff")
+      .insert([newStaff])
       .select();
 
     if (error) {
-      console.error("Supabase insert error:", error);
-      if (error.code === "23505") {
-        return NextResponse.json(
-          {
-            success: false,
-            message: {
-              title: "Error",
-              description: "Guest already exists.",
-              color: "danger",
-            },
-          },
-          { status: 400 }
-        );
-      }
       return NextResponse.json(
         {
           success: false,
@@ -91,7 +104,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
             color: "danger",
           },
         },
-        { status: 500 }
+        { status: 400 }
       );
     }
 
@@ -103,7 +116,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
           description: "Account created successfully.",
           color: "success",
         },
-        data: data[0] || {},
+        data: staff[0] || {},
       },
       { status: 201 }
     );
@@ -131,7 +144,7 @@ export async function DELETE(
     const body = await request.json();
     const selectedValues: number[] | "all" = body.selectedValues;
 
-    let query = supabase.from("guest").delete();
+    let query = supabase.from("staff").delete();
 
     if (selectedValues === "all") {
     } else if (Array.isArray(selectedValues) && selectedValues.length > 0) {

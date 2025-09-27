@@ -7,20 +7,21 @@ import {
   DropdownMenu,
   DropdownTrigger,
   DropdownItem,
+  MenuItem,
 } from "@heroui/react";
-import { User } from "@/types/users";
 import { statusColorMap } from "./constants";
 import { EllipsisVertical } from "lucide-react";
 import DeleteModal from "../modals/delete-modal";
 import EditModal from "../modals/edit-modal";
+import { Staff } from "@/types/staff";
 
 interface RenderCellProps {
-  user: User;
+  item: Staff;
   columnKey: string;
 }
 
-const RenderCell: React.FC<RenderCellProps> = ({ user, columnKey }) => {
-  const cellValue = user[columnKey as keyof User];
+const RenderCell: React.FC<RenderCellProps> = ({ item, columnKey }) => {
+  const cellValue = item[columnKey as keyof Staff];
 
   switch (columnKey) {
     case "name":
@@ -28,38 +29,36 @@ const RenderCell: React.FC<RenderCellProps> = ({ user, columnKey }) => {
         <UserUi
           avatarProps={{ radius: "full", size: "sm", src: "" }}
           classNames={{ description: "text-default-500" }}
-          description={user.email}
-          name={user.user_metadata.full_name}
+          description={item.email}
+          name={item.full_name}
         />
       );
     case "role":
       return (
         <div className="flex flex-col">
           <p className="text-bold text-small capitalize">
-            {user.app_metadata.roles?.[0] || "Guest"}
+            {item.role || "Guest"}
           </p>
           <p className="text-bold text-tiny capitalize text-default-500">
-            {user.app_metadata.roles?.[0] || "Guest"}
+            {item.role || "Guest"}
           </p>
         </div>
       );
-    case "gender":
+    case "position":
       return (
         <div className="flex flex-col">
           <p className="text-bold text-small capitalize">
-            {user.user_metadata.gender}
+            {item.position || "N/A"}
           </p>
           <p className="text-bold text-tiny capitalize text-default-500">
-            {user.user_metadata.gender}
+            {item.position || "N/A"}
           </p>
         </div>
       );
     case "phone":
       return (
         <div className="flex flex-col">
-          <p className="text-bold text-small capitalize">
-            {user.user_metadata.phone}
-          </p>
+          <p className="text-bold text-small capitalize">{item.phone}</p>
         </div>
       );
     case "status":
@@ -87,12 +86,12 @@ const RenderCell: React.FC<RenderCellProps> = ({ user, columnKey }) => {
             </DropdownTrigger>
             <DropdownMenu>
               <DropdownItem key="view">View</DropdownItem>
-              <DropdownItem key="edit" color="success">
-                <EditModal user={user} />
+              {/* <DropdownItem key="edit" color="success">
+                <EditModal user={MenuItem} />
               </DropdownItem>
               <DropdownItem key="delete" color="danger">
-                <DeleteModal user={user} />
-              </DropdownItem>
+                <DeleteModal user={item} />
+              </DropdownItem> */}
             </DropdownMenu>
           </Dropdown>
         </div>

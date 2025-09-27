@@ -57,7 +57,7 @@ export const siteConfig = {
       icon: Users,
     },
     {
-      label: "Account Management",
+      label: "Staff Management",
       href: "/admin/account",
       isExpandable: false,
       icon: ShieldUser,
