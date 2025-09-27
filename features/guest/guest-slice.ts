@@ -41,7 +41,7 @@ const guestSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // get all rooms
+      // get all s
       .addCase(fetchGuests.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
@@ -59,7 +59,7 @@ const guestSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // add room
+      // add
       .addCase(addGuest.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
@@ -67,6 +67,7 @@ const guestSlice = createSlice({
       .addCase(addGuest.fulfilled, (state, action: PayloadAction<Guest>) => {
         state.isLoading = false;
         state.error = undefined;
+        state.guest = action.payload;
         state.guests.push(action.payload);
       })
       .addCase(addGuest.rejected, (state, action) => {
@@ -74,7 +75,7 @@ const guestSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // update room
+      // update
       .addCase(updateGuest.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
@@ -92,7 +93,7 @@ const guestSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // delete room
+      // delete
       .addCase(deleteGuest.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
@@ -107,7 +108,7 @@ const guestSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // delete rooms
+      // delete s
       .addCase(deleteSelectedGuest.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;

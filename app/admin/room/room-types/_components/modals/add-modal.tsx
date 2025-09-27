@@ -11,15 +11,12 @@ import {
   Textarea,
   ModalFooter,
 } from "@heroui/react";
-import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch, type RootState } from "@/store/store";
 import { Copyright, Plus, Upload } from "lucide-react";
 import AddOnsInput from "../add-ons-input";
-import { addRoomType } from "@/features/room-types/room-types-thunk";
+import { useRoomTypes } from "@/hooks/use-room-types";
 
 export default function AddModal() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { isLoading } = useSelector((state: RootState) => state.room_type);
+  const { isLoading, error, addRoomType } = useRoomTypes();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [addOns, setAddOns] = useState<{ name: string; price: string }[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
@@ -29,8 +26,10 @@ export default function AddModal() {
     const formData = new FormData(e.currentTarget);
     formData.append("add_ons", JSON.stringify(addOns));
 
-    await dispatch(addRoomType(formData));
-    onClose();
+    await addRoomType(formData);
+    if (!error) {
+      onClose();
+    }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -11,13 +11,12 @@ import {
   Textarea,
   ModalFooter,
 } from "@heroui/react";
-import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch, type RootState } from "@/store/store";
 import { Copyright, Plus, Upload } from "lucide-react";
 import AddOnsInput from "../add-ons-input";
 import { updateRoomType } from "@/features/room-types/room-types-thunk";
 import { RoomType } from "@/types/room";
 import { uploadRoomImage } from "@/lib/upload-room-image";
+import { useRoomTypes } from "@/hooks/use-room-types";
 
 interface UpdateModalProps {
   room: RoomType;
@@ -26,8 +25,7 @@ interface UpdateModalProps {
 }
 
 const UpdateModal: React.FC<UpdateModalProps> = ({ room, isOpen, onClose }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { isLoading } = useSelector((state: RootState) => state.inventory);
+  const { isLoading, updateRoomType } = useRoomTypes();
   const [formData, setFormData] = useState<RoomType>(room);
   const [addOns, setAddOns] = useState<{ name: string; price: string }[]>(
     room.add_ons ?? []
@@ -40,16 +38,14 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ room, isOpen, onClose }) => {
     const data = new FormData(e.currentTarget);
     const file = data.get("image") as File;
 
-    await dispatch(
-      updateRoomType({
-        ...formData,
-        add_ons: addOns,
-        image:
-          file && file.size > 0
-            ? await uploadRoomImage(file, "type-image")
-            : formData.image,
-      })
-    );
+    await updateRoomType({
+      ...formData,
+      add_ons: addOns,
+      image:
+        file && file.size > 0
+          ? await uploadRoomImage(file, "type-image")
+          : formData.image,
+    });
     onClose();
   }
 

@@ -1,14 +1,26 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { Housekeeping } from "@/types/housekeeping";
+import {
+  FetchHousekeepingParams,
+  HousekeepingPagination,
+  HousekeepingTask,
+} from "@/types/housekeeping";
 import { addToast } from "@heroui/react";
 
 const apiUrl = "/api/housekeeping";
 
-export const fetchHousekeepingTasks = createAsyncThunk<Housekeeping[]>(
+export const fetchHousekeepingTasks = createAsyncThunk<
+  { data: HousekeepingTask[]; pagination: HousekeepingPagination },
+  FetchHousekeepingParams | undefined
+>(
   "housekeeping/fetchHousekeepingTasks",
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await fetch(apiUrl);
+      const searchParams = new URLSearchParams();
+      if (params?.page) searchParams.append("page", String(params.page));
+      if (params?.query) searchParams.append("q", params.query);
+      if (params?.status) searchParams.append("status", params.status);
+
+      const res = await fetch(`${apiUrl}?${searchParams.toString()}`);
       const data = await res.json();
 
       if (!res.ok || !data.success) {
@@ -17,14 +29,17 @@ export const fetchHousekeepingTasks = createAsyncThunk<Housekeeping[]>(
           data.message?.description ?? "Failed to fetch housekeeping tasks"
         );
       }
-      return data.data;
+      return data as {
+        data: HousekeepingTask[];
+        pagination: HousekeepingPagination;
+      };
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
 );
 
-export const fetchHousekeepingTask = createAsyncThunk<Housekeeping, string>(
+export const fetchHousekeepingTask = createAsyncThunk<HousekeepingTask, string>(
   "housekeeping/fetchHousekeepingTask",
   async (id, { rejectWithValue }) => {
     try {
@@ -49,13 +64,17 @@ export const fetchHousekeepingTask = createAsyncThunk<Housekeeping, string>(
   }
 );
 
-export const addHousekeepingTask = createAsyncThunk<Housekeeping, FormData>(
+export const addHousekeepingTask = createAsyncThunk<
+  HousekeepingTask,
+  HousekeepingTask
+>(
   "housekeeping/addHousekeepingTask",
-  async (formData, { rejectWithValue }) => {
+  async (housekeeping, { rejectWithValue }) => {
     try {
       const res = await fetch(apiUrl, {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(housekeeping),
       });
       const data = await res.json();
       addToast(data.message);
@@ -79,8 +98,8 @@ export const addHousekeepingTask = createAsyncThunk<Housekeeping, FormData>(
 
 // UPDATE
 export const updateHousekeepingTask = createAsyncThunk<
-  Housekeeping,
-  Housekeeping,
+  HousekeepingTask,
+  HousekeepingTask,
   { rejectValue: string }
 >(
   "housekeeping/updateHousekeepingTask",
@@ -142,7 +161,7 @@ export const deleteHousekeepingTask = createAsyncThunk<string, string>(
 
 //  delete selected rooms or all
 export const deleteSelectedHousekeepingTask = createAsyncThunk<
-  Housekeeping[],
+  HousekeepingTask[],
   { selectedValues: Set<number> | "all" },
   { rejectValue: string }
 >(

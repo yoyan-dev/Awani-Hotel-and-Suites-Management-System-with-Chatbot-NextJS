@@ -1,32 +1,48 @@
-export type HousekeepingStatus =
-  | "pending"
-  | "in_progress"
-  | "completed"
-  | "delayed"
-  | "cancelled";
+export type HousekeepingTaskType =
+  | "room_preparation"
+  | "amenity_setup"
+  | "minibar_refill"
+  | "safety_check"
+  | "daily_cleaning"
+  | "linen_change"
+  | "turndown_service"
+  | "checkout_cleaning"
+  | "lost_and_found"
+  | "inventory_restock"
+  | "maintenance_report"
+  | "custom";
 
-export interface Housekeeping {
+export type TaskStatus = "pending" | "in_progress" | "done" | "cancelled";
+
+export interface HousekeepingTask {
   id: string;
-  room_id: string;
-  staff_id: string;
-  title: string;
-  attachment: any;
-  priority: "N/A" | "high" | "medium" | "low";
-  category: "repair" | "service" | "inspection" | "safety";
-  area: string;
-  scheduled_date: string;
-  start_time?: string;
-  end_time?: string;
-  notes?: string;
-  rooms: any;
-  users: any;
-  status: HousekeepingStatus;
-  created_at: string;
+  room_id?: string;
+  guest_name?: string;
+  task_type: HousekeepingTaskType;
+  description?: string;
+  scheduled_time?: string;
+  arrival_date?: string;
+  status?: TaskStatus;
+  room?: any;
+  createdAt: string;
+}
+
+export interface HousekeepingPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+export interface FetchHousekeepingParams {
+  page?: number;
+  query?: string;
+  status?: string | undefined;
 }
 
 export interface HousekeepingState {
-  tasks: Housekeeping[];
-  task: Housekeeping;
+  tasks: HousekeepingTask[];
+  task: HousekeepingTask;
+  pagination: HousekeepingPagination | null;
   isLoading: boolean;
   error: string | undefined;
 }

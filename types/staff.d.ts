@@ -1,26 +1,19 @@
-export type StaffRole =
-  | "admin"
-  | "frontdesk"
-  | "housekeeping"
-  | "maintenance"
-  | "manager";
-export type StaffStatus = "active" | "inactive" | "on_leave" | "terminated";
-
 export interface Staff {
   id: string;
-  name: string;
-  email: string;
+  image: string;
+  full_name: string;
+  role: "housekeeping" | "admin" | string;
+  position?: string;
+  email?: string;
   phone?: string;
-  role: StaffRole;
-  status: StaffStatus;
-  hire_date: string;
-  shift?: string;
-  assigned_rooms?: string[];
-  created_at: string;
+  shift_type?: "AM" | "MID" | "PM" | "GY" | "N/A" | string;
+  status: "active" | "inactive" | "onLeave";
+  createdAt: Date;
 }
 
 export interface StaffState {
-  staff: Staff[];
+  lists: Staff[];
+  list: Staff;
   isLoading: boolean;
-  error: string | null;
+  error?: string | undefined;
 }

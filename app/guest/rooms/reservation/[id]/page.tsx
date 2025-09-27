@@ -4,30 +4,19 @@ import BookingForm from "./_components/booking-form";
 import SelectedRoom from "./_components/selected-room";
 import { Card, CardBody, CardHeader } from "@heroui/react";
 import { useParams } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
 import { useEffect, useMemo, useState } from "react";
-import { fetchRoom } from "@/features/room/room-thunk";
-import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
-import { RoomType } from "@/types/room";
 import AvailableRooms from "./_components/available-rooms";
-import { addBooking } from "@/features/booking/booking-thunk";
 import { supabase } from "@/lib/supabase/supabase-client";
-import { fetchGuest } from "@/features/guest/guest-thunk";
+import { useGuests } from "@/hooks/use-guests";
+import { useRoomTypes } from "@/hooks/use-room-types";
+import { useBookings } from "@/hooks/use-bookings";
 
 export default function Page() {
   const { id } = useParams();
-  const dispatch = useDispatch<AppDispatch>();
-  const { guest, isLoading: guestIsLoading } = useSelector(
-    (state: RootState) => state.guests
-  );
+  const { guest, isLoading: guestIsLoading, fetchGuest } = useGuests();
   const [selectedRoom, setSelectedRoom] = useState(id || null);
-  const { room_types, isLoading } = useSelector(
-    (state: RootState) => state.room_type
-  );
-  const { isLoading: bookingIsLoading } = useSelector(
-    (state: RootState) => state.booking
-  );
+  const { room_types, isLoading, fetchRoomTypes } = useRoomTypes();
+  const { isLoading: bookingIsLoading, addBooking } = useBookings();
 
   const [specialRequests, setSpecialRequests] = useState<
     { name: string; price: string; quantity: number }[]
@@ -40,15 +29,15 @@ export default function Page() {
     } = await supabase.auth.getUser();
 
     if (user?.id) {
-      await dispatch(fetchGuest(user.id));
+      await fetchGuest(user.id);
       return;
     }
   }
 
   useEffect(() => {
-    dispatch(fetchRoomTypes());
+    fetchRoomTypes();
     getCurrentUser();
-  }, [dispatch]);
+  }, []);
 
   const room = useMemo(() => {
     if (selectedRoom) {
@@ -75,10 +64,17 @@ export default function Page() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
+    const filtereSpecialRequest = specialRequests.filter(
+      (req) => req.quantity > 0
+    );
+
     formData.append("guest_id", guest.id || "");
-    formData.append("special_requests", JSON.stringify(specialRequests));
+    formData.append(
+      "special_requests",
+      JSON.stringify(filtereSpecialRequest || [])
+    );
     console.log(formData);
-    await dispatch(addBooking(formData));
+    await addBooking(formData);
   }
 
   return (

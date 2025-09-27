@@ -1,5 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { Housekeeping, HousekeepingState } from "@/types/housekeeping";
+import type {
+  HousekeepingTask,
+  HousekeepingState,
+  HousekeepingPagination,
+} from "@/types/housekeeping";
 import {
   fetchHousekeepingTask,
   fetchHousekeepingTasks,
@@ -11,7 +15,8 @@ import {
 
 const initialState: HousekeepingState = {
   tasks: [],
-  task: {} as Housekeeping,
+  task: {} as HousekeepingTask,
+  pagination: {} as HousekeepingPagination,
   isLoading: false,
   error: undefined,
 };
@@ -33,7 +38,7 @@ const housekeepingTaskSlice = createSlice({
       })
       .addCase(
         fetchHousekeepingTask.fulfilled,
-        (state, action: PayloadAction<Housekeeping>) => {
+        (state, action: PayloadAction<HousekeepingTask>) => {
           state.isLoading = false;
           state.task = action.payload;
           state.error = undefined;
@@ -51,9 +56,16 @@ const housekeepingTaskSlice = createSlice({
       })
       .addCase(
         fetchHousekeepingTasks.fulfilled,
-        (state, action: PayloadAction<Housekeeping[]>) => {
+        (
+          state,
+          action: PayloadAction<{
+            data: HousekeepingTask[];
+            pagination: HousekeepingPagination;
+          }>
+        ) => {
           state.isLoading = false;
-          state.tasks = action.payload;
+          state.tasks = action.payload.data;
+          state.pagination = action.payload.pagination;
           state.error = undefined;
         }
       )
@@ -62,14 +74,14 @@ const housekeepingTaskSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // add room
+      // add
       .addCase(addHousekeepingTask.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
       })
       .addCase(
         addHousekeepingTask.fulfilled,
-        (state, action: PayloadAction<Housekeeping>) => {
+        (state, action: PayloadAction<HousekeepingTask>) => {
           state.isLoading = false;
           state.error = undefined;
           state.tasks.push(action.payload);
@@ -87,7 +99,7 @@ const housekeepingTaskSlice = createSlice({
       })
       .addCase(
         updateHousekeepingTask.fulfilled,
-        (state, action: PayloadAction<Housekeeping>) => {
+        (state, action: PayloadAction<HousekeepingTask>) => {
           state.isLoading = false;
           state.error = undefined;
           const index = state.tasks.findIndex(

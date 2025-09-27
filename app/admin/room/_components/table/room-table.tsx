@@ -15,39 +15,34 @@ import { TableBottomContent } from "./bottom-content";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchRooms } from "@/features/room/room-thunk";
 import type { RootState, AppDispatch } from "@/store/store";
+import { FetchRoomsParams, Room, RoomPagination } from "@/types/room";
+import { ColumnType } from "@/types/column";
 
-export default function RoomTable() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { rooms, pagination, isLoading, error } = useSelector(
-    (state: RootState) => state.room
-  );
+interface RoomTableProps {
+  rooms: Room[];
+  pagination: RoomPagination | null;
+  query: FetchRoomsParams;
+  setQuery: React.Dispatch<React.SetStateAction<FetchRoomsParams>>;
+  selectedKeys: any;
+  setSelectedKeys: React.Dispatch<React.SetStateAction<any>>;
+  visibleColumns: any;
+  setVisibleColumns: React.Dispatch<React.SetStateAction<any>>;
+  headerColumns: ColumnType[];
+  isLoading: boolean;
+}
 
-  const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState<any>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-  const [statusFilter, setStatusFilter] = React.useState<any>("all");
-  const [page, setPage] = React.useState(1);
-
-  React.useEffect(() => {
-    dispatch(
-      fetchRooms({
-        page,
-        query: filterValue,
-        status: statusFilter === "all" ? "" : statusFilter,
-      })
-    );
-    console.log(pagination);
-  }, [dispatch, error, page, filterValue, statusFilter]);
-
-  const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
-    return columns.filter((column) =>
-      Array.from(visibleColumns).includes(column.uid)
-    );
-  }, [visibleColumns]);
-
+export default function RoomTable({
+  rooms,
+  pagination,
+  query,
+  setQuery,
+  selectedKeys,
+  setSelectedKeys,
+  visibleColumns,
+  setVisibleColumns,
+  headerColumns,
+  isLoading,
+}: RoomTableProps) {
   return (
     <Table
       aria-label="Rooms Table"
@@ -56,8 +51,8 @@ export default function RoomTable() {
       rowHeight={40}
       bottomContent={
         <TableBottomContent
-          page={page}
-          setPage={setPage}
+          query={query}
+          setQuery={setQuery}
           pages={pagination?.totalPages ?? 0}
           selectedKeys={selectedKeys}
           roomsCount={pagination?.total}
@@ -65,14 +60,10 @@ export default function RoomTable() {
       }
       bottomContentPlacement="outside"
       selectedKeys={selectedKeys}
-      selectionMode="multiple"
       topContent={
         <TableTopContent
-          filterValue={filterValue}
-          onSearchChange={setFilterValue}
-          setFilterValue={setFilterValue}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
+          query={query}
+          setQuery={setQuery}
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           roomsCount={pagination?.total}

@@ -4,7 +4,6 @@ import Footer from "./_components/footer";
 import Navbar from "./_components/navbar";
 import { User } from "@/types/users";
 import { supabase } from "@/lib/supabase/supabase-client";
-import { getCurrentUser } from "@/features/auth/auth-thunk";
 
 export default function HousekeepingLayout({
   children,

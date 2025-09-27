@@ -2,6 +2,7 @@ export type GuestStatus = "active" | "inactive" | "vip" | "banned";
 
 export interface Guest {
   id: string;
+  image?: string;
   full_name: string;
   email?: string;
   contact_number?: string;

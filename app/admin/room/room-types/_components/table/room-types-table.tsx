@@ -7,6 +7,7 @@ import {
   TableRow,
   TableCell,
   Spinner,
+  Selection,
 } from "@heroui/react";
 import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
 import { RenderCell } from "./render-cell";
@@ -15,58 +16,49 @@ import { TableBottomContent } from "./bottom-content";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/store";
 import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
+import { RoomType } from "@/types/room";
+import { ColumnType } from "@/types/column";
 
-export default function RoomTypesTable() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { room_types, isLoading, error } = useSelector(
-    (state: RootState) => state.room_type
-  );
+interface RoomTypesTableProps {
+  items: RoomType[];
+  room_types: RoomType[];
 
-  const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState<any>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [page, setPage] = React.useState(1);
+  headerColumns: ColumnType[];
+  visibleColumns: Set<string>;
+  setVisibleColumns: React.Dispatch<React.SetStateAction<Set<string>>>;
 
-  React.useEffect(() => {
-    dispatch(fetchRoomTypes());
-    console.log(error);
-  }, [dispatch, error]);
+  onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 
-  const pages = Math.ceil(room_types.length / rowsPerPage);
-  const hasSearchFilter = Boolean(filterValue);
+  hasSearchFilter: boolean;
+  filterValue: string;
+  setFilterValue: React.Dispatch<React.SetStateAction<string>>;
 
-  const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
-    return columns.filter((column) =>
-      Array.from(visibleColumns).includes(column.uid)
-    );
-  }, [visibleColumns]);
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  pages: number;
 
-  const filteredItems = React.useMemo(() => {
-    let filteredRoomTypes = [...room_types];
+  selectedKeys: Selection;
+  setSelectedKeys: React.Dispatch<React.SetStateAction<Selection>>;
 
-    if (hasSearchFilter) {
-      filteredRoomTypes = filteredRoomTypes.filter((item) =>
-        item.name?.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
-
-    return filteredRoomTypes;
-  }, [room_types, filterValue, hasSearchFilter]);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    return filteredItems.slice(start, start + rowsPerPage);
-  }, [page, filteredItems, rowsPerPage]);
-
-  const onRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setRowsPerPage(Number(e.target.value));
-    setPage(1);
-  };
-
+  isLoading: boolean;
+}
+export default function RoomTypesTable({
+  items,
+  room_types,
+  headerColumns,
+  visibleColumns,
+  setVisibleColumns,
+  onRowsPerPageChange,
+  hasSearchFilter,
+  filterValue,
+  setFilterValue,
+  page,
+  setPage,
+  pages,
+  selectedKeys,
+  setSelectedKeys,
+  isLoading,
+}: RoomTypesTableProps) {
   return (
     <Table
       isHeaderSticky

@@ -4,7 +4,7 @@ export const columns: ColumnType[] = [
   { name: "ID", uid: "id", sortable: true },
   { name: "NAME", uid: "name", sortable: true },
   { name: "ROLE", uid: "role", sortable: true },
-  { name: "Gender", uid: "gender", sortable: true },
+  { name: "SHIFT TYPE", uid: "shift_type", sortable: true },
   { name: "Phone", uid: "phone", sortable: true },
   // { name: "TEAM", uid: "team" },
   { name: "EMAIL", uid: "email" },
@@ -28,7 +28,8 @@ export const statusColorMap: Record<string, "success" | "danger" | "warning"> =
 export const INITIAL_VISIBLE_COLUMNS = [
   "name",
   "role",
-  "gender",
+  "shift_type",
   "phone",
+  "status",
   "actions",
 ];

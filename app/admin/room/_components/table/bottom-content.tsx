@@ -1,17 +1,18 @@
 import React from "react";
 import { Pagination } from "@heroui/react";
+import { FetchRoomsParams } from "@/types/room";
 
 interface Props {
-  page: number;
-  setPage: (val: number) => void;
+  query: FetchRoomsParams;
+  setQuery: React.Dispatch<React.SetStateAction<FetchRoomsParams>>;
   pages: number;
   selectedKeys: any;
   roomsCount: any;
 }
 
 export const TableBottomContent: React.FC<Props> = ({
-  page,
-  setPage,
+  query,
+  setQuery,
   pages,
   selectedKeys,
   roomsCount,
@@ -21,10 +22,10 @@ export const TableBottomContent: React.FC<Props> = ({
       <Pagination
         showControls
         color="primary"
-        page={page}
+        page={query.page}
         total={pages}
         variant="light"
-        onChange={setPage}
+        onChange={(page: number) => setQuery({ ...query, page: page })}
       />
       <span className="text-small text-default-400">
         {selectedKeys === "all"

@@ -45,7 +45,7 @@ export default function PolicyModal({ onConfirm }: PolicyModalProps) {
             </p>
             <Button
               as="a"
-              href="/policies/booking-cancellation.pdf"
+              href="policy/cancellation-policy.pdf"
               color="secondary"
               download
             >

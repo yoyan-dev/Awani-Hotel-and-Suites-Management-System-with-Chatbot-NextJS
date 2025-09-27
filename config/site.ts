@@ -5,6 +5,7 @@ import {
   Home,
   icons,
   Inbox,
+  List,
   LogOut,
   Notebook,
   Settings,
@@ -57,7 +58,7 @@ export const siteConfig = {
       icon: Users,
     },
     {
-      label: "Account Management",
+      label: "Staff Management",
       href: "/admin/account",
       isExpandable: false,
       icon: ShieldUser,
@@ -114,6 +115,11 @@ export const siteConfig = {
       label: "Dashboard",
       href: "/housekeeping",
       icon: Home,
+    },
+    {
+      label: "Tasks",
+      href: "/housekeeping/tasks",
+      icon: List,
     },
     {
       label: "Rooms",

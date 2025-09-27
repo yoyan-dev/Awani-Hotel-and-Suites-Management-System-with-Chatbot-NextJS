@@ -6,10 +6,9 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Selection,
 } from "@heroui/react";
 import { Search, ChevronDown } from "lucide-react";
-import { columns } from "./constants";
-import { capitalize } from "@/app/utils/capitalize";
 import AddModal from "../modals/add-modal";
 
 interface Props {
@@ -20,7 +19,7 @@ interface Props {
   setVisibleColumns: (val: any) => void;
   onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   itemsCount: number;
-  selectedKeys: Set<number> | "all";
+  selectedKeys: Selection;
 }
 
 export const TableTopContent: React.FC<Props> = ({

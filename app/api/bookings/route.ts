@@ -7,22 +7,33 @@ let bookings: Booking[];
 
 export async function GET(): Promise<NextResponse<ApiResponse>> {
   const { data: booking, error } = await supabase.from("bookings").select(`
+    id,
+    room_id,
+    guest_id,
+    room_type_id,
+    check_in,
+    check_out,
+    special_requests,
+    number_of_guests,
+    status,
+    total_add_ons,
+    total,
+    created_at,
+    room_type:room_type_id(*),
+    room:room_id (
       id,
       room_id,
-      guest_id,
+      room_number,
       room_type_id,
-      check_in,
-      check_out,
-      special_requests,
-      number_of_guests,
-      status,
-      total_add_ons,
-      total,
-      created_at,
       room_type:room_type_id(*),
-      room:room_id (*),
-      user:guest_id (*)
-    `);
+      area,
+      description,
+      status,
+      images,
+      remarks
+    ),
+    user:guest_id (*)
+  `);
 
   if (error) {
     console.error("Error fetching bookings:", error.message);

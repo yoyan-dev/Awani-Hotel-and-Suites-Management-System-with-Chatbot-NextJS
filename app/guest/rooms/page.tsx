@@ -1,25 +1,41 @@
 "use client";
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
 import { RoomsList } from "./_components/room-list";
 import Header from "./_components/header";
-import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
+import { useRoomTypes } from "@/hooks/use-room-types";
+import { User } from "@/types/users";
+import { supabase } from "@/lib/supabase/supabase-client";
 
 export default function Page() {
-  const { room_types, isLoading, error } = useSelector(
-    (state: RootState) => state.room_type
-  );
-  const dispatch = useDispatch<AppDispatch>();
+  const { room_types, isLoading, error, fetchRoomTypes } = useRoomTypes();
+  const [state, setState] = React.useState<{
+    user: User | null;
+    isLoading: boolean;
+  }>({ user: null, isLoading: true });
 
   useEffect(() => {
-    dispatch(fetchRoomTypes());
-  }, [dispatch]);
+    async function getCurrentUser() {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      setState({ user: (user as User) ?? null, isLoading: false });
+    }
+
+    getCurrentUser();
+    fetchRoomTypes();
+    fetchRoomTypes();
+  }, [error]);
 
   return (
     <div className="m-0 md:m-4 p-4 bg-white dark:bg-gray-800 space-y-4">
       <Header />
-      <RoomsList rooms={room_types} isLoading={isLoading} />
+      <RoomsList
+        user={state.user}
+        rooms={room_types}
+        typesLoading={isLoading}
+        userLoading={state.isLoading}
+      />
     </div>
   );
 }

@@ -6,11 +6,8 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
 } from "@heroui/react";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/store";
-import { deleteRoom, fetchRooms } from "@/features/room/room-thunk";
+import { useRooms } from "@/hooks/use-rooms";
 
 interface DeleteModalProps {
   room: Room;
@@ -19,12 +16,11 @@ interface DeleteModalProps {
 }
 
 const DeleteModal: React.FC<DeleteModalProps> = ({ room, isOpen, onClose }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const isLoading = useSelector((state: RootState) => state.room.isLoading);
+  const { isLoading, deleteRoom, fetchRooms } = useRooms();
 
   async function handleDelete() {
-    await dispatch(deleteRoom(room.id || ""));
-    dispatch(fetchRooms());
+    await deleteRoom(room.id || "");
+    fetchRooms(null);
   }
   return (
     <>

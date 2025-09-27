@@ -25,11 +25,9 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase-client";
 import { handleFileChange } from "@/app/utils/image-file-handler";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
 import { uploadUserImage } from "@/lib/upload-user-image";
-import { addGuest } from "@/features/guest/guest-thunk";
 import { useRouter } from "next/navigation";
+import { useGuests } from "@/hooks/use-guests";
 
 export default function Auth() {
   const [email, setEmail] = React.useState("");
@@ -37,8 +35,7 @@ export default function Auth() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [preview, setPreview] = React.useState<string | null>(null);
 
-  const dispatch = useDispatch<AppDispatch>();
-  const { error } = useSelector((state: RootState) => state.guests);
+  const { error, addGuest } = useGuests();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const router = useRouter();
 
@@ -69,8 +66,9 @@ export default function Auth() {
 
       if (data.user) {
         formData.append("id", data.user.id);
+        formData.append("image", imageUrl);
         console.log(formData);
-        await dispatch(addGuest(formData));
+        await addGuest(formData);
         if (error) {
           console.log(error);
           return;

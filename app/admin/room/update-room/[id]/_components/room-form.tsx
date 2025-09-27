@@ -24,8 +24,8 @@ interface RoomFormProps {
   images: any[];
   setImages: React.Dispatch<React.SetStateAction<any[]>>;
   roomTypes: RoomType[];
-  roomTypeIsLoading: boolean;
-  isLoading: boolean;
+  typesLoading: boolean;
+  roomLoading: boolean;
 }
 
 export default function RoomForm({
@@ -39,8 +39,8 @@ export default function RoomForm({
   images,
   setImages,
   roomTypes,
-  roomTypeIsLoading,
-  isLoading,
+  typesLoading,
+  roomLoading,
 }: RoomFormProps) {
   return (
     <Form
@@ -54,7 +54,7 @@ export default function RoomForm({
           type="submit"
           className="bg-primary-200"
           variant="bordered"
-          isLoading={isLoading}
+          isLoading={roomLoading}
         >
           <Save size={18} />
           Save
@@ -99,7 +99,7 @@ export default function RoomForm({
             />
           </div>
           <Select
-            isLoading={roomTypeIsLoading}
+            isLoading={typesLoading}
             radius="none"
             className="flex-1 w-full min-w-40"
             name="room_type"
@@ -150,18 +150,12 @@ export default function RoomForm({
             placeholder="Room remarks..."
             variant="bordered"
           />
-          {/* <BedsInput beds={beds} setBeds={setBeds} /> */}
         </div>
 
-        {/* RIGHT SIDE */}
         <div className="flex-1 flex flex-col gap-4 ">
           <h1>Room photo</h1>
           <hr className="border border-gray-400" />
           <ImagesUpload images={images} setImages={setImages} />
-          {/* <FacilitiesInput
-            facilities={facilities}
-            setFacilities={setFacilities}
-          /> */}
         </div>
       </div>
 
