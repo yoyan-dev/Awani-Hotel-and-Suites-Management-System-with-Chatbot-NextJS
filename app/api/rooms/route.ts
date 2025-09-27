@@ -75,12 +75,6 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   }
 
   console.log("Room data:", roomData);
-  const normalizedRooms: Room[] = roomData.map((room) => ({
-    ...room,
-    room_type: Array.isArray(room.room_type)
-      ? room.room_type[0]
-      : room.room_type,
-  }));
   rooms = roomData || [];
   return NextResponse.json(
     {

@@ -8,6 +8,8 @@ import {
   INITIAL_VISIBLE_COLUMNS,
 } from "./_components/table/constants";
 import { Booking } from "@/types/booking";
+import { HousekeepingTask } from "@/types/housekeeping";
+import { useHousekeeping } from "@/hooks/use-housekeeping";
 
 export default function Room() {
   const {
@@ -17,6 +19,8 @@ export default function Room() {
     fetchBookings,
     updateBooking,
   } = useBookings();
+
+  const { addHousekeepingTask } = useHousekeeping();
 
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
@@ -71,7 +75,30 @@ export default function Room() {
 
   async function handleSubmit(payload: Booking) {
     console.log(payload);
-    updateBooking(payload);
+    updateBooking({
+      id: payload.id,
+      room_id: payload.room_id,
+      status: "confirmed",
+    } as Booking);
+
+    const specialRequests = (payload.special_requests ?? [])
+      .map((req: any) => `${req.quantity} ${req.name}`)
+      .join(", ");
+
+    const tasks: Partial<HousekeepingTask> = {
+      room_id: payload.room_id,
+      guest_name: payload.user.full_name,
+      task_type: "room_preparation",
+      description:
+        specialRequests && specialRequests.trim() !== ""
+          ? `Prepare room for new arrival. Double-check the room is clean and ensure the following special requests are ready: ${specialRequests}.`
+          : `Prepare room for new arrival. Double-check the room is clean and perform full room preparation with standard amenities.`,
+      scheduled_time: new Date().toISOString(),
+      arrival_date: payload.check_in,
+      status: "pending",
+    };
+    addHousekeepingTask(tasks as HousekeepingTask);
+    console.log(tasks);
   }
 
   return (

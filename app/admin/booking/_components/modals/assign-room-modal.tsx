@@ -181,7 +181,10 @@ export default function AssignRoomModal({
             onPress={() =>
               onAssign({
                 id: booking.id,
+                user: booking.user,
                 room_id: selectedRoom || "",
+                special_requests: booking.special_requests,
+                check_in: booking.check_in,
                 status: "confirmed",
               } as Booking)
             }

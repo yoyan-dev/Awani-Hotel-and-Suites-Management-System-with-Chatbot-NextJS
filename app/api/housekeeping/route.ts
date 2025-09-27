@@ -1,44 +1,48 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
-import { Housekeeping } from "@/types/housekeeping";
 
-let housekeeping: Housekeeping[];
+export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
+  const { searchParams } = new URL(req.url);
 
-export async function GET(): Promise<NextResponse<ApiResponse>> {
-  const { data: items, error } = await supabase.from("housekeeping").select(`
+  const query = searchParams.get("q") || "";
+  const status = searchParams.get("status") || "";
+  const page = Number(searchParams.get("page") || "1");
+  const limit = 10;
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let q = supabase.from("housekeeping").select(
+    `
       id,
-      title,
       room_id,
-      staff_id,
-      attachment,
-      priority,
-      category,
-      area,
-      scheduled_date,
-      start_time,
-      end_time,
-      notes,
+      guest_name,
+      task_type,
+      description,
+      scheduled_time,
       status,
-      created_at,
-      rooms:room_id (
-        id,
-        room_id,
-        room_number,
-        room_type,
-        floor,
-        base_price,
-        status,
-        image
-      ),
-      users:staff_id (
-        id,
-        full_name,
-        email,
-        role,
-        phone
-      )
-    `);
+      room:room_id(*)
+    `,
+    { count: "exact" }
+  );
+
+  if (query) {
+    q = q.or(`
+    description.ilike.%${query}%,
+    guest_name.ilike.%${query}%,
+    task_type.ilike.%${query}%
+  `);
+  }
+
+  if (status) {
+    q = q.eq("status", status);
+  }
+
+  const {
+    data: housekeepingTask,
+    error,
+    count,
+  } = await q.order("room_id", { ascending: false }).range(from, to);
 
   if (error) {
     console.error("Error fetching housekeeping tasks:", error.message);
@@ -55,8 +59,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
     );
   }
 
-  console.log("housekeeping data:", items);
-  housekeeping = items || [];
+  console.log("housekeeping tasks:", housekeepingTask);
   return NextResponse.json(
     {
       success: true,
@@ -65,7 +68,13 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
         description: "",
         color: "success",
       },
-      data: housekeeping,
+      data: housekeepingTask,
+      pagination: {
+        page,
+        limit,
+        total: count ?? 0,
+        totalPages: Math.ceil((count ?? 0) / limit),
+      },
     },
     { status: 201 }
   );
@@ -74,13 +83,10 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
 // CREATE room
 export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
-    const formData = await req.formData();
-
-    const formObj = Object.fromEntries(formData.entries());
-    const newData = { ...formObj };
+    const body = await req.json();
     const { data, error } = await supabase
       .from("housekeeping")
-      .insert([newData])
+      .insert(body)
       .select();
 
     if (error) {
