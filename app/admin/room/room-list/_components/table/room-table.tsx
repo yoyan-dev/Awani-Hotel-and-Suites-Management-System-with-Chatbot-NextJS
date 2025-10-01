@@ -48,7 +48,6 @@ export default function RoomTable({
       aria-label="Rooms Table"
       isHeaderSticky
       classNames={{ wrapper: ["shadow-none", "dark:bg-gray-900", "p-0"] }}
-      rowHeight={40}
       bottomContent={
         <TableBottomContent
           query={query}

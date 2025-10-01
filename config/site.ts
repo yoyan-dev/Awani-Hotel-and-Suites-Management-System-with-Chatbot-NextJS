@@ -117,19 +117,14 @@ export const siteConfig = {
       icon: Home,
     },
     {
-      label: "Tasks",
-      href: "/housekeeping/tasks",
-      icon: List,
-    },
-    {
-      label: "Rooms",
+      label: "Room List",
       href: "/housekeeping/rooms",
       icon: Bed,
     },
     {
-      label: "Guest",
-      href: "/housekeeping/guest",
-      icon: User,
+      label: "Tasks",
+      href: "/housekeeping/tasks",
+      icon: List,
     },
     {
       label: "Guest Requests",

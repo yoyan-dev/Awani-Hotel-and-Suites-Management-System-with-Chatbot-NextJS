@@ -53,11 +53,11 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     q = q.eq("status", status);
   }
 
-  const {
-    data: roomData,
-    error,
-    count,
-  } = await q.order("room_id", { ascending: false }).range(from, to);
+  const { data: roomData, error, count } = await q.range(from, to);
+
+  const orderByRoomTypes = roomData?.sort((a: any, b: any) => {
+    return a.room_type?.name.localeCompare(b.room_type?.name);
+  });
 
   if (error) {
     console.error("Error fetching rooms:", error.message);
@@ -74,8 +74,8 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     );
   }
 
-  console.log("Room data:", roomData);
-  rooms = roomData || [];
+  console.log("Room data:", orderByRoomTypes);
+  rooms = orderByRoomTypes || [];
   return NextResponse.json(
     {
       success: true,

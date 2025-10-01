@@ -1,15 +1,15 @@
 "use client";
 import { useBookings } from "@/hooks/use-bookings";
 import Header from "./_components/header";
-import BookingTable from "./_components/table/booking-table";
 import React, { useState } from "react";
-import {
-  columns,
-  INITIAL_VISIBLE_COLUMNS,
-} from "./_components/table/constants";
+import { columns, INITIAL_VISIBLE_COLUMNS } from "./_components/constants";
 import { Booking } from "@/types/booking";
 import { HousekeepingTask } from "@/types/housekeeping";
 import { useHousekeeping } from "@/hooks/use-housekeeping";
+import { Tab, Tabs } from "@heroui/react";
+import Overview from "./overview/page";
+import Calendar from "./calendar/page";
+import BookingList from "./booking-list/page";
 
 export default function Room() {
   const {
@@ -102,28 +102,40 @@ export default function Room() {
   }
 
   return (
-    <div className="p-2 md:p-4 bg-white dark:bg-gray-900 rounded space-y-2">
+    <div>
       <Header />
-      <BookingTable
-        items={items}
-        bookings={bookings}
-        headerColumns={headerColumns}
-        visibleColumns={visibleColumns}
-        setVisibleColumns={setVisibleColumns}
-        onRowsPerPageChange={onRowsPerPageChange}
-        hasSearchFilter={hasSearchFilter}
-        filterValue={filterValue}
-        setFilterValue={setFilterValue}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        page={page}
-        setPage={setPage}
-        pages={pages}
-        selectedKeys={selectedKeys}
-        setSelectedKeys={setSelectedKeys}
-        bookingLoading={bookingLoading}
-        handleSubmit={handleSubmit}
-      />
+      <div>
+        <Tabs aria-label="Tabs variants" variant="underlined" color="primary">
+          <Tab key="overview" title="Overview">
+            <Overview />
+          </Tab>
+          <Tab key="calendar" title="Calendar">
+            <Calendar />
+          </Tab>
+          <Tab key="bookings" title="Booking List">
+            <BookingList
+              items={items}
+              bookings={bookings}
+              headerColumns={headerColumns}
+              visibleColumns={visibleColumns}
+              setVisibleColumns={setVisibleColumns}
+              onRowsPerPageChange={onRowsPerPageChange}
+              hasSearchFilter={hasSearchFilter}
+              filterValue={filterValue}
+              setFilterValue={setFilterValue}
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+              page={page}
+              setPage={setPage}
+              pages={pages}
+              selectedKeys={selectedKeys}
+              setSelectedKeys={setSelectedKeys}
+              bookingLoading={bookingLoading}
+              handleSubmit={handleSubmit}
+            />
+          </Tab>
+        </Tabs>
+      </div>
     </div>
   );
 }

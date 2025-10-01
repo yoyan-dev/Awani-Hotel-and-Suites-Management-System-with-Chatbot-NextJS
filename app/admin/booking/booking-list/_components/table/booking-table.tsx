@@ -14,7 +14,6 @@ import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
 import { Booking } from "@/types/booking";
 import { ColumnType } from "@/types/column";
-import { Room } from "@/types/room";
 
 interface BookingTableProps {
   items: Booking[];

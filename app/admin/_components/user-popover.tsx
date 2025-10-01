@@ -71,7 +71,7 @@ export const UserTwitterCard = () => {
   );
 };
 
-export default function UserPopover() {
+export default function UserPopover({ collapsed }: { collapsed: boolean }) {
   return (
     <Popover showArrow placement="bottom">
       <PopoverTrigger>
@@ -81,8 +81,8 @@ export default function UserPopover() {
             src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
           }}
           className="transition-transform"
-          description="Product Designer"
-          name="Zoe Lang"
+          description={!collapsed ? "Product Designer" : ""}
+          name={!collapsed ? "Zoe Lang" : ""}
         />
       </PopoverTrigger>
       <PopoverContent className="p-1">

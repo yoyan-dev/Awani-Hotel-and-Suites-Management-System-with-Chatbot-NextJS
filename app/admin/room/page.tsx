@@ -1,48 +1,29 @@
 "use client";
-import { useRooms } from "@/hooks/use-rooms";
 import Header from "./_components/header";
-import RoomTable from "./_components/table/room-table";
-import React, { useEffect, useState } from "react";
-import { FetchRoomsParams } from "@/types/room";
-import {
-  columns,
-  INITIAL_VISIBLE_COLUMNS,
-} from "./_components/table/constants";
+import React from "react";
+import { Tab, Tabs } from "@heroui/react";
+import RoomList from "./room-list/page";
+import RoomTypes from "./room-types/page";
 
-export default function Room() {
-  const { rooms, pagination, isLoading, fetchRooms } = useRooms();
-  const [query, setQuery] = useState<FetchRoomsParams>({});
-  const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState<any>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-
-  const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
-    return columns.filter((column) =>
-      Array.from(visibleColumns).includes(column.uid)
-    );
-  }, [visibleColumns]);
-
-  useEffect(() => {
-    fetchRooms(query);
-  }, [query]);
-
+export default function Rooms() {
+  const [selected, setSelected] = React.useState("rooms");
   return (
-    <div className="p-2 bg-white dark:bg-gray-900 rounded space-y-2">
+    <div>
       <Header />
-      <RoomTable
-        rooms={rooms}
-        pagination={pagination}
-        query={query}
-        setQuery={setQuery}
-        selectedKeys={selectedKeys}
-        setSelectedKeys={setSelectedKeys}
-        visibleColumns={visibleColumns}
-        setVisibleColumns={setVisibleColumns}
-        headerColumns={headerColumns}
-        isLoading={isLoading}
-      />
+      <Tabs
+        aria-label="Options"
+        selectedKey={selected}
+        onSelectionChange={(key) => setSelected(key.toString())}
+        variant="underlined"
+        color="primary"
+      >
+        <Tab key="rooms" title="Rooms">
+          <RoomList />
+        </Tab>
+        <Tab key="room-types" title="Room Types">
+          <RoomTypes />
+        </Tab>
+      </Tabs>
     </div>
   );
 }

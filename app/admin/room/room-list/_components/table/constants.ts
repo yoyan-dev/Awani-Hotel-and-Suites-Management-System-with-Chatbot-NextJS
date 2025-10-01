@@ -2,7 +2,6 @@ import type { ColumnType } from "@/types/column";
 
 export const columns: ColumnType[] = [
   { name: "ID", uid: "id", sortable: true },
-  { name: "Image", uid: "images" },
   { name: "ROOM ID", uid: "room_id" },
   { name: "ROOM NUMBER", uid: "room_number" },
   { name: "ROOM TYPE", uid: "room_type" },
@@ -34,7 +33,6 @@ export const statusColorMap: Record<
 };
 
 export const INITIAL_VISIBLE_COLUMNS = [
-  "images",
   "room_id",
   "room_number",
   "room_type",
