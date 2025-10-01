@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { Chip, Image } from "@heroui/react";
 import { useParams } from "next/navigation";
-import { statusColorMap } from "../_components/table/constants";
+import { statusColorMap } from "../../../../constants/rooms";
 import { useRooms } from "@/hooks/use-rooms";
 
 export default function RoomDetails() {

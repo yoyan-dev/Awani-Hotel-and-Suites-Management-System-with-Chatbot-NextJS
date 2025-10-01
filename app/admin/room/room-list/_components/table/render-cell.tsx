@@ -11,7 +11,7 @@ import {
   Link,
 } from "@heroui/react";
 import type { Room } from "@/types/room";
-import { statusColorMap } from "./constants";
+import { statusColorMap } from "../../../../../constants/rooms";
 import { Edit, EllipsisVertical, Eye, Trash } from "lucide-react";
 import RoomDetails from "../modals/view-modal";
 import DeleteModal from "../modals/delete-modal";

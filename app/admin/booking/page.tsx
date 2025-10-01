@@ -2,7 +2,7 @@
 import { useBookings } from "@/hooks/use-bookings";
 import Header from "./_components/header";
 import React, { useState } from "react";
-import { columns, INITIAL_VISIBLE_COLUMNS } from "./_components/constants";
+import { columns, INITIAL_VISIBLE_COLUMNS } from "@/app/constants/booking";
 import { Booking } from "@/types/booking";
 import { HousekeepingTask } from "@/types/housekeeping";
 import { useHousekeeping } from "@/hooks/use-housekeeping";
@@ -107,7 +107,26 @@ export default function Room() {
       <div>
         <Tabs aria-label="Tabs variants" variant="underlined" color="primary">
           <Tab key="overview" title="Overview">
-            <Overview />
+            <Overview
+              items={items}
+              bookings={bookings}
+              headerColumns={headerColumns}
+              visibleColumns={visibleColumns}
+              setVisibleColumns={setVisibleColumns}
+              onRowsPerPageChange={onRowsPerPageChange}
+              hasSearchFilter={hasSearchFilter}
+              filterValue={filterValue}
+              setFilterValue={setFilterValue}
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+              page={page}
+              setPage={setPage}
+              pages={pages}
+              selectedKeys={selectedKeys}
+              setSelectedKeys={setSelectedKeys}
+              bookingLoading={bookingLoading}
+              handleSubmit={handleSubmit}
+            />
           </Tab>
           <Tab key="calendar" title="Calendar">
             <Calendar />

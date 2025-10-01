@@ -24,19 +24,12 @@ export const bookingStatusOptions = [
   { name: "Checked Out", uid: "checked_out" },
 ];
 
-export const bookingStatusColorMap: Record<
-  (typeof bookingStatusOptions)[number]["uid"],
-  "default" | "primary" | "secondary" | "success" | "warning" | "danger"
-> = {
-  confirmed: "success",
-  cancelled: "danger",
-  pending: "warning",
-  processing: "primary",
-  reserved: "secondary",
-  deposit: "danger",
-  paid: "success",
-  checked_in: "primary",
-  checked_out: "default",
+export const bookingStatusColorMap: Record<string, string> = {
+  pending: "bg-yellow-100 text-yellow-800",
+  confirmed: "bg-blue-100 text-blue-800",
+  "Check-in": "bg-green-100 text-green-800",
+  "Check-out": "bg-slate-100 text-slate-800",
+  cancelled: "bg-red-100 text-red-800",
 };
 
 export const INITIAL_VISIBLE_COLUMNS = [

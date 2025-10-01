@@ -3,10 +3,7 @@ import { useBookings } from "@/hooks/use-bookings";
 import Header from "./_components/header";
 import BookingTable from "./_components/table/booking-table";
 import React, { useState } from "react";
-import {
-  columns,
-  INITIAL_VISIBLE_COLUMNS,
-} from "./_components/table/constants";
+import { columns, INITIAL_VISIBLE_COLUMNS } from "@/app/constants/booking";
 import { Booking } from "@/types/booking";
 import { HousekeepingTask } from "@/types/housekeeping";
 import { useHousekeeping } from "@/hooks/use-housekeeping";

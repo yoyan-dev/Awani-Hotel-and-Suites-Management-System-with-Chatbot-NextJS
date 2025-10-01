@@ -8,7 +8,10 @@ import {
   TableCell,
   Spinner,
 } from "@heroui/react";
-import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
+import {
+  columns,
+  INITIAL_VISIBLE_COLUMNS,
+} from "../../../../../constants/rooms";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";

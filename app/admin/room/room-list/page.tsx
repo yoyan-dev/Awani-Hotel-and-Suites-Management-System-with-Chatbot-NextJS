@@ -4,10 +4,7 @@ import Header from "./_components/header";
 import RoomTable from "./_components/table/room-table";
 import React, { useEffect, useState } from "react";
 import { FetchRoomsParams } from "@/types/room";
-import {
-  columns,
-  INITIAL_VISIBLE_COLUMNS,
-} from "./_components/table/constants";
+import { columns, INITIAL_VISIBLE_COLUMNS } from "../../../constants/rooms";
 
 export default function RoomList() {
   const { rooms, pagination, isLoading, fetchRooms } = useRooms();

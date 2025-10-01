@@ -9,32 +9,18 @@ import {
   Spinner,
   Selection,
 } from "@heroui/react";
-import {
-  columns,
-  INITIAL_VISIBLE_COLUMNS,
-} from "../../../../../constants/room-types";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@/store/store";
-import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
-import { RoomType } from "@/types/room";
+import { Booking } from "@/types/booking";
 import { ColumnType } from "@/types/column";
 
-interface RoomTypesTableProps {
-  items: RoomType[];
-  room_types: RoomType[];
+interface BookingTableProps {
+  items: Booking[];
+  bookings: Booking[];
 
   headerColumns: ColumnType[];
-  visibleColumns: Set<string>;
-  setVisibleColumns: React.Dispatch<React.SetStateAction<Set<string>>>;
-
-  onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-
   hasSearchFilter: boolean;
-  filterValue: string;
-  setFilterValue: React.Dispatch<React.SetStateAction<string>>;
 
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
@@ -43,29 +29,30 @@ interface RoomTypesTableProps {
   selectedKeys: Selection;
   setSelectedKeys: React.Dispatch<React.SetStateAction<Selection>>;
 
-  isLoading: boolean;
+  bookingLoading: boolean;
+  handleSubmit: (payload: Booking) => void;
 }
-export default function RoomTypesTable({
+
+export default function BookingTable({
   items,
-  room_types,
+  bookings,
   headerColumns,
-  visibleColumns,
-  setVisibleColumns,
-  onRowsPerPageChange,
   hasSearchFilter,
-  filterValue,
-  setFilterValue,
   page,
   setPage,
   pages,
   selectedKeys,
   setSelectedKeys,
-  isLoading,
-}: RoomTypesTableProps) {
+  bookingLoading,
+  handleSubmit,
+}: BookingTableProps) {
   return (
     <Table
+      className="mt-4"
       isHeaderSticky
-      classNames={{ wrapper: ["shadow-none", "dark:bg-gray-900", "p-0"] }}
+      classNames={{
+        wrapper: ["shadow-none", "dark:bg-gray-900", "p-0", "table-auto"],
+      }}
       aria-label="Rooms Table"
       rowHeight={40}
       bottomContent={
@@ -79,18 +66,7 @@ export default function RoomTypesTable({
         />
       }
       bottomContentPlacement="outside"
-      topContent={
-        <TableTopContent
-          filterValue={filterValue}
-          onSearchChange={setFilterValue}
-          setFilterValue={setFilterValue}
-          visibleColumns={visibleColumns}
-          setVisibleColumns={setVisibleColumns}
-          onRowsPerPageChange={onRowsPerPageChange}
-          itemsCount={room_types.length}
-          selectedKeys={selectedKeys}
-        />
-      }
+      topContent={<TableTopContent bookingsCount={bookings.length} />}
       topContentPlacement="outside"
       onSelectionChange={setSelectedKeys}
     >
@@ -106,16 +82,21 @@ export default function RoomTypesTable({
         )}
       </TableHeader>
       <TableBody
-        isLoading={isLoading}
+        isLoading={bookingLoading}
         loadingContent={<Spinner label="Loading..." />}
-        emptyContent="No room types found"
+        emptyContent="No bookings found"
         items={items}
       >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell className="capitalize">
-                <RenderCell room_type={item} columnKey={columnKey as string} />
+                <RenderCell
+                  booking={item}
+                  columnKey={columnKey as string}
+                  onAssign={handleSubmit}
+                  bookingLoading={bookingLoading}
+                />
               </TableCell>
             )}
           </TableRow>

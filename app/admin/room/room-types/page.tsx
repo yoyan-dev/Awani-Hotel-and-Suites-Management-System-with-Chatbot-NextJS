@@ -6,7 +6,7 @@ import React from "react";
 import {
   columns,
   INITIAL_VISIBLE_COLUMNS,
-} from "./_components/table/constants";
+} from "../../../constants/room-types";
 
 export default function RoomTypes() {
   const { room_types, isLoading, error, fetchRoomTypes } = useRoomTypes();
