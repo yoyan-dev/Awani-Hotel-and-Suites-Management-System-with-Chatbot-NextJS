@@ -8,32 +8,27 @@ import {
   DropdownItem,
 } from "@heroui/react";
 import { Search, ChevronDown } from "lucide-react";
-import { columns, statusOptions, priorityLevel, category } from "./constants";
+import { columns, statusOptions } from "./constants";
 import { capitalize } from "@/app/utils/capitalize";
 import AddModal from "../modals/add-modal";
+import { FetchHousekeepingParams } from "@/types/housekeeping";
 
 interface Props {
-  filterValue: string;
-  onSearchChange: (value: string) => void;
-  setFilterValue: (val: string) => void;
-  statusFilter: any;
-  setStatusFilter: (val: any) => void;
+  query: FetchHousekeepingParams;
+  setQuery: React.Dispatch<React.SetStateAction<FetchHousekeepingParams>>;
   visibleColumns: any;
   setVisibleColumns: (val: any) => void;
-  onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  taskCount: number;
+  tasksCount: any;
+  selectedKeys: Set<number> | "all";
 }
 
 export const TableTopContent: React.FC<Props> = ({
-  filterValue,
-  onSearchChange,
-  setFilterValue,
-  statusFilter,
-  setStatusFilter,
+  query,
+  setQuery,
   visibleColumns,
   setVisibleColumns,
-  onRowsPerPageChange,
-  taskCount,
+  tasksCount,
+  selectedKeys,
 }) => {
   return (
     <div className="flex flex-col gap-4">
@@ -53,84 +48,12 @@ export const TableTopContent: React.FC<Props> = ({
               disallowEmptySelection
               aria-label="Table Columns"
               closeOnSelect={false}
-              selectedKeys={statusFilter}
-              selectionMode="multiple"
-              onSelectionChange={setStatusFilter}
+              selectionMode="single"
+              selectedKeys={query.status || "all"}
             >
               {statusOptions.map((status) => (
                 <DropdownItem key={status.uid} className="capitalize">
                   {capitalize(status.name)}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
-              <Button
-                endContent={<ChevronDown className="text-small" />}
-                size="sm"
-                variant="flat"
-              >
-                Priority level
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              disallowEmptySelection
-              aria-label="Table Columns"
-              closeOnSelect={false}
-              selectionMode="multiple"
-            >
-              {priorityLevel.map((level) => (
-                <DropdownItem key={level.uid} className="capitalize">
-                  {capitalize(level.name)}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
-              <Button
-                endContent={<ChevronDown className="text-small" />}
-                size="sm"
-                variant="flat"
-              >
-                Category
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              disallowEmptySelection
-              aria-label="Table Columns"
-              closeOnSelect={false}
-              selectionMode="multiple"
-            >
-              {category.map((item) => (
-                <DropdownItem key={item.uid} className="capitalize">
-                  {capitalize(item.name)}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
-              <Button
-                endContent={<ChevronDown className="text-small" />}
-                size="sm"
-                variant="flat"
-              >
-                Columns
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              disallowEmptySelection
-              aria-label="Table Columns"
-              closeOnSelect={false}
-              selectedKeys={visibleColumns}
-              selectionMode="multiple"
-              onSelectionChange={setVisibleColumns}
-            >
-              {columns.map((column) => (
-                <DropdownItem key={column.uid} className="capitalize">
-                  {capitalize(column.name)}
                 </DropdownItem>
               ))}
             </DropdownMenu>
@@ -146,17 +69,17 @@ export const TableTopContent: React.FC<Props> = ({
             placeholder="Search by name..."
             size="sm"
             startContent={<Search className="text-default-300" />}
-            value={filterValue}
+            value={query.query}
             variant="bordered"
-            onClear={() => setFilterValue("")}
-            onValueChange={onSearchChange}
+            onClear={() => setQuery({ ...query, query: "" })}
+            onValueChange={(value) => setQuery({ ...query, query: value })}
           />
           <AddModal />
         </div>
       </div>
       <div className="flex justify-between items-center">
         <span className="text-default-600 text-small">
-          Total {taskCount} housekeeping tasks
+          Total {tasksCount} housekeeping tasks
         </span>
         <label className="flex items-center text-default-400 text-small">
           Rows per page: 10

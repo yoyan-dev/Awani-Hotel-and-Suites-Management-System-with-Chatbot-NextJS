@@ -8,54 +8,31 @@ import {
   DropdownTrigger,
   DropdownItem,
 } from "@heroui/react";
-import { Housekeeping } from "@/types/housekeeping";
-import { levelColorMap, priorityLevel, statusColorMap } from "./constants";
-import { EllipsisVertical, Link } from "lucide-react";
+import { HousekeepingTask } from "@/types/housekeeping";
+import { statusColorMap } from "./constants";
+import { EllipsisVertical } from "lucide-react";
 
-export const RenderCell = (housekeeping: Housekeeping, columnKey: string) => {
-  const cellValue = housekeeping[columnKey as keyof Housekeeping];
+export const RenderCell = ({
+  task,
+  columnKey,
+}: {
+  task: HousekeepingTask;
+  columnKey: string;
+}) => {
+  const cellValue = task[columnKey as keyof HousekeepingTask];
 
   switch (columnKey) {
-    case "assigned_to":
-      return (
-        <User
-          avatarProps={{ radius: "full", size: "sm", src: "" }}
-          classNames={{ description: "text-default-500" }}
-          name={housekeeping.users.full_name}
-        />
-      );
-    case "attachment":
-      return (
-        <div className="text-gray-500">
-          <Link size={10} />
-        </div>
-      );
-    case "priority":
-      return (
-        <Chip
-          className="capitalize border-none gap-1"
-          color={levelColorMap[housekeeping.priority]}
-          size="sm"
-          variant="flat"
-        >
-          {housekeeping.priority}
-        </Chip>
-      );
-    case "category":
-      return (
-        <Chip className="capitalize border-none gap-1" size="sm" variant="flat">
-          {housekeeping.category}
-        </Chip>
-      );
+    case "room_number":
+      return task.room.room_number;
     case "status":
       return (
         <Chip
           className="capitalize border-none gap-1 text-default-600"
-          color={statusColorMap[housekeeping.status]}
+          color={statusColorMap[task.status || "default"]}
           size="sm"
           variant="dot"
         >
-          {housekeeping.status}
+          {task.status}
         </Chip>
       );
     case "actions":

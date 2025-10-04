@@ -1,80 +1,104 @@
-import React, { useMemo, useState } from "react";
+"use client"
+import React, { useMemo, } from "react";
 import BookingHeader from "./_components/header";
 import KeyPerformanceIndicator from "./_components/key-performance-indicator";
-import { ColumnType } from "@/types/column";
 import BookingTable from "./_components/table/booking-table";
-import { Selection } from "@heroui/react";
 import { Booking } from "@/types/booking";
 import CenterRow from "./_components/center-row";
+import { useBookings } from "@/hooks/use-bookings";
+import { useHousekeeping } from "@/hooks/use-housekeeping";
+import { columns, INITIAL_VISIBLE_COLUMNS } from "@/app/constants/booking";
+import { HousekeepingTask } from "@/types/housekeeping";
 
-function formatPHP(n: number) {
-  return n.toLocaleString("en-PH", {
-    style: "currency",
-    currency: "PHP",
-    maximumFractionDigits: 0,
-  });
-}
+export default function Overview() {
+  const {
+    bookings,
+    isLoading: bookingLoading,
+    error: bookingError,
+    fetchBookings,
+    updateBooking,
+  } = useBookings();
 
-interface OverviewProps {
-  items: Booking[];
-  bookings: Booking[];
+  const { addHousekeepingTask } = useHousekeeping();
 
-  headerColumns: ColumnType[];
-  visibleColumns: Set<string>;
-  setVisibleColumns: React.Dispatch<React.SetStateAction<Set<string>>>;
+  const [filterValue, setFilterValue] = React.useState("");
+  const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
+  const [visibleColumns, setVisibleColumns] = React.useState<any>(
+    new Set(INITIAL_VISIBLE_COLUMNS)
+  );
+  const [statusFilter, setStatusFilter] = React.useState<any>("all");
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = React.useState(1);
 
-  onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  const pages = Math.ceil(bookings.length / rowsPerPage);
+  const hasSearchFilter = Boolean(filterValue);
 
-  hasSearchFilter: boolean;
-  filterValue: string;
-  setFilterValue: React.Dispatch<React.SetStateAction<string>>;
-  statusFilter: any;
-  setStatusFilter: React.Dispatch<React.SetStateAction<any | "all">>;
+  const headerColumns = React.useMemo(() => {
+    if (visibleColumns === "all") return columns;
+    return columns.filter((column) =>
+      Array.from(visibleColumns).includes(column.uid)
+    );
+  }, [visibleColumns]);
 
-  page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  pages: number;
+  const filteredItems = React.useMemo(() => {
+    let filteredBookings = [...bookings];
 
-  selectedKeys: Selection;
-  setSelectedKeys: React.Dispatch<React.SetStateAction<Selection>>;
+    if (hasSearchFilter) {
+      filteredBookings = filteredBookings.filter((item) =>
+        item.user.full_name?.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
 
-  bookingLoading: boolean;
-  handleSubmit: (payload: Booking) => void;
-}
+    if (statusFilter !== "all" && Array.from(statusFilter).length) {
+      filteredBookings = filteredBookings.filter((item) =>
+        Array.from(statusFilter).includes(item.status)
+      );
+    }
 
-export default function Overview({
-  items,
-  bookings,
-  headerColumns,
-  visibleColumns,
-  setVisibleColumns,
-  onRowsPerPageChange,
-  hasSearchFilter,
-  filterValue,
-  setFilterValue,
-  statusFilter,
-  setStatusFilter,
-  page,
-  setPage,
-  pages,
-  selectedKeys,
-  setSelectedKeys,
-  bookingLoading,
-  handleSubmit,
-}: OverviewProps) {
-  //   const filtered = useMemo(() => {
-  //     const q = query.trim().toLowerCase();
-  //     return data
-  //       .filter((b) =>
-  //         filterStatus === "All" ? true : b.status === filterStatus
-  //       )
-  //       .filter(
-  //         (b) =>
-  //           b.user?.fullname.toLowerCase().includes(q) ||
-  //           b.room?.room_type?.name?.toLowerCase().includes(q) ||
-  //           b.room_type?.name?.toLowerCase().includes(q)
-  //       );
-  //   }, [data, query, filterStatus]);
+    return filteredBookings;
+  }, [bookings, filterValue, statusFilter, hasSearchFilter]);
+
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    return filteredItems.slice(start, start + rowsPerPage);
+  }, [page, filteredItems, rowsPerPage]);
+
+  const onRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRowsPerPage(Number(e.target.value));
+    setPage(1);
+  };
+
+  React.useEffect(() => {
+    fetchBookings();
+  }, [bookingError]);
+
+  async function handleSubmit(payload: Booking) {
+    console.log(payload);
+    updateBooking({
+      id: payload.id,
+      room_id: payload.room_id,
+      status: "confirmed",
+    } as Booking);
+
+    const specialRequests = (payload.special_requests ?? [])
+      .map((req: any) => `${req.quantity} ${req.name}`)
+      .join(", ");
+
+    const tasks: Partial<HousekeepingTask> = {
+      room_id: payload.room_id,
+      guest_name: payload.user.full_name,
+      task_type: "room_preparation",
+      description:
+        specialRequests && specialRequests.trim() !== ""
+          ? `Prepare room for new arrival. Double-check the room is clean and ensure the following special requests are ready: ${specialRequests}.`
+          : `Prepare room for new arrival. Double-check the room is clean and perform full room preparation with standard amenities.`,
+      scheduled_time: new Date().toISOString(),
+      arrival_date: payload.check_in,
+      status: "pending",
+    };
+    addHousekeepingTask(tasks as HousekeepingTask);
+    console.log(tasks);
+  }
 
   const stats = useMemo(() => {
     const totalRevenue = bookings.reduce((s, b) => s + Number(b.total), 0);

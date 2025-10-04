@@ -61,24 +61,27 @@ export default function Sidebar() {
           variant="faded"
           className="mt-4"
         >
-          {(item) => (
-            <ListboxItem
-              key={item.href}
-              as={NextLink}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 py-3 rounded-lg transition-all duration-200",
-                pathname === item.href
-                  ? "bg-primary-500 text-white shadow-md"
-                  : item.label === "Logout"
-                    ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
-                    : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-              )}
-              startContent={<item.icon size={20} />}
-            >
-              {!collapsed ? item.label : ""}
-            </ListboxItem>
-          )}
+          {(item) => {
+            const isActive = pathname === item.href;
+            return (
+              <ListboxItem
+                key={item.href}
+                as={NextLink}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 py-3 rounded-lg transition-all duration-200",
+                  isActive
+                    ? "bg-primary-500 text-white shadow-md"
+                    : item.label === "Logout"
+                      ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                      : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                )}
+                startContent={<item.icon size={20} />}
+              >
+                {!collapsed ? item.label : ""}
+              </ListboxItem>
+            );
+          }}
         </Listbox>
       </ListboxWrapper>
     </div>
