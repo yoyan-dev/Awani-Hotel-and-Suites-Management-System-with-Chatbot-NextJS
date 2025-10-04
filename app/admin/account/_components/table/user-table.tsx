@@ -7,6 +7,7 @@ import {
   TableRow,
   TableCell,
   Spinner,
+  Selection,
 } from "@heroui/react";
 import { columns, INITIAL_VISIBLE_COLUMNS } from "./constants";
 import RenderCell from "./render-cell";
@@ -15,67 +16,54 @@ import { TableBottomContent } from "./bottom-content";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@/store/store";
 import { fetchUsers } from "@/features/users/user-thunk";
+import { Staff } from "@/types/staff";
+import { ColumnType } from "@/types/column";
 
-export default function UserTable() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { users, isLoading, error } = useSelector(
-    (state: RootState) => state.users
-  );
+interface StaffTableProps {
+  items: Staff[];
+  lists: Staff[];
 
-  const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState<any>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-  const [rolesStatusFilter, setRolesStatusFilter] = React.useState<any>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [page, setPage] = React.useState(1);
+  headerColumns: ColumnType[];
+  visibleColumns: Set<string>;
+  setVisibleColumns: React.Dispatch<React.SetStateAction<Set<string>>>;
 
-  React.useEffect(() => {
-    dispatch(fetchUsers());
-    console.log(error);
-  }, [dispatch, error]);
+  onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 
-  const pages = Math.ceil(users.length / rowsPerPage);
-  const hasSearchFilter = Boolean(filterValue);
+  hasSearchFilter: boolean;
+  filterValue: string;
+  setFilterValue: React.Dispatch<React.SetStateAction<string>>;
+  rolesStatusFilter: any;
+  setRolesStatusFilter: React.Dispatch<React.SetStateAction<any | "all">>;
 
-  const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
-    return columns.filter((column) =>
-      Array.from(visibleColumns).includes(column.uid)
-    );
-  }, [visibleColumns]);
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  pages: number;
 
-  const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+  selectedKeys: Selection;
+  setSelectedKeys: React.Dispatch<React.SetStateAction<Selection>>;
 
-    if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.user_metadata.full_name
-          ?.toLowerCase()
-          .includes(filterValue.toLowerCase())
-      );
-    }
+  isLoading: boolean;
+}
 
-    if (rolesStatusFilter !== "all" && Array.from(rolesStatusFilter).length) {
-      filteredUsers = filteredUsers.filter((item) =>
-        Array.from(rolesStatusFilter).includes(item.app_metadata.roles?.[0])
-      );
-    }
-
-    return filteredUsers;
-  }, [users, filterValue, rolesStatusFilter, hasSearchFilter]);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    return filteredItems.slice(start, start + rowsPerPage);
-  }, [page, filteredItems, rowsPerPage]);
-
-  const onRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setRowsPerPage(Number(e.target.value));
-    setPage(1);
-  };
-
+export default function StaffTable({
+  items,
+  lists,
+  headerColumns,
+  visibleColumns,
+  setVisibleColumns,
+  onRowsPerPageChange,
+  hasSearchFilter,
+  filterValue,
+  setFilterValue,
+  rolesStatusFilter,
+  setRolesStatusFilter,
+  page,
+  setPage,
+  pages,
+  selectedKeys,
+  setSelectedKeys,
+  isLoading,
+}: StaffTableProps) {
   return (
     <Table
       isHeaderSticky
@@ -104,7 +92,7 @@ export default function UserTable() {
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           onRowsPerPageChange={onRowsPerPageChange}
-          usersCount={users.length}
+          usersCount={lists.length}
         />
       }
       topContentPlacement="outside"
@@ -131,7 +119,7 @@ export default function UserTable() {
           <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell className="capitalize">
-                <RenderCell user={item} columnKey={columnKey as string} />
+                <RenderCell item={item} columnKey={columnKey as string} />
               </TableCell>
             )}
           </TableRow>

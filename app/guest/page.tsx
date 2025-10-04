@@ -1,26 +1,18 @@
 "use client";
 
-import { useDispatch, useSelector } from "react-redux";
 import About from "./_components/sections/about-section";
 import { RoomsCarousel } from "./_components/sections/room-carousel";
-import { RoomsAndSuites } from "./_components/sections/collection-section";
 import HeroBanner from "./_components/sections/hero-section";
 import Stats from "./_components/sections/stat-section";
-import { AppDispatch, RootState } from "@/store/store";
 import React from "react";
-import { fetchRooms } from "@/features/room/room-thunk";
 import HotelPoolSection from "./_components/sections/pool-section";
-import FAQSection from "./_components/sections/faq-section";
 import Testimonials from "./_components/sections/review-section";
-import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
 import { User } from "@/types/users";
 import { supabase } from "@/lib/supabase/supabase-client";
+import { useRoomTypes } from "@/hooks/use-room-types";
 
 export default function page() {
-  const { room_types, isLoading: roomTypeIsLoading } = useSelector(
-    (state: RootState) => state.room_type
-  );
-  const dispatch = useDispatch<AppDispatch>();
+  const { room_types, isLoading, fetchRoomTypes } = useRoomTypes();
   const [state, setState] = React.useState<{
     user: User | null;
     isLoading: boolean;
@@ -36,15 +28,14 @@ export default function page() {
     }
 
     getCurrentUser();
-    dispatch(fetchRooms());
-    dispatch(fetchRoomTypes());
-  }, [dispatch]);
+    fetchRoomTypes();
+  }, []);
   return (
     <div>
       <HeroBanner user={state.user} isLoading={state.isLoading} />
       <About />
       <Stats />
-      <RoomsCarousel rooms={room_types} isLoading={roomTypeIsLoading} />
+      <RoomsCarousel rooms={room_types} isLoading={isLoading} />
       <HotelPoolSection />
       {/* <RoomsAndSuites rooms={room_types} isLoading={isLoading} /> */}
       <Testimonials />

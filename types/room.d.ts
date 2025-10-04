@@ -45,19 +45,18 @@ export interface RoomPagination {
   total: number;
   totalPages: number;
 }
+export interface FetchRoomsParams {
+  page?: number;
+  query?: string;
+  roomTypeID?: string;
+  status?: string | undefined;
+  minPrice?: number;
+  maxPrice?: number;
+}
 export interface RoomState {
   rooms: Room[];
   room: Room;
   pagination: RoomPagination | null;
   isLoading: boolean;
   error?: string;
-}
-
-export interface FetchRoomsParams {
-  page?: number;
-  query?: string;
-  roomTypeID?: string;
-  status?: string;
-  minPrice?: number;
-  maxPrice?: number;
 }

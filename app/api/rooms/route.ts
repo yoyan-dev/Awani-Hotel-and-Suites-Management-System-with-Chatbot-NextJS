@@ -53,11 +53,11 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     q = q.eq("status", status);
   }
 
-  const {
-    data: roomData,
-    error,
-    count,
-  } = await q.order("room_id", { ascending: false }).range(from, to);
+  const { data: roomData, error, count } = await q.range(from, to);
+
+  const orderByRoomTypes = roomData?.sort((a: any, b: any) => {
+    return a.room_type?.name.localeCompare(b.room_type?.name);
+  });
 
   if (error) {
     console.error("Error fetching rooms:", error.message);
@@ -74,14 +74,8 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     );
   }
 
-  console.log("Room data:", roomData);
-  const normalizedRooms: Room[] = roomData.map((room) => ({
-    ...room,
-    room_type: Array.isArray(room.room_type)
-      ? room.room_type[0]
-      : room.room_type,
-  }));
-  rooms = roomData || [];
+  console.log("Room data:", orderByRoomTypes);
+  rooms = orderByRoomTypes || [];
   return NextResponse.json(
     {
       success: true,
@@ -190,6 +184,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   }
 }
 
+//DELETE MANY
 export async function DELETE(
   request: Request
 ): Promise<NextResponse<ApiResponse>> {

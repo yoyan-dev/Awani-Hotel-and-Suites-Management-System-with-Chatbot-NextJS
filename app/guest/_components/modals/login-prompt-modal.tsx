@@ -10,19 +10,14 @@ import {
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
-interface LoginPromptModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export default function LoginPromptModal() {
+export default function LoginPromptModal({ name }: { name: string }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
 
   return (
     <>
       <Button className="mt-6" color="primary" onPress={onOpen}>
-        Book Apartments
+        {name}
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} hideCloseButton>
         <ModalContent>

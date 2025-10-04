@@ -28,7 +28,7 @@ export const HeroBanner: React.FC<Props> = ({ user, isLoading }) => {
           Book Apartments
         </Button>
       ) : (
-        <LoginPromptModal />
+        <LoginPromptModal name="Book Apartments" />
       )}
     </section>
   );

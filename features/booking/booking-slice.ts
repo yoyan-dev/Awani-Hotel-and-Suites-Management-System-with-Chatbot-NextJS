@@ -62,7 +62,7 @@ const bookingSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // add room
+      // add
       .addCase(addBooking.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
@@ -80,7 +80,7 @@ const bookingSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // update room
+      // update
       .addCase(updateBooking.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
@@ -103,7 +103,7 @@ const bookingSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // delete room
+      // delete
       .addCase(deleteBooking.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;
@@ -118,7 +118,7 @@ const bookingSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // delete rooms
+      // delete many
       .addCase(deleteSelectedBooking.pending, (state) => {
         state.isLoading = true;
         state.error = undefined;

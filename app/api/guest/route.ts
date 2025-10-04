@@ -49,6 +49,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       nationality,
       gender,
       email,
+      image,
     } = Object.fromEntries(formData.entries());
 
     const newData = {
@@ -59,6 +60,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       nationality,
       gender,
       email,
+      image,
     };
     const { data, error } = await supabase
       .from("guest")

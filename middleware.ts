@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getCurrentUser } from "./lib/auth/index";
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 
 export async function middleware(req: NextRequest) {
-  // Create a response so Supabase can attach refreshed cookies if needed
   let res = NextResponse.next();
 
-  const { user, error } = await getCurrentUser();
+  const supabase = createMiddlewareClient({ req, res });
+  const { data, error } = await supabase.auth.getSession();
 
-  console.log("Middleware user:", user, "Error:", error);
+  console.log("Middleware user:", data, "Error:", error);
 
   const { pathname } = req.nextUrl;
 
@@ -18,18 +18,18 @@ export async function middleware(req: NextRequest) {
   }
 
   // prevent logged in user from visiting /auth
-  if (pathname.startsWith("/auth") && user) {
-    let redirectTo = "/guest";
-    const roles = user.app_metadata?.roles || user.user_metadata?.roles;
+  // if (pathname.startsWith("/auth") && user) {
+  //   let redirectTo = "/guest";
+  //   // const roles = user.app_metadata?.roles || user.user_metadata?.roles;
 
-    if (roles?.includes("admin")) {
-      redirectTo = "/admin";
-    } else if (roles?.includes("housekeeping")) {
-      redirectTo = "/housekeeping";
-    }
+  //   // if (roles?.includes("admin")) {
+  //   //   redirectTo = "/admin";
+  //   // } else if (roles?.includes("housekeeping")) {
+  //   //   redirectTo = "/housekeeping";
+  //   // }
 
-    return NextResponse.redirect(new URL(redirectTo, req.url));
-  }
+  //   return NextResponse.redirect(new URL(redirectTo, req.url));
+  // }
 
   // route protections
   // if (pathname.startsWith("/admin")) {
