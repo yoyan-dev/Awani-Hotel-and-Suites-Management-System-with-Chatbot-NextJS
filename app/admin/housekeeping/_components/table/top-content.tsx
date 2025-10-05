@@ -33,7 +33,22 @@ export const TableTopContent: React.FC<Props> = ({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between gap-3 items-end">
+        <Input
+          isClearable
+          classNames={{
+            base: "w-full sm:max-w-[44%]",
+            inputWrapper: "border-1",
+          }}
+          placeholder="Search by name..."
+          size="sm"
+          startContent={<Search className="text-default-300" />}
+          value={query.query}
+          variant="bordered"
+          onClear={() => setQuery({ ...query, query: "" })}
+          onValueChange={(value) => setQuery({ ...query, query: value })}
+        />
         <div className="flex gap-3">
+          <AddModal />
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
               <Button
@@ -58,23 +73,6 @@ export const TableTopContent: React.FC<Props> = ({
               ))}
             </DropdownMenu>
           </Dropdown>
-        </div>
-        <div className="flex gap-3">
-          <Input
-            isClearable
-            classNames={{
-              base: "w-full sm:max-w-[44%]",
-              inputWrapper: "border-1",
-            }}
-            placeholder="Search by name..."
-            size="sm"
-            startContent={<Search className="text-default-300" />}
-            value={query.query}
-            variant="bordered"
-            onClear={() => setQuery({ ...query, query: "" })}
-            onValueChange={(value) => setQuery({ ...query, query: value })}
-          />
-          <AddModal />
         </div>
       </div>
       <div className="flex justify-between items-center">

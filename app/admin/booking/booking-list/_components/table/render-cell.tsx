@@ -14,6 +14,8 @@ import {
   Bed,
   CalendarArrowDown,
   CalendarArrowUp,
+  Check,
+  CircleCheckBig,
   EllipsisVertical,
   Eye,
 } from "lucide-react";
@@ -22,6 +24,8 @@ import { formatPHP } from "@/lib/format-php";
 import { calculateBookingPrice, getNights } from "@/utils/pricing";
 import { Room } from "@/types/room";
 import AssignRoomModal from "../modals/assign-room-modal";
+import CheckInButton from "../actions/mark-check-in";
+import CheckOutButton from "../actions/mark-check-out";
 
 interface RenderCellProps {
   booking: Booking;
@@ -83,7 +87,7 @@ export const RenderCell = ({
       );
     case "actions":
       return (
-        <div className="relative flex justify-end items-center gap-2">
+        <div>
           <AssignRoomModal
             isOpen={assignModalOpen}
             onClose={() => setAssignModalOpen(false)}
@@ -91,36 +95,43 @@ export const RenderCell = ({
             booking={booking}
             bookingLoading={bookingLoading}
           />
-          <Dropdown className="bg-background border-1 border-default-200">
-            <DropdownTrigger>
-              <Button isIconOnly radius="full" size="sm" variant="light">
-                <EllipsisVertical className="text-default-400" />
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu>
-              <DropdownItem
-                key="view"
-                as={Link}
-                href={`booking/${booking.id}`}
-                color="primary"
-              >
-                <div className="flex items-center gap-2">
-                  <Eye size={15} /> View
-                </div>
-              </DropdownItem>
-              <DropdownItem
-                key="assign"
-                onPress={() => setAssignModalOpen(true)}
-                className="text-blue-600"
-              >
-                <div className="flex items-center gap-2">
-                  <Bed size={15} /> Assign Room
-                </div>
-              </DropdownItem>
-              <DropdownItem key="edit">Edit</DropdownItem>
-              <DropdownItem key="delete">Delete</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+          <div className="relative flex justify-end items-center gap-2">
+            {booking.status === "confirmed" ? (
+              <CheckInButton booking={booking} />
+            ) : booking.status === "check-in" ? (
+              <CheckOutButton booking={booking} />
+            ) : null}
+            <Dropdown className="bg-background border-1 border-default-200">
+              <DropdownTrigger>
+                <Button isIconOnly radius="full" size="sm" variant="light">
+                  <EllipsisVertical className="text-default-400" />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu>
+                <DropdownItem
+                  key="view"
+                  as={Link}
+                  href={`booking/${booking.id}`}
+                  color="primary"
+                >
+                  <div className="flex items-center gap-2">
+                    <Eye size={15} /> View
+                  </div>
+                </DropdownItem>
+                <DropdownItem
+                  key="assign"
+                  onPress={() => setAssignModalOpen(true)}
+                  className="text-blue-600"
+                >
+                  <div className="flex items-center gap-2">
+                    <Bed size={15} /> Assign Room
+                  </div>
+                </DropdownItem>
+                <DropdownItem key="edit">Edit</DropdownItem>
+                <DropdownItem key="delete">Delete</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
         </div>
       );
     default:

@@ -3,9 +3,8 @@ import { ColumnType } from "@/types/column";
 export const columns: ColumnType[] = [
   { name: "ID", uid: "id" },
   { name: "ROOM NUMBER", uid: "room_number" },
-  { name: "DESCRIPTION", uid: "description" },
+  { name: "MESSAGE", uid: "message" },
   { name: "SCHEDULE", uid: "scheduled_time" },
-  { name: "ARRIVAL DATE", uid: "arrival_date" },
   { name: "STATUS", uid: "status" },
   { name: "ACTIONS", uid: "actions" },
 ];
@@ -31,8 +30,7 @@ export const levelColorMap: Record<string, "success" | "danger" | "warning"> = {
 
 export const INITIAL_VISIBLE_COLUMNS = [
   "room_number",
-  "description",
-  "arrival_date",
+  "message",
   "status",
   "actions",
 ];

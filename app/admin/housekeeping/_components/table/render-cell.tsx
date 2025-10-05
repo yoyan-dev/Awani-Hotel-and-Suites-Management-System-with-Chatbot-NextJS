@@ -23,7 +23,7 @@ export const RenderCell = ({
 
   switch (columnKey) {
     case "room_number":
-      return task.room.room_number;
+      return task.room_number;
     case "status":
       return (
         <Chip

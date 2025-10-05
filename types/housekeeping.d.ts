@@ -1,29 +1,14 @@
-export type HousekeepingTaskType =
-  | "room_preparation"
-  | "amenity_setup"
-  | "minibar_refill"
-  | "safety_check"
-  | "daily_cleaning"
-  | "linen_change"
-  | "turndown_service"
-  | "checkout_cleaning"
-  | "lost_and_found"
-  | "inventory_restock"
-  | "maintenance_report"
-  | "custom";
-
 export type TaskStatus = "pending" | "in_progress" | "done" | "cancelled";
 
 export interface HousekeepingTask {
   id: string;
-  room_id?: string;
+  room_number?: number;
   guest_name?: string;
-  task_type: HousekeepingTaskType;
-  description?: string;
+  task_type: string;
+  requests?: string;
+  message?: string;
   scheduled_time?: string;
-  arrival_date?: string;
   status?: TaskStatus;
-  room?: any;
   createdAt: string;
 }
 

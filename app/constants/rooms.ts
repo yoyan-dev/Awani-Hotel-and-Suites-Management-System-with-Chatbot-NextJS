@@ -36,7 +36,7 @@ export const INITIAL_VISIBLE_COLUMNS = [
   "room_id",
   "room_number",
   "room_type",
-  "name",
+  "area",
   "max_guest",
   "base_price",
   "status",
