@@ -68,7 +68,7 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   );
 }
 
-// CREATE room
+// CREATE
 export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
     const body = await req.json();
