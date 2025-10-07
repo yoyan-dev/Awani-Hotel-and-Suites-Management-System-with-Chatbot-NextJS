@@ -24,19 +24,17 @@ export default function Calendar() {
 
   React.useEffect(() => {
     fetchRooms({ roomTypeID: selectedRoomType });
+    fetchBookings({ roomTypeID: selectedRoomType });
   }, [selectedRoomType]);
 
-  React.useState(() => {
-    fetchBookings();
-  }, []);
   return (
     <div className="p-2 md:p-4 bg-white dark:bg-gray-900 rounded space-y-2">
-      <h1 className="text-2xl font-bold">Front Desk Calendar</h1>
+      <h1 className="text-2xl font-bold">Front Desk Calendar</h1>\
       {!roomTypeLoading ? (
         <Tabs
           aria-label="Options"
           selectedKey={selectedRoomType}
-          onSelectionChange={setSelectedRoomType}
+          onSelectionChange={(key) => setSelectedRoomType(String(key))}
           variant="underlined"
           color="primary"
           items={room_types}
@@ -45,7 +43,9 @@ export default function Calendar() {
             <Tab key={item.id} title={item.name}>
               {!roomLoading && !bookingsLoading ? (
                 <CalendarView rooms={rooms} bookings={bookings} />
-              ) : null}
+              ) : (
+                <div>loading...</div>
+              )}
             </Tab>
           )}
         </Tabs>

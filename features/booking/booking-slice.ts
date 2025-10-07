@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { Booking, BookingState } from "@/types/booking";
+import type { Booking, BookingPagination, BookingState } from "@/types/booking";
 import {
   fetchBooking,
   fetchBookings,
@@ -13,6 +13,7 @@ const initialState: BookingState = {
   bookings: [],
   booking: {} as Booking,
   isLoading: false,
+  pagination: {} as BookingPagination,
   error: undefined,
 };
 
@@ -51,9 +52,16 @@ const bookingSlice = createSlice({
       })
       .addCase(
         fetchBookings.fulfilled,
-        (state, action: PayloadAction<Booking[]>) => {
+        (
+          state,
+          action: PayloadAction<{
+            data: Booking[];
+            pagination: BookingPagination;
+          }>
+        ) => {
           state.isLoading = false;
-          state.bookings = action.payload;
+          state.bookings = action.payload.data;
+          state.pagination = action.payload.pagination;
           state.error = undefined;
         }
       )

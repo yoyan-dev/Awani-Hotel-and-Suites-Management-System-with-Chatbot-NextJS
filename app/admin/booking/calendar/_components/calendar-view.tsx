@@ -24,7 +24,7 @@ export function CalendarView({
       id: b.id,
       resourceId: b.room_id,
       title:
-        `${b.user?.full_name} ⚫ ${getNights(b.check_in, b.check_out)}` ||
+        `${b.user?.full_name} ⚫ ${getNights(b.check_in, b.check_out)} night/nights` ||
         "Unknown Guest",
       start: b.check_in,
       end: b.check_out,
@@ -42,7 +42,7 @@ export function CalendarView({
     if (!rooms) return [];
     return rooms.map((room) => ({
       id: room.id,
-      title: room.room_number,
+      title: String(room.room_number),
     }));
   }, [rooms]);
 
