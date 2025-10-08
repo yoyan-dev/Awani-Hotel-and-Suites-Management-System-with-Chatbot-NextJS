@@ -33,6 +33,20 @@ export const TableTopContent: React.FC<Props> = ({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between gap-3 items-end">
+        <Input
+          isClearable
+          classNames={{
+            base: "w-full sm:max-w-[44%]",
+            inputWrapper: "border-1",
+          }}
+          placeholder="Search by name..."
+          size="sm"
+          startContent={<Search className="text-default-300" />}
+          value={query.query}
+          variant="bordered"
+          onClear={() => setQuery({ ...query, query: "" })}
+          onValueChange={(value) => setQuery({ ...query, query: value })}
+        />
         <div className="flex gap-3">
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
@@ -58,22 +72,7 @@ export const TableTopContent: React.FC<Props> = ({
               ))}
             </DropdownMenu>
           </Dropdown>
-        </div>
-        <div className="flex gap-3">
-          <Input
-            isClearable
-            classNames={{
-              base: "w-full sm:max-w-[44%]",
-              inputWrapper: "border-1",
-            }}
-            placeholder="Search by name..."
-            size="sm"
-            startContent={<Search className="text-default-300" />}
-            value={query.query}
-            variant="bordered"
-            onClear={() => setQuery({ ...query, query: "" })}
-            onValueChange={(value) => setQuery({ ...query, query: value })}
-          />
+
           <AddModal />
         </div>
       </div>
@@ -81,9 +80,6 @@ export const TableTopContent: React.FC<Props> = ({
         <span className="text-default-600 text-small">
           Total {tasksCount} housekeeping tasks
         </span>
-        <label className="flex items-center text-default-400 text-small">
-          Rows per page: 10
-        </label>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import React from "react";
 import { Room } from "@/types/room";
 import { Booking } from "@/types/booking";
 import { getNights } from "@/utils/pricing";
+import { bookingStatusHexColorMap } from "@/app/constants/booking";
 
 export function CalendarView({
   rooms,
@@ -24,16 +25,13 @@ export function CalendarView({
       id: b.id,
       resourceId: b.room_id,
       title:
-        `${b.user?.full_name} ⚫ ${getNights(b.check_in, b.check_out)} night/nights` ||
+        `${b.user?.full_name} ● ${getNights(b.check_in, b.check_out)} night/nights` ||
         "Unknown Guest",
       start: b.check_in,
       end: b.check_out,
       color:
-        b.status === "check-in"
-          ? "#60a5fa"
-          : b.status === "reserved"
-            ? "#a78bfa"
-            : "#f87171",
+        bookingStatusHexColorMap[b.status] ||
+        bookingStatusHexColorMap["default"],
     }));
     setEvents(mapped);
   }, [bookings]);
@@ -42,7 +40,7 @@ export function CalendarView({
     if (!rooms) return [];
     return rooms.map((room) => ({
       id: room.id,
-      title: String(room.room_number),
+      title: `${String(room.room_number)} - ${room.status?.toUpperCase()}`,
     }));
   }, [rooms]);
 
@@ -73,7 +71,6 @@ export function CalendarView({
         initialView="resourceTimelineWeek"
         editable={true}
         selectable={true}
-        eventResourceEditable={true}
         resourceAreaHeaderContent="Rooms"
         resources={resources}
         events={events}
@@ -98,6 +95,8 @@ export function CalendarView({
             {arg.event.title}
           </div>
         )}
+        windowResizeDelay={100}
+        handleWindowResize={true}
       />
     </div>
   );

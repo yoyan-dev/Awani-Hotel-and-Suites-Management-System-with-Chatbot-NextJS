@@ -32,6 +32,15 @@ export const bookingStatusColorMap: Record<string, string> = {
   cancelled: "bg-red-100 text-red-800",
 };
 
+export const bookingStatusHexColorMap: Record<string, string> = {
+  pending: "#facc15", // yellow
+  reserved: "#a78bfa", // purple
+  confirmed: "#60a5fa", // blue
+  "check-in": "#34d399", // green
+  cancelled: "#f87171", // red
+  default: "#9ca3af", // gray
+};
+
 export const INITIAL_VISIBLE_COLUMNS = [
   "booking_id",
   "room",

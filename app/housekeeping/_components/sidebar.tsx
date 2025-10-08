@@ -12,13 +12,22 @@ import {
   CircleArrowOutDownLeft,
   BrushCleaning,
   Users,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Listbox, ListboxItem, cn, User } from "@heroui/react";
 import { siteConfig } from "@/config/site";
+import { useState } from "react";
+import UserPopover from "./user-popover";
 
-export const ListboxWrapper = ({ children }: any) => {
+export const ListboxWrapper = ({ children, collapsed }: any) => {
   return (
-    <div className="w-64 h-screen max-w-64 space-y-4 border-small px-2 py-4 text-white rounded-small border-default-200 dark:border-default-100">
+    <div
+      className={cn(
+        "relative h-screen border-r border-default-200 dark:border-default-100 transition-all duration-300",
+        collapsed ? "w-20" : "w-64"
+      )}
+    >
       {children}
     </div>
   );
@@ -26,45 +35,53 @@ export const ListboxWrapper = ({ children }: any) => {
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="bg-primary dark:bg-primary-100 hidden lg:block">
-      <ListboxWrapper>
-        <NextLink
-          className="flex justify-start items-center gap-1 bg-white text-gray-900 dark:text-white dark:bg-gray-800 p-4 rounded"
-          href="/admin"
+    <div className="bg-white/90 dark:bg-gray-900/80 backdrop-blur-md hidden lg:block shadow-lg">
+      <ListboxWrapper collapsed={collapsed}>
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="absolute -right-3 top-6 z-10 bg-primary-500 text-white p-1.5 rounded-full shadow hover:scale-105 transition"
         >
-          <User
-            avatarProps={{
-              src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-            }}
-            description="Admin"
-            name="Jane Doe"
-          />
-        </NextLink>
+          {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+        </button>
+
+        <div
+          className={cn(
+            "flex items-center gap-2 bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm transition-all duration-300",
+            collapsed && "justify-center"
+          )}
+        >
+          <UserPopover collapsed={collapsed} />
+        </div>
         <Listbox
           items={siteConfig.housekeepingNavMenuItems}
           aria-label="Listbox menu with icons"
           variant="faded"
-          defaultSelectedKeys={[pathname]}
+          className="mt-4"
         >
-          {(item) => (
-            <ListboxItem
-              className={
-                pathname === item.href
-                  ? "bg-primary-400 text-white dark:text-primary-50"
-                  : item.label === "Logout"
-                    ? "text-warning"
-                    : ""
-              }
-              as={NextLink}
-              href={item.href}
-              key={item.href}
-              startContent={<item.icon />}
-            >
-              {item.label}
-            </ListboxItem>
-          )}
+          {(item) => {
+            const isActive = pathname === item.href;
+            return (
+              <ListboxItem
+                key={item.href}
+                as={NextLink}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 py-3 rounded-lg transition-all duration-200",
+                  isActive
+                    ? "bg-primary-50 text-primary-500 shadow-md"
+                    : item.label === "Logout"
+                      ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                      : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                )}
+                startContent={<item.icon size={20} />}
+              >
+                {!collapsed ? item.label : ""}
+              </ListboxItem>
+            );
+          }}
         </Listbox>
       </ListboxWrapper>
     </div>
