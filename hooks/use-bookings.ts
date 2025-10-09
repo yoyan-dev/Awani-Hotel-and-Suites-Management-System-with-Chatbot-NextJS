@@ -10,12 +10,13 @@ import { Booking, FetchBookingParams } from "@/types/booking";
 
 export function useBookings() {
   const dispatch = useAppDispatch();
-  const { bookings, booking, isLoading, error } = useAppSelector(
+  const { bookings, booking, pagination, isLoading, error } = useAppSelector(
     (state) => state.booking
   );
   return {
     booking,
     bookings,
+    pagination,
     isLoading,
     error,
     fetchBookings: (payload: FetchBookingParams | undefined) =>
