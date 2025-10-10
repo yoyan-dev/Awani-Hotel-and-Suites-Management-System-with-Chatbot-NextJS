@@ -12,23 +12,11 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  let q = supabase.from("housekeeping").select(
-    `
-      id,
-      room_id,
-      guest_name,
-      task_type,
-      description,
-      scheduled_time,
-      status,
-      room:room_id(*)
-    `,
-    { count: "exact" }
-  );
+  let q = supabase.from("housekeeping").select("*", { count: "exact" });
 
   if (query) {
     q = q.or(`
-    description.ilike.%${query}%,
+    message.ilike.%${query}%,
     guest_name.ilike.%${query}%,
     task_type.ilike.%${query}%
   `);
@@ -42,7 +30,7 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     data: housekeepingTask,
     error,
     count,
-  } = await q.order("room_id", { ascending: false }).range(from, to);
+  } = await q.order("scheduled_time", { ascending: false }).range(from, to);
 
   if (error) {
     console.error("Error fetching housekeeping tasks:", error.message);
@@ -80,7 +68,7 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   );
 }
 
-// CREATE room
+// CREATE
 export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
   try {
     const body = await req.json();

@@ -31,9 +31,27 @@ export interface Booking {
   created_at: any;
 }
 
+export interface BookingPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+export interface FetchBookingParams {
+  page?: number;
+  query?: string;
+  guest_id?: string;
+  check_in?: any;
+  check_out?: any;
+  date_range?: { start: string; end: string };
+  roomTypeID?: string;
+  room_id?: string;
+  status?: string | undefined;
+}
 export interface BookingState {
   bookings: Booking[];
   booking: Booking;
   isLoading: boolean;
+  pagination: BookingPagination;
   error: string | undefined;
 }

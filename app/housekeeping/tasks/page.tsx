@@ -8,6 +8,7 @@ import {
   INITIAL_VISIBLE_COLUMNS,
 } from "./_components/table/constants";
 import { FetchHousekeepingParams } from "@/types/housekeeping";
+import { Tab, Tabs } from "@heroui/react";
 
 export default function Housekeeping() {
   const { tasks, isLoading, pagination, error, fetchHousekeepingTasks } =
@@ -31,20 +32,81 @@ export default function Housekeeping() {
   }, [query]);
 
   return (
-    <div className="p-2 bg-white dark:bg-gray-900 rounded space-y-2">
+    <div className="p-2 rounded space-y-2">
       <Header />
-      <TaskTable
-        tasks={tasks}
-        pagination={pagination}
-        query={query}
-        setQuery={setQuery}
-        selectedKeys={selectedKeys}
-        setSelectedKeys={setSelectedKeys}
-        visibleColumns={visibleColumns}
-        setVisibleColumns={setVisibleColumns}
-        headerColumns={headerColumns}
-        isLoading={isLoading}
-      />
+
+      <Tabs aria-label="Tabs variants" variant="underlined" color="primary">
+        <Tab
+          key="pending"
+          title={
+            <span className="text-gray-800 dark:text-gray-100 font-medium">
+              Pending
+            </span>
+          }
+        >
+          <div className="bg-white dark:bg-gray-900 p-4 rounded">
+            <TaskTable
+              tasks={tasks}
+              pagination={pagination}
+              query={query}
+              setQuery={setQuery}
+              selectedKeys={selectedKeys}
+              setSelectedKeys={setSelectedKeys}
+              visibleColumns={visibleColumns}
+              setVisibleColumns={setVisibleColumns}
+              headerColumns={headerColumns}
+              isLoading={isLoading}
+            />
+          </div>
+        </Tab>
+
+        <Tab
+          key="completed"
+          title={
+            <span className="text-gray-800 dark:text-gray-100 font-medium">
+              Completed
+            </span>
+          }
+        >
+          <div className="bg-white dark:bg-gray-900 p-4 rounded">
+            <TaskTable
+              tasks={tasks}
+              pagination={pagination}
+              query={query}
+              setQuery={setQuery}
+              selectedKeys={selectedKeys}
+              setSelectedKeys={setSelectedKeys}
+              visibleColumns={visibleColumns}
+              setVisibleColumns={setVisibleColumns}
+              headerColumns={headerColumns}
+              isLoading={isLoading}
+            />
+          </div>
+        </Tab>
+        <Tab
+          key="cancelled"
+          title={
+            <span className="text-gray-800 dark:text-gray-100 font-medium">
+              Cancelled
+            </span>
+          }
+        >
+          <div className="bg-white dark:bg-gray-900 p-4 rounded">
+            <TaskTable
+              tasks={tasks}
+              pagination={pagination}
+              query={query}
+              setQuery={setQuery}
+              selectedKeys={selectedKeys}
+              setSelectedKeys={setSelectedKeys}
+              visibleColumns={visibleColumns}
+              setVisibleColumns={setVisibleColumns}
+              headerColumns={headerColumns}
+              isLoading={isLoading}
+            />
+          </div>
+        </Tab>
+      </Tabs>
     </div>
   );
 }

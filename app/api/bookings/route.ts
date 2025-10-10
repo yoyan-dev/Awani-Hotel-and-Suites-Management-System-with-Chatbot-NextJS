@@ -5,8 +5,25 @@ import { Booking } from "@/types/booking";
 
 let bookings: Booking[];
 
-export async function GET(): Promise<NextResponse<ApiResponse>> {
-  const { data: booking, error } = await supabase.from("bookings").select(`
+export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
+  const { searchParams } = new URL(req.url);
+
+  const query = searchParams.get("query") || "";
+  const roomTypeID = searchParams.get("roomTypeID") || "";
+  const guest_id = searchParams.get("guest_id") || "";
+  const check_in = searchParams.get("check_in");
+  const check_out = searchParams.get("check_out");
+  const start = searchParams.get("start");
+  const end = searchParams.get("end");
+  const status = searchParams.get("status") || "";
+  const page = Number(searchParams.get("page") || "1");
+  const limit = 10;
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let q = supabase.from("bookings").select(
+    `
     id,
     room_id,
     guest_id,
@@ -33,7 +50,28 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
       remarks
     ),
     user:guest_id (*)
-  `);
+  `,
+    { count: "exact" }
+  );
+
+  if (roomTypeID) q = q.eq("room_type_id", roomTypeID);
+  if (guest_id) q = q.eq("guest_id", guest_id);
+  if (check_in) q = q.eq("check_in", check_in);
+  if (check_out) q = q.eq("check_out", check_out);
+  if (start && end) q = q.gte("check_in", start).lte("check_in", end);
+  if (status) q = q.eq("status", status);
+
+  if (query) {
+    //   q = q.or(`
+    //   r.ilike.%${query}%,
+    // `);
+  }
+
+  const {
+    data: bookingData,
+    error,
+    count,
+  } = await q.order("created_at", { ascending: true }).range(from, to);
 
   if (error) {
     console.error("Error fetching bookings:", error.message);
@@ -50,8 +88,8 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
     );
   }
 
-  console.log("Bookings data:", booking);
-  bookings = booking || [];
+  console.log("Bookings data:", bookingData);
+  bookings = bookingData || [];
   return NextResponse.json(
     {
       success: true,
@@ -61,6 +99,12 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
         color: "success",
       },
       data: bookings,
+      pagination: {
+        page,
+        limit,
+        total: count ?? 0,
+        totalPages: Math.ceil((count ?? 0) / limit),
+      },
     },
     { status: 201 }
   );

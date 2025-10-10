@@ -6,19 +6,21 @@ import {
   updateBooking,
 } from "@/features/booking/booking-thunk";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { Booking } from "@/types/booking";
+import { Booking, FetchBookingParams } from "@/types/booking";
 
 export function useBookings() {
   const dispatch = useAppDispatch();
-  const { bookings, booking, isLoading, error } = useAppSelector(
+  const { bookings, booking, pagination, isLoading, error } = useAppSelector(
     (state) => state.booking
   );
   return {
     booking,
     bookings,
+    pagination,
     isLoading,
     error,
-    fetchBookings: () => dispatch(fetchBookings()),
+    fetchBookings: (payload: FetchBookingParams | undefined) =>
+      dispatch(fetchBookings(payload)),
     fetchBooking: (id: string) => dispatch(fetchBooking(id)),
     addBooking: (payload: FormData) => dispatch(addBooking(payload)),
     updateBooking: (payload: Booking) => dispatch(updateBooking(payload)),

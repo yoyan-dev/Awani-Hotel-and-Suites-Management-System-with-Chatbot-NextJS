@@ -1,28 +1,49 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { Booking } from "@/types/booking";
+import {
+  Booking,
+  BookingPagination,
+  FetchBookingParams,
+} from "@/types/booking";
 import { addToast } from "@heroui/react";
 
 const apiUrl = "/api/bookings";
 
-export const fetchBookings = createAsyncThunk<Booking[]>(
-  "booking/fetchBookings",
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await fetch(apiUrl);
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        addToast(data.message);
-        return rejectWithValue(
-          data.message?.description ?? "Failed to fetch bookings"
-        );
-      }
-      return data.data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+export const fetchBookings = createAsyncThunk<
+  { data: Booking[]; pagination: BookingPagination },
+  FetchBookingParams | undefined
+>("booking/fetchBookings", async (params, { rejectWithValue }) => {
+  try {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append("page", String(params.page));
+    if (params?.query) searchParams.append("query", params.query);
+    if (params?.guest_id) searchParams.append("guest_id", params.guest_id);
+    if (params?.check_in) searchParams.append("check_in", params.check_in);
+    if (params?.check_out) searchParams.append("check_out", params.check_out);
+    if (params?.date_range) {
+      searchParams.append("start", params.date_range.start);
+      searchParams.append("end", params.date_range.end);
     }
+    if (params?.roomTypeID)
+      searchParams.append("roomTypeID", params.roomTypeID);
+    if (params?.status) searchParams.append("status", params.status);
+
+    const res = await fetch(`${apiUrl}?${searchParams}`);
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      addToast(data.message);
+      return rejectWithValue(
+        data.message?.description ?? "Failed to fetch bookings"
+      );
+    }
+    return data as {
+      data: Booking[];
+      pagination: BookingPagination;
+    };
+  } catch (error: any) {
+    return rejectWithValue(error.message);
   }
-);
+});
 
 export const fetchBooking = createAsyncThunk<Booking, string>(
   "booking/fetchBooking",

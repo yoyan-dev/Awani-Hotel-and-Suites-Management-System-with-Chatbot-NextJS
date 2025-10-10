@@ -1,19 +1,18 @@
 import React from "react";
 import { Pagination } from "@heroui/react";
+import { BookingPagination, FetchBookingParams } from "@/types/booking";
 
 interface Props {
-  hasSearchFilter: boolean;
-  page: number;
-  setPage: (val: number) => void;
+  query: FetchBookingParams;
+  setQuery: React.Dispatch<React.SetStateAction<FetchBookingParams>>;
   pages: number;
   selectedKeys: any;
   itemsLength: number;
 }
 
 export const TableBottomContent: React.FC<Props> = ({
-  hasSearchFilter,
-  page,
-  setPage,
+  query,
+  setQuery,
   pages,
   selectedKeys,
   itemsLength,
@@ -23,11 +22,10 @@ export const TableBottomContent: React.FC<Props> = ({
       <Pagination
         showControls
         color="primary"
-        isDisabled={hasSearchFilter}
-        page={page}
+        page={query.page}
         total={pages}
         variant="light"
-        onChange={setPage}
+        onChange={(page: number) => setQuery({ ...query, page: page })}
       />
       <span className="text-small text-default-400">
         {selectedKeys === "all"

@@ -5,6 +5,7 @@ export type RoomStatus =
   | "cleaning"
   | "reserved"
   | "occupied"
+  | "dirty"
   | "maintenance"
   | "out_of_service";
 

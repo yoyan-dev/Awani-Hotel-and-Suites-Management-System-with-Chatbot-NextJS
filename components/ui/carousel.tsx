@@ -23,8 +23,9 @@ interface CarouselProps extends PropsWithChildren {
     lg?: number;
     xl?: number;
   };
-  dotType?: "button" | "image"; // ✅ new
+  dotType?: "button" | "image" | "none"; // ✅ new
   images?: string[]; // ✅ for thumbnails
+  hasButton?: boolean;
 }
 
 export function Carousel({
@@ -37,6 +38,7 @@ export function Carousel({
   responsive,
   dotType = "button",
   images = [],
+  hasButton = true,
 }: CarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -120,20 +122,24 @@ export function Carousel({
       </div>
 
       {/* Controls */}
-      <button
-        onClick={scrollPrev}
-        aria-label="Previous"
-        className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-zinc-800/70 backdrop-blur-sm p-2 rounded-full shadow-sm hover:scale-105 transition"
-      >
-        <ChevronLeft className="w-5 h-5 text-zinc-900 dark:text-zinc-100" />
-      </button>
-      <button
-        onClick={scrollNext}
-        aria-label="Next"
-        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-zinc-800/70 backdrop-blur-sm p-2 rounded-full shadow-sm hover:scale-105 transition"
-      >
-        <ChevronRight className="w-5 h-5 text-zinc-900 dark:text-zinc-100" />
-      </button>
+      {hasButton ? (
+        <>
+          <button
+            onClick={scrollPrev}
+            aria-label="Previous"
+            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-zinc-800/70 backdrop-blur-sm p-2 rounded-full shadow-sm hover:scale-105 transition"
+          >
+            <ChevronLeft className="w-5 h-5 text-zinc-900 dark:text-zinc-100" />
+          </button>
+          <button
+            onClick={scrollNext}
+            aria-label="Next"
+            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-zinc-800/70 backdrop-blur-sm p-2 rounded-full shadow-sm hover:scale-105 transition"
+          >
+            <ChevronRight className="w-5 h-5 text-zinc-900 dark:text-zinc-100" />
+          </button>
+        </>
+      ) : null}
 
       {/* Dots or Images */}
       <div className="flex items-center justify-center gap-2 mt-3">
@@ -157,6 +163,8 @@ export function Carousel({
                 />
               </button>
             );
+          } else if (dotType === "none") {
+            return null;
           }
 
           return (

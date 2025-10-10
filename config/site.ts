@@ -5,7 +5,8 @@ import {
   Home,
   icons,
   Inbox,
-  List,
+  LayoutDashboard,
+  Paintbrush,
   LogOut,
   Notebook,
   Settings,
@@ -13,6 +14,7 @@ import {
   ShoppingCart,
   User,
   Users,
+  ArrowRightLeft,
 } from "lucide-react";
 
 export type SiteConfig = typeof siteConfig;
@@ -114,17 +116,22 @@ export const siteConfig = {
     {
       label: "Dashboard",
       href: "/housekeeping",
-      icon: Home,
+      icon: LayoutDashboard,
     },
+    // {
+    //   label: "Tasks",
+    //   href: "/housekeeping/tasks",
+    //   icon: Paintbrush,
+    // },
     {
       label: "Room List",
       href: "/housekeeping/rooms",
       icon: Bed,
     },
     {
-      label: "Tasks",
-      href: "/housekeeping/tasks",
-      icon: List,
+      label: "Guest Movement",
+      href: "/housekeeping/guests",
+      icon: ArrowRightLeft,
     },
     {
       label: "Guest Requests",
