@@ -12,51 +12,35 @@ import {
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
-import { Booking } from "@/types/booking";
+import {
+  Booking,
+  BookingPagination,
+  FetchBookingParams,
+} from "@/types/booking";
 import { ColumnType } from "@/types/column";
 
 interface BookingTableProps {
-  items: Booking[];
   bookings: Booking[];
-
+  pagination: BookingPagination;
+  query: FetchBookingParams;
+  setQuery: React.Dispatch<React.SetStateAction<FetchBookingParams>>;
   headerColumns: ColumnType[];
   visibleColumns: Set<string>;
   setVisibleColumns: React.Dispatch<React.SetStateAction<Set<string>>>;
-
-  onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-
-  hasSearchFilter: boolean;
-  filterValue: string;
-  setFilterValue: React.Dispatch<React.SetStateAction<string>>;
-  statusFilter: any;
-  setStatusFilter: React.Dispatch<React.SetStateAction<any | "all">>;
-
-  page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  pages: number;
-
   selectedKeys: Selection;
   setSelectedKeys: React.Dispatch<React.SetStateAction<Selection>>;
-
   bookingLoading: boolean;
   handleSubmit: (payload: Booking) => void;
 }
 
 export default function BookingTable({
-  items,
   bookings,
+  pagination,
+  query,
+  setQuery,
   headerColumns,
   visibleColumns,
   setVisibleColumns,
-  onRowsPerPageChange,
-  hasSearchFilter,
-  filterValue,
-  setFilterValue,
-  statusFilter,
-  setStatusFilter,
-  page,
-  setPage,
-  pages,
   selectedKeys,
   setSelectedKeys,
   bookingLoading,
@@ -65,19 +49,20 @@ export default function BookingTable({
   return (
     <Table
       isHeaderSticky
+      radius="none"
       classNames={{
         wrapper: ["shadow-none", "dark:bg-gray-900", "p-0", "table-auto"],
+        th: "bg-primary text-white",
       }}
       aria-label="Rooms Table"
       rowHeight={40}
       bottomContent={
         <TableBottomContent
-          hasSearchFilter={hasSearchFilter}
-          page={page}
-          setPage={setPage}
-          pages={pages}
+          query={query}
+          setQuery={setQuery}
+          pages={pagination.totalPages}
           selectedKeys={selectedKeys}
-          itemsLength={items.length}
+          itemsLength={pagination.total}
         />
       }
       bottomContentPlacement="outside"
@@ -85,15 +70,9 @@ export default function BookingTable({
       selectionMode="multiple"
       topContent={
         <TableTopContent
-          filterValue={filterValue}
-          onSearchChange={setFilterValue}
-          setFilterValue={setFilterValue}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
-          visibleColumns={visibleColumns}
-          setVisibleColumns={setVisibleColumns}
-          onRowsPerPageChange={onRowsPerPageChange}
-          bookingsCount={bookings.length}
+          query={query}
+          setQuery={setQuery}
+          bookingsCount={pagination.total}
         />
       }
       topContentPlacement="outside"
@@ -114,10 +93,17 @@ export default function BookingTable({
         isLoading={bookingLoading}
         loadingContent={<Spinner label="Loading..." />}
         emptyContent="No bookings found"
-        items={items}
+        items={bookings}
       >
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow
+            key={item.id}
+            className={
+              bookings.indexOf(item) % 2 === 0
+                ? "bg-white dark:bg-gray-800"
+                : "bg-gray-100 dark:bg-gray-900"
+            }
+          >
             {(columnKey) => (
               <TableCell className="capitalize">
                 <RenderCell

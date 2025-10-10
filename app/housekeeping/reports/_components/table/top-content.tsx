@@ -9,7 +9,7 @@ import {
   Link,
 } from "@heroui/react";
 import { Search, ChevronDown, Plus } from "lucide-react";
-import { columns, statusOptions } from "../../../../../constants/rooms";
+import { columns, statusOptions } from "@/app/constants/rooms";
 import { capitalize } from "@/app/utils/capitalize";
 import DeleteSelectedModal from "../modals/delete-selected-modal";
 import { FetchRoomsParams } from "@/types/room";

@@ -2,7 +2,7 @@
 
 import BookingForm from "./_components/booking-form";
 import SelectedRoom from "./_components/selected-room";
-import { Card, CardBody, CardHeader } from "@heroui/react";
+import { addToast, Card, CardBody, CardHeader } from "@heroui/react";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import AvailableRooms from "./_components/available-rooms";
@@ -16,7 +16,12 @@ export default function Page() {
   const { guest, isLoading: guestIsLoading, fetchGuest } = useGuests();
   const [selectedRoom, setSelectedRoom] = useState(id || null);
   const { room_types, isLoading, fetchRoomTypes } = useRoomTypes();
-  const { isLoading: bookingIsLoading, addBooking } = useBookings();
+  const {
+    bookings,
+    isLoading: bookingIsLoading,
+    fetchBookings,
+    addBooking,
+  } = useBookings();
 
   const [specialRequests, setSpecialRequests] = useState<
     { name: string; price: string; quantity: number }[]
@@ -68,6 +73,17 @@ export default function Page() {
       (req) => req.quantity > 0
     );
 
+    const check_in_date = formData.get("check_in") || "";
+    await fetchBookings({ guest_id: guest.id, check_in: check_in_date });
+    if (!bookingIsLoading && bookings.length > 0) {
+      addToast({
+        title: "Error!",
+        description:
+          "You still have a pending booking reservation. Please contact awani customer service for assistance.",
+        color: "warning",
+      });
+      return;
+    }
     formData.append("guest_id", guest.id || "");
     formData.append(
       "special_requests",

@@ -11,28 +11,17 @@ import { Search, ChevronDown } from "lucide-react";
 import { columns, bookingStatusOptions } from "@/app/constants/booking";
 import { capitalize } from "@/app/utils/capitalize";
 import AddModal from "../modals/add-modal/index";
+import { FetchBookingParams } from "@/types/booking";
 
 interface Props {
-  filterValue: string;
-  onSearchChange: (value: string) => void;
-  setFilterValue: (val: string) => void;
-  statusFilter: any;
-  setStatusFilter: (val: any) => void;
-  visibleColumns: any;
-  setVisibleColumns: (val: any) => void;
-  onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  query: FetchBookingParams;
+  setQuery: React.Dispatch<React.SetStateAction<FetchBookingParams>>;
   bookingsCount: number;
 }
 
 export const TableTopContent: React.FC<Props> = ({
-  filterValue,
-  onSearchChange,
-  setFilterValue,
-  statusFilter,
-  setStatusFilter,
-  visibleColumns,
-  setVisibleColumns,
-  onRowsPerPageChange,
+  query,
+  setQuery,
   bookingsCount,
 }) => {
   return (
@@ -47,10 +36,10 @@ export const TableTopContent: React.FC<Props> = ({
           placeholder="Search by name..."
           size="sm"
           startContent={<Search className="text-default-300" />}
-          value={filterValue}
+          value={query.query}
           variant="bordered"
-          onClear={() => setFilterValue("")}
-          onValueChange={onSearchChange}
+          onClear={() => setQuery({ ...query, query: "" })}
+          onValueChange={(value) => setQuery({ ...query, query: value })}
         />
         <div className="flex gap-3">
           <Dropdown>
@@ -67,9 +56,8 @@ export const TableTopContent: React.FC<Props> = ({
               disallowEmptySelection
               aria-label="Table Columns"
               closeOnSelect={false}
-              selectedKeys={statusFilter}
-              selectionMode="multiple"
-              onSelectionChange={setStatusFilter}
+              selectedKeys={query.status}
+              selectionMode="single"
             >
               {bookingStatusOptions.map((status) => (
                 <DropdownItem key={status.uid} className="capitalize">

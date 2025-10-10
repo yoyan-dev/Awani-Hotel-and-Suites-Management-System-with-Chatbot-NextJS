@@ -40,7 +40,12 @@ export interface BookingPagination {
 export interface FetchBookingParams {
   page?: number;
   query?: string;
+  guest_id?: string;
+  check_in?: any;
+  check_out?: any;
+  date_range?: { start: string; end: string };
   roomTypeID?: string;
+  room_id?: string;
   status?: string | undefined;
 }
 export interface BookingState {

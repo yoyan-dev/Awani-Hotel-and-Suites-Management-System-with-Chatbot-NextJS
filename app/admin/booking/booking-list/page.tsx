@@ -2,7 +2,7 @@
 import Header from "./_components/header";
 import BookingTable from "./_components/table/booking-table";
 import React from "react";
-import { Booking } from "@/types/booking";
+import { Booking, FetchBookingParams } from "@/types/booking";
 import { useBookings } from "@/hooks/use-bookings";
 import { columns, INITIAL_VISIBLE_COLUMNS } from "@/app/constants/booking";
 import { HousekeepingTask } from "@/types/housekeeping";
@@ -11,25 +11,18 @@ import { useHousekeeping } from "@/hooks/use-housekeeping";
 export default function BookingList() {
   const {
     bookings,
-    isLoading: bookingLoading,
-    error: bookingError,
+    pagination,
+    isLoading,
+    error,
     fetchBookings,
     updateBooking,
   } = useBookings();
 
-  const { addHousekeepingTask } = useHousekeeping();
-
-  const [filterValue, setFilterValue] = React.useState("");
+  const [query, setQuery] = React.useState<FetchBookingParams>({});
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [statusFilter, setStatusFilter] = React.useState<any>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [page, setPage] = React.useState(1);
-
-  const pages = Math.ceil(bookings.length / rowsPerPage);
-  const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
@@ -38,37 +31,9 @@ export default function BookingList() {
     );
   }, [visibleColumns]);
 
-  const filteredItems = React.useMemo(() => {
-    let filteredBookings = [...bookings];
-
-    if (hasSearchFilter) {
-      filteredBookings = filteredBookings.filter((item) =>
-        item.user.full_name?.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
-
-    if (statusFilter !== "all" && Array.from(statusFilter).length) {
-      filteredBookings = filteredBookings.filter((item) =>
-        Array.from(statusFilter).includes(item.status)
-      );
-    }
-
-    return filteredBookings;
-  }, [bookings, filterValue, statusFilter, hasSearchFilter]);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    return filteredItems.slice(start, start + rowsPerPage);
-  }, [page, filteredItems, rowsPerPage]);
-
-  const onRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setRowsPerPage(Number(e.target.value));
-    setPage(1);
-  };
-
   React.useEffect(() => {
-    fetchBookings();
-  }, [bookingError]);
+    fetchBookings(query);
+  }, [error]);
 
   async function handleSubmit(payload: Booking) {
     console.log(payload);
@@ -82,23 +47,16 @@ export default function BookingList() {
     <div className="p-2 md:p-4 bg-white dark:bg-gray-900 rounded space-y-2">
       <Header />
       <BookingTable
-        items={items}
         bookings={bookings}
+        pagination={pagination}
+        query={query}
+        setQuery={setQuery}
         headerColumns={headerColumns}
         visibleColumns={visibleColumns}
         setVisibleColumns={setVisibleColumns}
-        onRowsPerPageChange={onRowsPerPageChange}
-        hasSearchFilter={hasSearchFilter}
-        filterValue={filterValue}
-        setFilterValue={setFilterValue}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        page={page}
-        setPage={setPage}
-        pages={pages}
         selectedKeys={selectedKeys}
         setSelectedKeys={setSelectedKeys}
-        bookingLoading={bookingLoading}
+        bookingLoading={isLoading}
         handleSubmit={handleSubmit}
       />
     </div>

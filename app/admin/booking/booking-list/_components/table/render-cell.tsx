@@ -26,6 +26,7 @@ import { Room } from "@/types/room";
 import AssignRoomModal from "../modals/assign-room-modal";
 import CheckInButton from "../actions/mark-check-in";
 import CheckOutButton from "../actions/mark-check-out";
+import MarkCancelled from "@/app/housekeeping/guests/_components/actions/mark-cancelled";
 
 interface RenderCellProps {
   booking: Booking;
@@ -46,48 +47,43 @@ export const RenderCell = ({
 
   switch (columnKey) {
     case "room":
-      return booking.room?.room_number || "No yet assigned";
+      return booking.room?.room_number || "N/A";
     case "guest_name":
-      return booking.user?.full_name || "undefined";
-    case "room_type":
-      return booking.room_type?.name;
-    case "nights":
-      return nights;
-    case "check_in":
       return (
-        <div className="flex gap-2">
-          <Chip
-            startContent={<CalendarArrowDown size={18} />}
-            color="success"
-            variant="flat"
-          >
-            {booking.check_in}
-          </Chip>
-          -
-          <Chip
-            startContent={<CalendarArrowUp size={18} />}
-            color="warning"
-            variant="flat"
-          >
-            {booking.check_out}
-          </Chip>
+        <div className="flex flex-col w-48">
+          <p className="text-bold text-small capitalize">
+            {booking.user?.full_name || "undefined"}
+          </p>
+          <p className="text-bold text-tiny capitalize text-default-600 dark:text-default-300 flex ">
+            {booking.check_in} to {booking.check_out}
+          </p>
         </div>
       );
+
+    case "room_type":
+      return <Chip>{booking.room_type?.name}</Chip>;
+    case "nights":
+      return nights;
+
     case "total_price":
       return formatPHP(
         calculateBookingPrice(booking) + Number(booking.total_add_ons || 0)
       );
     case "status":
       return (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${bookingStatusColorMap[booking.status]}`}
+        <Chip
+          size="sm"
+          className={`px-2 rounded-full  font-medium ${bookingStatusColorMap[booking.status]}`}
         >
           {booking.status}
-        </span>
+        </Chip>
       );
     case "actions":
-      return (
-        <div>
+      return booking.status !== "check-out" ? (
+        <div className="flex gap-2">
+          {booking.status === "pending" ? (
+            <MarkCancelled id={booking.id} />
+          ) : null}
           <AssignRoomModal
             isOpen={assignModalOpen}
             onClose={() => setAssignModalOpen(false)}
@@ -107,32 +103,40 @@ export const RenderCell = ({
                   <EllipsisVertical className="text-default-400" />
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem
-                  key="view"
-                  as={Link}
-                  href={`booking/${booking.id}`}
-                  color="primary"
-                >
-                  <div className="flex items-center gap-2">
-                    <Eye size={15} /> View
-                  </div>
-                </DropdownItem>
-                <DropdownItem
-                  key="assign"
-                  onPress={() => setAssignModalOpen(true)}
-                  className="text-blue-600"
-                >
-                  <div className="flex items-center gap-2">
-                    <Bed size={15} /> Assign Room
-                  </div>
-                </DropdownItem>
-                <DropdownItem key="edit">Edit</DropdownItem>
-                <DropdownItem key="delete">Delete</DropdownItem>
-              </DropdownMenu>
+              {booking.status !== "cancelled" ? (
+                <DropdownMenu>
+                  <DropdownItem
+                    key="view"
+                    as={Link}
+                    href={`booking/${booking.id}`}
+                    color="primary"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Eye size={15} /> View
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="assign"
+                    onPress={() => setAssignModalOpen(true)}
+                    className="text-blue-600"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Bed size={15} /> Assign Room
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem key="edit">Edit</DropdownItem>
+                  <DropdownItem key="delete">Delete</DropdownItem>
+                </DropdownMenu>
+              ) : (
+                <DropdownMenu>
+                  <DropdownItem key="delete">Delete</DropdownItem>
+                </DropdownMenu>
+              )}
             </Dropdown>
           </div>
         </div>
+      ) : (
+        ""
       );
     default:
       return cellValue;

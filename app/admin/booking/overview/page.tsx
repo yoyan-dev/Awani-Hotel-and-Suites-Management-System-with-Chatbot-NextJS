@@ -1,5 +1,5 @@
-"use client"
-import React, { useMemo, } from "react";
+"use client";
+import React, { useMemo } from "react";
 import BookingHeader from "./_components/header";
 import KeyPerformanceIndicator from "./_components/key-performance-indicator";
 import BookingTable from "./_components/table/booking-table";
@@ -69,7 +69,7 @@ export default function Overview() {
   };
 
   React.useEffect(() => {
-    fetchBookings();
+    fetchBookings(undefined);
   }, [bookingError]);
 
   async function handleSubmit(payload: Booking) {
@@ -79,25 +79,6 @@ export default function Overview() {
       room_id: payload.room_id,
       status: "confirmed",
     } as Booking);
-
-    const specialRequests = (payload.special_requests ?? [])
-      .map((req: any) => `${req.quantity} ${req.name}`)
-      .join(", ");
-
-    const tasks: Partial<HousekeepingTask> = {
-      room_id: payload.room_id,
-      guest_name: payload.user.full_name,
-      task_type: "room_preparation",
-      description:
-        specialRequests && specialRequests.trim() !== ""
-          ? `Prepare room for new arrival. Double-check the room is clean and ensure the following special requests are ready: ${specialRequests}.`
-          : `Prepare room for new arrival. Double-check the room is clean and perform full room preparation with standard amenities.`,
-      scheduled_time: new Date().toISOString(),
-      arrival_date: payload.check_in,
-      status: "pending",
-    };
-    addHousekeepingTask(tasks as HousekeepingTask);
-    console.log(tasks);
   }
 
   const stats = useMemo(() => {
