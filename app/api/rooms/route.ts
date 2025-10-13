@@ -4,8 +4,6 @@ import { supabase } from "@/lib/supabase-client";
 import { uploadRoomImage } from "@/lib/upload-room-image";
 import { ApiResponse } from "@/types/response";
 
-let rooms: Room[];
-
 export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   const { searchParams } = new URL(req.url);
 
@@ -30,12 +28,12 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     description,
     status,
     images,
-    remarks
+    remarks,
+    bookings
   `,
     { count: "exact" }
   );
 
-  // Search by query if provided
   if (query) {
     q = q.or(`
     room_id.ilike.%${query}%,
@@ -75,7 +73,7 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   }
 
   console.log("Room data:", orderByRoomTypes);
-  rooms = orderByRoomTypes || [];
+  const rooms = orderByRoomTypes || [];
   return NextResponse.json(
     {
       success: true,

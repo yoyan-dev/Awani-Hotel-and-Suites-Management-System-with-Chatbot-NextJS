@@ -18,6 +18,7 @@ import {
   FetchBookingParams,
 } from "@/types/booking";
 import { ColumnType } from "@/types/column";
+import { Room } from "@/types/room";
 
 interface BookingTableProps {
   bookings: Booking[];
@@ -30,7 +31,7 @@ interface BookingTableProps {
   selectedKeys: Selection;
   setSelectedKeys: React.Dispatch<React.SetStateAction<Selection>>;
   bookingLoading: boolean;
-  handleSubmit: (payload: Booking) => void;
+  handleSubmit: (booking: Booking, room: Room) => void;
 }
 
 export default function BookingTable({

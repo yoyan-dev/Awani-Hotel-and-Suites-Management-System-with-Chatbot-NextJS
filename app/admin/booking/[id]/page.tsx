@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Card,
   CardHeader,
@@ -19,6 +19,10 @@ import { formatPHP } from "@/lib/format-php";
 import { calculateBookingPrice, getNights } from "@/utils/pricing";
 import { useBookings } from "@/hooks/use-bookings";
 import GuestModal from "./_components/modals/guest-details-modal";
+import { Booking } from "@/types/booking";
+import { Room } from "@/types/room";
+import { useRooms } from "@/hooks/use-rooms";
+import AssignRoomModal from "./_components/modals/assign-room-modal";
 
 function formatDate(d?: string) {
   if (!d) return "—";
@@ -35,14 +39,31 @@ function formatDate(d?: string) {
 
 export default function BookingDetailsStunning() {
   const { id } = useParams();
-  const { booking, isLoading, error, fetchBooking } = useBookings();
+  const { booking, isLoading, error, fetchBooking, updateBooking } =
+    useBookings();
+  const { updateRoom } = useRooms();
   const [viewOpen, setViewOpen] = React.useState(false);
+  const [assignModalOpen, setAssignModalOpen] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (id) {
       fetchBooking(id as string);
     }
   }, [id, error]);
+
+  async function handleSubmit(room: Room) {
+    await updateBooking({
+      id: booking.id,
+      room_id: room.id,
+      status: "confirmed",
+    } as Booking);
+
+    await updateRoom({
+      id: room.id,
+      bookings: [...(room.bookings || []), booking],
+    });
+    fetchBooking(id as string);
+  }
 
   if (isLoading || !booking) {
     return <div className="p-6">Loading...</div>;
@@ -53,6 +74,13 @@ export default function BookingDetailsStunning() {
         isOpen={viewOpen}
         onClose={() => setViewOpen(false)}
         guest={booking.user}
+      />
+      <AssignRoomModal
+        isOpen={assignModalOpen}
+        onClose={() => setAssignModalOpen(false)}
+        onAssign={handleSubmit}
+        booking={booking}
+        bookingLoading={isLoading}
       />
       <div className="px-4 py-2 text-white bg-primary mb-4">
         Booking Details
@@ -160,9 +188,27 @@ export default function BookingDetailsStunning() {
               <div className="ml-auto hidden sm:flex items-center text-sm text-gray-500 gap-2">
                 <Tag className="w-4 h-4" />
                 {booking.room ? (
-                  <span>#{booking.room?.room_number}</span>
+                  <div className="flex gap-2 items-center">
+                    <span>#{booking.room?.room_number}</span>
+                    <Button
+                      size="sm"
+                      color="primary"
+                      onPress={() => setAssignModalOpen(true)}
+                    >
+                      Transfer room
+                    </Button>
+                  </div>
                 ) : (
-                  <span>No room assigned</span>
+                  <div className="flex gap-2 items-center">
+                    <span>No room assigned</span>
+                    <Button
+                      size="sm"
+                      color="primary"
+                      onPress={() => setAssignModalOpen(true)}
+                    >
+                      Choose room
+                    </Button>
+                  </div>
                 )}
               </div>
             </div>

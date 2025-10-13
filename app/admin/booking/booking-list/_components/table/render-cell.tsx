@@ -23,7 +23,6 @@ import { Booking } from "@/types/booking";
 import { formatPHP } from "@/lib/format-php";
 import { calculateBookingPrice, getNights } from "@/utils/pricing";
 import { Room } from "@/types/room";
-import AssignRoomModal from "../modals/assign-room-modal";
 import CheckInButton from "../actions/mark-check-in";
 import CheckOutButton from "../actions/mark-check-out";
 import MarkCancelled from "@/app/housekeeping/guests/_components/actions/mark-cancelled";
@@ -31,19 +30,13 @@ import MarkCancelled from "@/app/housekeeping/guests/_components/actions/mark-ca
 interface RenderCellProps {
   booking: Booking;
   columnKey: string;
-  onAssign: (payload: Booking) => void;
+  onAssign: (booking: Booking, room: Room) => void;
   bookingLoading: boolean;
 }
 
-export const RenderCell = ({
-  booking,
-  columnKey,
-  onAssign,
-  bookingLoading,
-}: RenderCellProps) => {
+export const RenderCell = ({ booking, columnKey }: RenderCellProps) => {
   const cellValue = booking[columnKey as keyof Booking];
   const nights = getNights(booking.check_in, booking.check_out);
-  const [assignModalOpen, setAssignModalOpen] = React.useState(false);
 
   switch (columnKey) {
     case "room":
@@ -79,18 +72,11 @@ export const RenderCell = ({
         </Chip>
       );
     case "actions":
-      return booking.status !== "check-out" ? (
+      return (
         <div className="flex gap-2">
           {booking.status === "pending" ? (
             <MarkCancelled id={booking.id} />
           ) : null}
-          <AssignRoomModal
-            isOpen={assignModalOpen}
-            onClose={() => setAssignModalOpen(false)}
-            onAssign={onAssign}
-            booking={booking}
-            bookingLoading={bookingLoading}
-          />
           <div className="relative flex justify-end items-center gap-2">
             {booking.status === "confirmed" ? (
               <CheckInButton booking={booking} />
@@ -115,15 +101,6 @@ export const RenderCell = ({
                       <Eye size={15} /> View
                     </div>
                   </DropdownItem>
-                  <DropdownItem
-                    key="assign"
-                    onPress={() => setAssignModalOpen(true)}
-                    className="text-blue-600"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Bed size={15} /> Assign Room
-                    </div>
-                  </DropdownItem>
                   <DropdownItem key="edit">Edit</DropdownItem>
                   <DropdownItem key="delete">Delete</DropdownItem>
                 </DropdownMenu>
@@ -135,8 +112,6 @@ export const RenderCell = ({
             </Dropdown>
           </div>
         </div>
-      ) : (
-        ""
       );
     default:
       return cellValue;

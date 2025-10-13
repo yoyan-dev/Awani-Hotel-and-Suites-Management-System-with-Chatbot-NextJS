@@ -124,7 +124,7 @@ export const siteConfig = {
     //   icon: Paintbrush,
     // },
     {
-      label: "Room List",
+      label: "Room Status",
       href: "/housekeeping/rooms",
       icon: Bed,
     },

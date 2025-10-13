@@ -1,4 +1,5 @@
 import { Pagination } from "@supabase/supabase-js";
+import { Booking } from "./booking";
 
 export type RoomStatus =
   | "available"
@@ -7,7 +8,8 @@ export type RoomStatus =
   | "occupied"
   | "dirty"
   | "maintenance"
-  | "out_of_service";
+  | "out_of_service"
+  | undefined;
 
 export interface RoomType {
   id?: string;
@@ -38,6 +40,7 @@ export interface Room {
   status?: RoomStatus;
   images?: string[];
   remarks?: string;
+  bookings?: Booking[];
 }
 
 export interface RoomPagination {

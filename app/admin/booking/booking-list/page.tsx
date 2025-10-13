@@ -7,6 +7,8 @@ import { useBookings } from "@/hooks/use-bookings";
 import { columns, INITIAL_VISIBLE_COLUMNS } from "@/app/constants/booking";
 import { HousekeepingTask } from "@/types/housekeeping";
 import { useHousekeeping } from "@/hooks/use-housekeeping";
+import { useRooms } from "@/hooks/use-rooms";
+import { Room } from "@/types/room";
 
 export default function BookingList() {
   const {
@@ -17,6 +19,7 @@ export default function BookingList() {
     fetchBookings,
     updateBooking,
   } = useBookings();
+  const { updateRoom } = useRooms();
 
   const [query, setQuery] = React.useState<FetchBookingParams>({});
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
@@ -33,15 +36,19 @@ export default function BookingList() {
 
   React.useEffect(() => {
     fetchBookings(query);
-  }, [error]);
+  }, []);
 
-  async function handleSubmit(payload: Booking) {
-    console.log(payload);
-    updateBooking({
-      id: payload.id,
-      room_id: payload.room_id,
+  async function handleSubmit(booking: Booking, room: Room) {
+    await updateBooking({
+      id: booking.id,
+      room_id: room.room_id,
       status: "confirmed",
     } as Booking);
+
+    await updateRoom({
+      id: room.id,
+      bookings: [...(room.bookings || []), booking],
+    });
   }
   return (
     <div className="p-2 md:p-4 bg-white dark:bg-gray-900 rounded space-y-2">
