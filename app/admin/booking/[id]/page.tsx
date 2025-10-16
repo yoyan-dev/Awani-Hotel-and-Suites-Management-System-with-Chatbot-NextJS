@@ -32,8 +32,6 @@ function formatDate(d?: string) {
     year: "numeric",
     month: "short",
     day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
   });
 }
 

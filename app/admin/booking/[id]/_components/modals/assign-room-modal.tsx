@@ -74,6 +74,21 @@ export default function AssignRoomModal({
     onAssign(filterRoom);
   };
 
+  const availableRooms = React.useMemo(() => {
+    return rooms.map((room) => {
+      const hasOverlap = room.bookings?.some(
+        (b) => b.check_in < booking.check_out && b.check_out > booking.check_in
+      );
+
+      return {
+        ...room,
+        availability: hasOverlap
+          ? "Not available on the selected date"
+          : "Available on the selected date",
+      };
+    });
+  }, [rooms, booking]);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -164,7 +179,7 @@ export default function AssignRoomModal({
               <div className="flex justify-center py-4">
                 <Spinner color="primary" label="Loading rooms..." />
               </div>
-            ) : rooms?.length ? (
+            ) : availableRooms?.length ? (
               <Select
                 placeholder="Select a room"
                 selectedKeys={
@@ -179,13 +194,15 @@ export default function AssignRoomModal({
                 }
                 className="max-w-full"
               >
-                {rooms.map((r) => (
+                {availableRooms.map((r: any) => (
                   <SelectItem key={r.id} textValue={String(r.room_number)}>
                     <div className="flex flex-col">
                       <span className="font-medium">Room {r.room_number}</span>
                       <div className="flex items-center justify-between flex-wrap gap-2">
                         <span className="text-xs text-default-700 dark:text-default-400">
-                          {r.room_type?.name}
+                          {booking.room_id !== r.id
+                            ? r.availability
+                            : "Already selected"}
                         </span>
                         <Chip
                           size="sm"
