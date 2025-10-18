@@ -1,13 +1,13 @@
 import React from "react";
 import { Pagination } from "@heroui/react";
-import { FetchHousekeepingParams } from "@/types/housekeeping";
+import { BookingPagination, FetchBookingParams } from "@/types/booking";
 
 interface Props {
-  query: FetchHousekeepingParams;
-  setQuery: React.Dispatch<React.SetStateAction<FetchHousekeepingParams>>;
+  query: FetchBookingParams;
+  setQuery: React.Dispatch<React.SetStateAction<FetchBookingParams>>;
   pages: number;
   selectedKeys: any;
-  tasksCount: any;
+  itemsLength: number;
 }
 
 export const TableBottomContent: React.FC<Props> = ({
@@ -15,7 +15,7 @@ export const TableBottomContent: React.FC<Props> = ({
   setQuery,
   pages,
   selectedKeys,
-  tasksCount,
+  itemsLength,
 }) => {
   return (
     <div className="py-2 px-2 flex justify-between items-center">
@@ -30,7 +30,7 @@ export const TableBottomContent: React.FC<Props> = ({
       <span className="text-small text-default-400">
         {selectedKeys === "all"
           ? "All items selected"
-          : `${selectedKeys.size} of ${tasksCount} selected`}
+          : `${selectedKeys.size} of ${itemsLength} selected`}
       </span>
     </div>
   );

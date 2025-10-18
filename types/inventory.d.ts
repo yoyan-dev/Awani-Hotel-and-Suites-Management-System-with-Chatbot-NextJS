@@ -8,6 +8,7 @@ export interface Inventory {
   category: "toiletries" | "linens" | "minibar" | "cleaning_supply";
   createdAt?: any;
   status?: InventoryStatus;
+  price?: number;
 }
 
 export interface InventoryUsage {

@@ -22,7 +22,7 @@ import GuestModal from "./_components/modals/guest-details-modal";
 import { Booking } from "@/types/booking";
 import { Room } from "@/types/room";
 import { useRooms } from "@/hooks/use-rooms";
-import AssignRoomModal from "./_components/modals/assign-room-modal";
+import Link from "next/link";
 
 function formatDate(d?: string) {
   if (!d) return "—";
@@ -73,13 +73,7 @@ export default function BookingDetailsStunning() {
         onClose={() => setViewOpen(false)}
         guest={booking.user}
       />
-      <AssignRoomModal
-        isOpen={assignModalOpen}
-        onClose={() => setAssignModalOpen(false)}
-        onAssign={handleSubmit}
-        booking={booking}
-        bookingLoading={isLoading}
-      />
+
       <div className="px-4 py-2 text-white bg-primary mb-4">
         Booking Details
       </div>
@@ -188,24 +182,22 @@ export default function BookingDetailsStunning() {
                 {booking.room ? (
                   <div className="flex gap-2 items-center">
                     <span>#{booking.room?.room_number}</span>
-                    <Button
-                      size="sm"
-                      color="primary"
-                      onPress={() => setAssignModalOpen(true)}
+                    <Link
+                      className="px-2 py-1 bg-primary text-white rounded-sm"
+                      href={`booking/assign-room/${booking.id}`}
                     >
                       Transfer room
-                    </Button>
+                    </Link>
                   </div>
                 ) : (
                   <div className="flex gap-2 items-center">
                     <span>No room assigned</span>
-                    <Button
-                      size="sm"
-                      color="primary"
-                      onPress={() => setAssignModalOpen(true)}
+                    <Link
+                      className="px-2 py-1 bg-primary text-white rounded-sm"
+                      href={`booking/assign-room/${booking.id}`}
                     >
                       Choose room
-                    </Button>
+                    </Link>
                   </div>
                 )}
               </div>

@@ -8,27 +8,21 @@ import {
   DropdownItem,
 } from "@heroui/react";
 import { Search, ChevronDown } from "lucide-react";
-import { columns, statusOptions } from "./constants";
+import { columns, bookingStatusOptions } from "@/app/constants/booking";
 import { capitalize } from "@/app/utils/capitalize";
-import AddModal from "../modals/add-modal";
-import { FetchHousekeepingParams } from "@/types/housekeeping";
+import AddModal from "../modals/add-modal/index";
+import { FetchBookingParams } from "@/types/booking";
 
 interface Props {
-  query: FetchHousekeepingParams;
-  setQuery: React.Dispatch<React.SetStateAction<FetchHousekeepingParams>>;
-  visibleColumns: any;
-  setVisibleColumns: (val: any) => void;
-  tasksCount: any;
-  selectedKeys: Set<number> | "all";
+  query: FetchBookingParams;
+  setQuery: React.Dispatch<React.SetStateAction<FetchBookingParams>>;
+  bookingsCount: number;
 }
 
 export const TableTopContent: React.FC<Props> = ({
   query,
   setQuery,
-  visibleColumns,
-  setVisibleColumns,
-  tasksCount,
-  selectedKeys,
+  bookingsCount,
 }) => {
   return (
     <div className="flex flex-col gap-4">
@@ -48,7 +42,6 @@ export const TableTopContent: React.FC<Props> = ({
           onValueChange={(value) => setQuery({ ...query, query: value })}
         />
         <div className="flex gap-3">
-          <AddModal />
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
               <Button
@@ -63,21 +56,22 @@ export const TableTopContent: React.FC<Props> = ({
               disallowEmptySelection
               aria-label="Table Columns"
               closeOnSelect={false}
+              selectedKeys={query.status}
               selectionMode="single"
-              selectedKeys={query.status || "all"}
             >
-              {statusOptions.map((status) => (
+              {bookingStatusOptions.map((status) => (
                 <DropdownItem key={status.uid} className="capitalize">
                   {capitalize(status.name)}
                 </DropdownItem>
               ))}
             </DropdownMenu>
           </Dropdown>
+          <AddModal />
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-default-600 text-small">
-          Total {tasksCount} housekeeping tasks
+        <span className="text-default-400 text-small">
+          Total {bookingsCount} bookings
         </span>
         <label className="flex items-center text-default-400 text-small">
           Rows per page: 10

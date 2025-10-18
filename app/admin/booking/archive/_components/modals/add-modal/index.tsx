@@ -1,4 +1,8 @@
+import { addBooking } from "@/features/booking/booking-thunk";
 import { fetchGuests } from "@/features/guest/guest-thunk";
+import { fetchRoomTypes } from "@/features/room-types/room-types-thunk";
+import { fetchRooms } from "@/features/room/room-thunk";
+import { formatPHP } from "@/lib/format-php";
 import { AppDispatch, RootState } from "@/store/store";
 import { Guest } from "@/types/guest";
 import {
@@ -9,28 +13,43 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
+  Checkbox,
+  Input,
+  Link,
   Form,
+  Chip,
+  Select,
+  RadioGroup,
+  Radio,
+  Textarea,
+  SelectItem,
+  CheckboxGroup,
+  Card,
+  CardHeader,
+  CardBody,
   addToast,
 } from "@heroui/react";
 import { Copyright, Minus, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import SelectedGuest from "../../selected-guest";
+import GuestForm from "../guest/guest-form";
 import BookingDetailsSection from "./booking-details-section";
 import HealthDeclarationSection from "./health-declaration-section";
 import GuestInfoSection from "./guest-info-section";
-import { useBookings } from "@/hooks/use-bookings";
-import { useRoomTypes } from "@/hooks/use-room-types";
-import { useRooms } from "@/hooks/use-rooms";
 
 export default function AddModal() {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-  const {
-    room_types,
-    isLoading: typesLoading,
-    fetchRoomTypes,
-  } = useRoomTypes();
-  const { isLoading: bookingIsLoading, error, addBooking } = useBookings();
-  const { rooms, isLoading: roomLoading, fetchRooms } = useRooms();
+  const dispatch = useDispatch<AppDispatch>();
+  const { room_types, isLoading: typesLoading } = useSelector(
+    (state: RootState) => state.room_type
+  );
+  const { isLoading: bookingIsLoading, error } = useSelector(
+    (state: RootState) => state.booking
+  );
+  const { rooms, isLoading: roomLoading } = useSelector(
+    (state: RootState) => state.room
+  );
   const { guests, isLoading: guestLoading } = useSelector(
     (state: RootState) => state.guests
   );
@@ -42,15 +61,17 @@ export default function AddModal() {
   >([]);
 
   useEffect(() => {
-    fetchRoomTypes();
-    fetchGuests();
-  }, []);
+    dispatch(fetchRoomTypes());
+    dispatch(fetchGuests());
+  }, [dispatch]);
 
   useEffect(() => {
     if (selectedRoomType) {
-      fetchRooms({ roomTypeID: selectedRoomType, status: "available" });
+      dispatch(
+        fetchRooms({ roomTypeID: selectedRoomType, status: "available" })
+      );
     }
-  }, [selectedRoomType]);
+  }, [dispatch, selectedRoomType]);
 
   const filteredGuest = useMemo(
     () =>
@@ -87,8 +108,7 @@ export default function AddModal() {
     }
     formData.append("guest_id", selectedGuest);
     console.log(formData);
-    formData.append("special_requests", JSON.stringify([]));
-    await addBooking(formData);
+    await dispatch(addBooking(formData));
     if (error === undefined) {
       onClose();
     }

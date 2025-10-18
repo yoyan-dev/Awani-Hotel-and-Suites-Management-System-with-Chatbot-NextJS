@@ -1,8 +1,6 @@
 import { Select, SelectItem, Input, Chip, Button } from "@heroui/react";
 import { Minus, Plus } from "lucide-react";
 import { formatPHP } from "@/lib/format-php";
-import React from "react";
-import { getAvailableRooms } from "@/app/utils/room-availability";
 
 interface Props {
   room_types: any[];
@@ -17,13 +15,6 @@ interface Props {
   roomLoading?: boolean;
 }
 
-function formatDateISO(d: Date) {
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
-}
-
 export default function BookingDetailsSection({
   room_types,
   rooms,
@@ -34,37 +25,6 @@ export default function BookingDetailsSection({
   typesLoading,
   roomLoading,
 }: Props) {
-  const [checkInDate, setCheckInDate] = React.useState<string>("");
-  const [checkOutDate, setCheckOutDate] = React.useState<string>("");
-
-  const today = React.useMemo(() => formatDateISO(new Date()), []);
-  const minCheckout = React.useMemo(() => {
-    if (!checkInDate) {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      return formatDateISO(tomorrow);
-    }
-    const d = new Date(checkInDate);
-    d.setDate(d.getDate() + 1);
-    return formatDateISO(d);
-  }, [checkInDate]);
-
-  React.useEffect(() => {
-    if (!checkInDate) {
-      setCheckOutDate("");
-      return;
-    }
-    if (!checkOutDate) {
-      return;
-    }
-    if (checkOutDate < minCheckout) {
-      setCheckOutDate(minCheckout);
-    }
-  }, [checkInDate, minCheckout, checkOutDate]);
-
-  const availableRooms = React.useMemo(() => {
-    return getAvailableRooms(rooms, checkInDate, checkInDate);
-  }, [rooms, checkInDate, checkOutDate]);
   return (
     <div className="space-y-4 w-full">
       <h1 className="w-full bg-primary px-2 py-1 text-white">
@@ -96,40 +56,7 @@ export default function BookingDetailsSection({
           ))}
         </Select>
       </div>
-      <div className="flex gap-4">
-        <Input
-          fullWidth
-          variant="bordered"
-          radius="none"
-          isRequired
-          type="date"
-          label="Check-in Date"
-          name="check_in"
-          value={checkInDate}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setCheckInDate(e.target.value)
-          }
-          min={today}
-        />
-
-        <Input
-          fullWidth
-          variant="bordered"
-          radius="none"
-          isRequired
-          type="date"
-          label="Check-out Date"
-          name="check_out"
-          value={checkOutDate}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setCheckOutDate(e.target.value)
-          }
-          min={minCheckout}
-          disabled={!checkInDate}
-        />
-      </div>
-
-      {selectedRoomType && checkInDate ? (
+      {selectedRoomType ? (
         <div className="pt-4">
           <Select
             fullWidth
@@ -142,31 +69,16 @@ export default function BookingDetailsSection({
             placeholder="Assign available room"
             variant="bordered"
           >
-            {availableRooms.map((room: any) => (
+            {rooms.map((room) => (
               <SelectItem
                 key={room.id}
                 textValue={room.room_number?.toString() || ""}
               >
                 <div className="flex flex-col">
-                  <span className="font-medium">Room {room.room_number}</span>
-                  <div className="flex items-center justify-between flex-wrap gap-2">
-                    <span className="text-xs text-default-700 dark:text-default-400">
-                      {room.availability}
-                    </span>
-                    <Chip
-                      size="sm"
-                      color={
-                        room.status === "available"
-                          ? "success"
-                          : room.status === "occupied"
-                            ? "danger"
-                            : "warning"
-                      }
-                      className="capitalize"
-                    >
-                      {room.status}
-                    </Chip>
-                  </div>
+                  <span className="text-small">{room.room_number}</span>
+                  <span className="text-tiny text-gray-600 dark:text-gray-300">
+                    {room.description}
+                  </span>
                 </div>
               </SelectItem>
             ))}
@@ -174,6 +86,27 @@ export default function BookingDetailsSection({
         </div>
       ) : null}
 
+      <div className="flex gap-4">
+        <Input
+          fullWidth
+          variant="bordered"
+          radius="none"
+          isRequired
+          type="date"
+          label="Check-in Date"
+          name="check_in"
+        />
+
+        <Input
+          fullWidth
+          variant="bordered"
+          radius="none"
+          isRequired
+          type="date"
+          label="Check-out Date"
+          name="check_out"
+        />
+      </div>
       <div>
         <label>Special requests</label>
         <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">
