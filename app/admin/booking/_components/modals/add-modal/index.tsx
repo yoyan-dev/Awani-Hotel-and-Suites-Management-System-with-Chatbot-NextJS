@@ -95,8 +95,8 @@ export default function AddModal({ query }: { query: FetchBookingParams }) {
 
   return (
     <>
-      <Button color="primary" endContent={<Plus />} size="sm" onPress={onOpen}>
-        Booking
+      <Button color="primary" size="sm" onPress={onOpen}>
+        Booking <Plus />
       </Button>
       <Modal
         isOpen={isOpen}

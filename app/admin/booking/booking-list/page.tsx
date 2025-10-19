@@ -36,7 +36,7 @@ export default function BookingList() {
 
   React.useEffect(() => {
     fetchBookings(query);
-  }, []);
+  }, [query]);
 
   async function handleSubmit(booking: Booking, room: Room) {
     await updateBooking({

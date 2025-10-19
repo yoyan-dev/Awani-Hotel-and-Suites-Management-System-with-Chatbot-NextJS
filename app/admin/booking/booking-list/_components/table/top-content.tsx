@@ -6,6 +6,8 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Select,
+  SelectItem,
 } from "@heroui/react";
 import { Search, ChevronDown } from "lucide-react";
 import { columns, bookingStatusOptions } from "@/app/constants/booking";
@@ -42,30 +44,16 @@ export const TableTopContent: React.FC<Props> = ({
           onValueChange={(value) => setQuery({ ...query, query: value })}
         />
         <div className="flex gap-3">
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
-              <Button
-                endContent={<ChevronDown className="text-small" />}
-                size="sm"
-                variant="flat"
-              >
-                Status
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              disallowEmptySelection
-              aria-label="Table Columns"
-              closeOnSelect={false}
-              selectedKeys={query.status}
-              selectionMode="single"
-            >
-              {bookingStatusOptions.map((status) => (
-                <DropdownItem key={status.uid} className="capitalize">
-                  {capitalize(status.name)}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
+          <Select
+            size="sm"
+            radius="sm"
+            items={bookingStatusOptions}
+            className="min-w-32"
+            placeholder="Select Status"
+            onChange={(e) => setQuery({ ...query, status: e.target.value })}
+          >
+            {(item) => <SelectItem key={item.uid}>{item.name}</SelectItem>}
+          </Select>
           <AddModal query={query} />
         </div>
       </div>
