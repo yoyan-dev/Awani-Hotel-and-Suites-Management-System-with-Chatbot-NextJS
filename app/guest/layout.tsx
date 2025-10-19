@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Footer from "./_components/footer";
 import Navbar from "./_components/navbar";
 import { User } from "@/types/users";
@@ -11,11 +11,12 @@ export default function HousekeepingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [state, setState] = useState<{ user: User | null; isLoading: boolean }>(
-    { user: null, isLoading: true }
-  );
+  const [state, setState] = React.useState<{
+    user: User | null;
+    isLoading: boolean;
+  }>({ user: null, isLoading: true });
 
-  useEffect(() => {
+  React.useEffect(() => {
     async function getCurrentUser() {
       const {
         data: { user },

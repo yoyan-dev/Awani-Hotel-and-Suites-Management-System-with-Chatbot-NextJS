@@ -13,24 +13,11 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Checkbox,
-  Input,
-  Link,
   Form,
-  Chip,
-  Select,
-  RadioGroup,
-  Radio,
-  Textarea,
-  SelectItem,
-  CheckboxGroup,
-  Card,
-  CardHeader,
-  CardBody,
   addToast,
 } from "@heroui/react";
 import { Copyright, Minus, Plus } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SelectedGuest from "../../selected-guest";
 import GuestForm from "../guest/guest-form";
@@ -53,19 +40,19 @@ export default function AddModal() {
   const { guests, isLoading: guestLoading } = useSelector(
     (state: RootState) => state.guests
   );
-  const [selectedGuest, setSelectedGuest] = useState<string>();
-  const [selectedPurpose, setSelectedPurpose] = useState<string>();
-  const [selectedRoomType, setSelectedRoomType] = useState<string>();
-  const [specialRequests, setSpecialRequests] = useState<
+  const [selectedGuest, setSelectedGuest] = React.useState<string>();
+  const [selectedPurpose, setSelectedPurpose] = React.useState<string>();
+  const [selectedRoomType, setSelectedRoomType] = React.useState<string>();
+  const [specialRequests, setSpecialRequests] = React.useState<
     { name: string; price: string; quantity: number }[]
   >([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     dispatch(fetchRoomTypes());
     dispatch(fetchGuests());
   }, [dispatch]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (selectedRoomType) {
       dispatch(
         fetchRooms({ roomTypeID: selectedRoomType, status: "available" })
@@ -73,14 +60,14 @@ export default function AddModal() {
     }
   }, [dispatch, selectedRoomType]);
 
-  const filteredGuest = useMemo(
+  const filteredGuest = React.useMemo(
     () =>
       guests.find((guest) => guest.id === selectedGuest) ||
       ({ full_name: "", contact_number: "", address: "" } as Guest),
     [selectedGuest]
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     const room = room_types.find((room) => room.id === selectedRoomType);
     if (room?.add_ons) {
       setSpecialRequests(

@@ -10,7 +10,7 @@ import {
 import { Search, ChevronDown } from "lucide-react";
 import { columns, bookingStatusOptions } from "@/app/constants/booking";
 import { capitalize } from "@/app/utils/capitalize";
-import AddModal from "../modals/add-modal/index";
+import AddModal from "../../../_components/modals/add-modal";
 import { FetchBookingParams } from "@/types/booking";
 
 interface Props {
@@ -66,7 +66,7 @@ export const TableTopContent: React.FC<Props> = ({
               ))}
             </DropdownMenu>
           </Dropdown>
-          <AddModal />
+          <AddModal query={query} />
         </div>
       </div>
       <div className="flex justify-between items-center">

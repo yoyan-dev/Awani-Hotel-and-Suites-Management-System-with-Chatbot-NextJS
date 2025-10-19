@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Card,
   CardBody,
@@ -24,7 +24,7 @@ export default function RoomDetails() {
     (state: RootState) => state.room_type
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (id) {
       dispatch(fetchRoomType(id as string));
     }

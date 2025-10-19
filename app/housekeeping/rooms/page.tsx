@@ -2,7 +2,7 @@
 import { useRooms } from "@/hooks/use-rooms";
 import Header from "./_components/header";
 import RoomTable from "./_components/table/room-table";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FetchRoomsParams } from "@/types/room";
 import {
   columns,
@@ -11,7 +11,7 @@ import {
 
 export default function RoomList() {
   const { rooms, pagination, isLoading, fetchRooms } = useRooms();
-  const [query, setQuery] = useState<FetchRoomsParams>({});
+  const [query, setQuery] = React.useState<FetchRoomsParams>({});
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
     new Set(HOUSEKEEPING_INITIAL_VISIBLE_COLUMNS)
@@ -24,7 +24,7 @@ export default function RoomList() {
     );
   }, [visibleColumns]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchRooms(query);
   }, [query]);
 

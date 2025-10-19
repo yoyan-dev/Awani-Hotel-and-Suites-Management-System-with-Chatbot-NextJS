@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { Chip, Image } from "@heroui/react";
 import { useParams } from "next/navigation";
 import { statusColorMap } from "../../../../constants/rooms";
@@ -9,7 +9,7 @@ export default function RoomDetails() {
   const { id } = useParams();
   const { room, isLoading, error, fetchRoom } = useRooms();
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (id) {
       fetchRoom(id as string);
     }

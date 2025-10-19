@@ -4,7 +4,7 @@ import BookingForm from "./_components/booking-form";
 import SelectedRoom from "./_components/selected-room";
 import { addToast, Card, CardBody, CardHeader } from "@heroui/react";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import React from "react";
 import AvailableRooms from "./_components/available-rooms";
 import { supabase } from "@/lib/supabase/supabase-client";
 import { useGuests } from "@/hooks/use-guests";
@@ -14,7 +14,7 @@ import { useBookings } from "@/hooks/use-bookings";
 export default function Page() {
   const { id } = useParams();
   const { guest, isLoading: guestIsLoading, fetchGuest } = useGuests();
-  const [selectedRoom, setSelectedRoom] = useState(id || null);
+  const [selectedRoom, setSelectedRoom] = React.useState(id || null);
   const { room_types, isLoading, fetchRoomTypes } = useRoomTypes();
   const {
     bookings,
@@ -23,7 +23,7 @@ export default function Page() {
     addBooking,
   } = useBookings();
 
-  const [specialRequests, setSpecialRequests] = useState<
+  const [specialRequests, setSpecialRequests] = React.useState<
     { name: string; price: string; quantity: number }[]
   >([]);
 
@@ -39,19 +39,19 @@ export default function Page() {
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchRoomTypes();
     getCurrentUser();
   }, []);
 
-  const room = useMemo(() => {
+  const room = React.useMemo(() => {
     if (selectedRoom) {
       return room_types.find((room) => room.id === selectedRoom);
     }
     return null;
   }, [room_types, selectedRoom]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (room?.add_ons) {
       setSpecialRequests(
         room.add_ons.map((item: any) => ({
