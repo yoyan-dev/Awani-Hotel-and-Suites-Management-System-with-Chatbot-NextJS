@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
+import { Room } from "@/types/room";
+import { Booking } from "@/types/booking";
 
 export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   const { searchParams } = new URL(req.url);
 
   const roomTypeID = searchParams.get("roomTypeID") || "";
   const status = searchParams.get("status") || "";
+  const checkIn = searchParams.get("checkIn") || "";
+  const checkOut = searchParams.get("checkOut") || "";
 
   let q = supabase.from("rooms").select(
     `
@@ -20,8 +24,8 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     status,
     images,
     remarks,
-  `,
-    { count: "exact" }
+    bookings
+  `
   );
 
   if (roomTypeID) {
@@ -32,11 +36,24 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     q = q.eq("status", status);
   }
 
-  const { data: roomData, error, count } = await q;
+  const { data: rooms, error } = await q;
 
-  const orderByRoomTypes = roomData?.sort((a: any, b: any) => {
-    return a.room_type?.name.localeCompare(b.room_type?.name);
-  });
+  const availableRooms = () => {
+    return (
+      rooms?.map((room) => {
+        const hasOverlap = room?.bookings?.some(
+          (b: Booking) => b.check_in < checkIn && b.check_out > checkOut
+        );
+
+        return {
+          ...room,
+          availability: hasOverlap
+            ? "Not available on the selected date"
+            : "Available on the selected date",
+        };
+      }) || []
+    );
+  };
 
   if (error) {
     console.error("Error fetching rooms:", error.message);
@@ -53,8 +70,7 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     );
   }
 
-  console.log("Room data:", orderByRoomTypes);
-  const rooms = orderByRoomTypes || [];
+  console.log("Room data:", availableRooms());
   return NextResponse.json(
     {
       success: true,
@@ -63,7 +79,7 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
         description: "",
         color: "success",
       },
-      data: rooms,
+      data: availableRooms(),
     },
     { status: 201 }
   );

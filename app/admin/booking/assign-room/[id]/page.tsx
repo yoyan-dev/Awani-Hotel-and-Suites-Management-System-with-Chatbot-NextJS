@@ -37,7 +37,12 @@ export default function AssignRoomPage() {
     updateBooking,
     error,
   } = useBookings();
-  const { rooms, isLoading: roomLoading, fetchRooms, updateRoom } = useRooms();
+  const {
+    rooms,
+    isLoading: roomLoading,
+    fetchAvailableRooms,
+    updateRoom,
+  } = useRooms();
 
   React.useEffect(() => {
     if (id) {
@@ -47,24 +52,13 @@ export default function AssignRoomPage() {
 
   React.useEffect(() => {
     if (booking.room_type_id) {
-      fetchRooms({ roomTypeID: booking.room_type_id });
+      fetchAvailableRooms({
+        roomTypeID: booking.room_type_id,
+        checkIn: booking.check_in,
+        checkOut: booking.check_out,
+      });
     }
   }, [booking.room_type_id]);
-
-  const availableRooms = React.useMemo(() => {
-    return rooms.map((room) => {
-      const hasOverlap = room.bookings?.some(
-        (b) => b.check_in < booking.check_out && b.check_out > booking.check_in
-      );
-
-      return {
-        ...room,
-        availability: hasOverlap
-          ? "Not available on the selected date"
-          : "Available on the selected date",
-      };
-    });
-  }, [rooms, booking]);
 
   async function assignRoom(room: Room) {
     await updateBooking({
@@ -96,7 +90,7 @@ export default function AssignRoomPage() {
       <Divider className="mb-6" />
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {availableRooms.map((room) => (
+        {rooms.map((room) => (
           <Card
             key={room.id}
             isPressable
@@ -105,7 +99,7 @@ export default function AssignRoomPage() {
             <Image
               src={room.images?.[0]}
               alt={room.room_id}
-              className="rounded-t-xl h-40 object-cover"
+              className="rounded-t-xl h-40 w-xl object-cover"
             />
             <CardHeader className="flex flex-col items-start gap-1">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
@@ -116,9 +110,6 @@ export default function AssignRoomPage() {
             <CardBody className="text-sm text-gray-600 dark:text-gray-300 flex flex-col gap-2">
               <p className="flex items-center gap-2">
                 <Building2 className="w-4 h-4" /> {room.area}
-              </p>
-              <p className="flex items-center gap-2">
-                <UserRound className="w-4 h-4" /> {room.room_type.max_guest}
               </p>
               <p className="flex items-center gap-2">
                 <CalendarDays className="w-4 h-4" />{" "}
@@ -135,20 +126,22 @@ export default function AssignRoomPage() {
                 {room.status}
               </Chip>
             </CardBody>
-            <Divider />
-            <CardFooter>
-              {booking.room_id !== room.id ? (
-                <Button
-                  onPress={() => assignRoom(room)}
-                  fullWidth
-                  isLoading={bookingLoading}
-                  color="primary"
-                  startContent={<ArrowRightCircle className="w-4 h-4" />}
-                >
-                  Assign Room
-                </Button>
-              ) : null}
-            </CardFooter>
+            {booking.room_id !== room.id ? (
+              <>
+                <Divider />
+                <CardFooter>
+                  <Button
+                    onPress={() => assignRoom(room)}
+                    fullWidth
+                    isLoading={bookingLoading}
+                    color="primary"
+                    startContent={<ArrowRightCircle className="w-4 h-4" />}
+                  >
+                    Assign Room
+                  </Button>
+                </CardFooter>
+              </>
+            ) : null}
           </Card>
         ))}
       </div>

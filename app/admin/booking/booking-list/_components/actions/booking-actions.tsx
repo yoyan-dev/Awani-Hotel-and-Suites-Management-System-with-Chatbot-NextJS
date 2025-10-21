@@ -46,7 +46,7 @@ export default function BookingActionsDropdown({
           <DropdownItem
             key="view"
             startContent={<Eye className="w-4 h-4" />}
-            href={`booking/${booking.id}`}
+            href={`${booking.id}`}
             color="primary"
           >
             View Details
@@ -69,13 +69,22 @@ export default function BookingActionsDropdown({
             <div className="border-t border-gray-200 my-1"></div>
           </DropdownItem>
 
-          <DropdownItem
-            key="assign"
-            href={`booking/assign-room/${booking.id}`}
-            startContent={<Bed className="w-4 h-4" />}
-          >
-            Assign Room
-          </DropdownItem>
+          {!booking.room_id ? (
+            <DropdownItem
+              key="assign"
+              href={`assign-room/${booking.id}`}
+              startContent={<Bed className="w-4 h-4" />}
+            >
+              Assign Room
+            </DropdownItem>
+          ) : (
+            <DropdownItem
+              key="assign"
+              startContent={<Bed className="w-4 h-4" />}
+            >
+              Transfer Room
+            </DropdownItem>
+          )}
           {!["check-in", "pending"].includes(booking.status) ? (
             <DropdownItem key="checkin">
               <CheckInButton booking={booking} />
@@ -115,10 +124,11 @@ export default function BookingActionsDropdown({
           <DropdownItem isReadOnly key="div3">
             <div className="border-t border-gray-200 my-1"></div>
           </DropdownItem>
-
-          <DropdownItem key="cancel" color="danger">
-            <MarkCancelled id={booking.id} />
-          </DropdownItem>
+          {booking.status === "confirmed" || booking.status === "pending" ? (
+            <DropdownItem key="cancel" color="danger">
+              <MarkCancelled id={booking.id} />
+            </DropdownItem>
+          ) : null}
         </DropdownMenu>
       </Dropdown>
     </>

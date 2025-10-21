@@ -7,6 +7,7 @@ import {
   updateRoom,
   deleteRoom,
   deleteRooms,
+  fetchAvailableRooms,
 } from "./room-thunk";
 
 const initialState: RoomState = {
@@ -61,6 +62,24 @@ const roomSlice = createSlice({
       )
 
       .addCase(fetchRooms.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
+
+      //fetch availbale rooms
+      .addCase(fetchAvailableRooms.pending, (state) => {
+        state.isLoading = true;
+        state.error = undefined;
+      })
+      .addCase(
+        fetchAvailableRooms.fulfilled,
+        (state, action: PayloadAction<{ data: Room[] }>) => {
+          state.isLoading = false;
+          state.rooms = action.payload.data;
+          state.error = undefined;
+        }
+      )
+      .addCase(fetchAvailableRooms.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })

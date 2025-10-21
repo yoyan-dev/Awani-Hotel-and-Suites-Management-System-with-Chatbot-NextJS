@@ -41,6 +41,7 @@ export interface Room {
   images?: string[];
   remarks?: string;
   bookings?: Booking[];
+  availability?: string;
 }
 
 export interface RoomPagination {
@@ -56,6 +57,8 @@ export interface FetchRoomsParams {
   status?: string | undefined;
   minPrice?: number;
   maxPrice?: number;
+  checkIn?: any;
+  checkOut?: any;
 }
 export interface RoomState {
   rooms: Room[];

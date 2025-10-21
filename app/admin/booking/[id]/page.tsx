@@ -192,12 +192,15 @@ export default function BookingDetailsStunning() {
                 ) : (
                   <div className="flex gap-2 items-center">
                     <span>No room assigned</span>
-                    <Link
-                      className="px-2 py-1 bg-primary text-white rounded-sm"
-                      href={`booking/assign-room/${booking.id}`}
-                    >
-                      Choose room
-                    </Link>
+                    {(booking.status === "check-in" ||
+                      booking.status === "confirmed") && (
+                      <Link
+                        className="px-2 py-1 bg-primary text-white rounded-sm"
+                        href={`/admin/booking/assign-room/${booking.id}`}
+                      >
+                        Choose room
+                      </Link>
+                    )}
                   </div>
                 )}
               </div>
