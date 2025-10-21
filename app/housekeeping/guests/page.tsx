@@ -1,6 +1,6 @@
 "use client";
 import Header from "./_components/header";
-import TaskTable from "./_components/table/guest-table";
+import GuestTable from "./_components/table/guest-table";
 import React from "react";
 import {
   columns,
@@ -9,15 +9,16 @@ import {
 import { Tab, Tabs } from "@heroui/react";
 import { useBookings } from "@/hooks/use-bookings";
 import { FetchBookingParams } from "@/types/booking";
+import { today } from "@/utils/get-date";
 
 export default function Housekeeping() {
   const { bookings, pagination, isLoading, error, fetchBookings } =
     useBookings();
 
   const [query, setQuery] = React.useState<FetchBookingParams>({
-    status: "check-in",
+    check_in: today,
   });
-  const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
+  const [selectedKeys, setSelectedKeys] = React.useState("arrival");
   const [visibleColumns, setVisibleColumns] = React.useState<any>(
     new Set(INITIAL_HOUSEKEEPING_VISIBLE_COLUMNS)
   );
@@ -39,59 +40,39 @@ export default function Housekeeping() {
 
       <Tabs
         aria-label="Options"
-        selectedKey={query.status}
-        onSelectionChange={(key) => setQuery({ ...query, status: String(key) })}
+        selectedKey={selectedKeys}
+        onSelectionChange={(key) => setSelectedKeys(String(key))}
         variant="underlined"
         color="primary"
       >
         <Tab
-          key="check-in"
+          key="arrival"
+          onClick={() => setQuery({ ...query, check_in: today, check_out: "" })}
           title={
             <span className="text-gray-800 dark:text-gray-100 font-medium">
               Arrival
             </span>
           }
-        >
-          <div className="bg-white dark:bg-gray-900 p-4 rounded">
-            <TaskTable
-              bookings={bookings}
-              pagination={pagination}
-              query={query}
-              setQuery={setQuery}
-              selectedKeys={selectedKeys}
-              setSelectedKeys={setSelectedKeys}
-              visibleColumns={visibleColumns}
-              setVisibleColumns={setVisibleColumns}
-              headerColumns={headerColumns}
-              isLoading={isLoading}
-            />
-          </div>
-        </Tab>
+        />
 
         <Tab
-          key="check-out"
+          key="departure"
+          onClick={() => setQuery({ ...query, check_out: today, check_in: "" })}
           title={
             <span className="text-gray-800 dark:text-gray-100 font-medium">
               Departure
             </span>
           }
-        >
-          <div className="bg-white dark:bg-gray-900 p-4 rounded">
-            <TaskTable
-              bookings={bookings}
-              pagination={pagination}
-              query={query}
-              setQuery={setQuery}
-              selectedKeys={selectedKeys}
-              setSelectedKeys={setSelectedKeys}
-              visibleColumns={visibleColumns}
-              setVisibleColumns={setVisibleColumns}
-              headerColumns={headerColumns}
-              isLoading={isLoading}
-            />
-          </div>
-        </Tab>
+        />
       </Tabs>
+      <GuestTable
+        bookings={bookings}
+        pagination={pagination}
+        query={query}
+        setQuery={setQuery}
+        headerColumns={headerColumns}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

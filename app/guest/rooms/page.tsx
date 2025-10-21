@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { RoomsList } from "./_components/room-list";
 import Header from "./_components/header";
 import { useRoomTypes } from "@/hooks/use-room-types";
@@ -13,7 +13,7 @@ export default function Page() {
     isLoading: boolean;
   }>({ user: null, isLoading: true });
 
-  useEffect(() => {
+  React.useEffect(() => {
     async function getCurrentUser() {
       const {
         data: { user },

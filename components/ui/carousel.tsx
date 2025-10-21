@@ -1,17 +1,11 @@
 "use client";
 
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-  useRef,
-  PropsWithChildren,
-} from "react";
+import React from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaOptionsType } from "embla-carousel";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface CarouselProps extends PropsWithChildren {
+interface CarouselProps extends React.PropsWithChildren {
   options?: EmblaOptionsType;
   className?: string;
   autoScroll?: boolean;
@@ -41,12 +35,14 @@ export function Carousel({
   hasButton = true,
 }: CarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [slides, setSlides] = useState<number>(React.Children.count(children));
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [slides, setSlides] = React.useState<number>(
+    React.Children.count(children)
+  );
+  const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
 
   // Track selected index
-  useEffect(() => {
+  React.useEffect(() => {
     if (!emblaApi) return;
 
     const onSelect = () => {
@@ -66,7 +62,7 @@ export function Carousel({
   }, [emblaApi, children]);
 
   // Auto scroll
-  useEffect(() => {
+  React.useEffect(() => {
     if (!emblaApi || !autoScroll) return;
 
     intervalRef.current = setInterval(() => {
@@ -83,9 +79,15 @@ export function Carousel({
     };
   }, [emblaApi, autoScroll, autoScrollInterval]);
 
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
-  const scrollTo = useCallback(
+  const scrollPrev = React.useCallback(
+    () => emblaApi?.scrollPrev(),
+    [emblaApi]
+  );
+  const scrollNext = React.useCallback(
+    () => emblaApi?.scrollNext(),
+    [emblaApi]
+  );
+  const scrollTo = React.useCallback(
     (i: number) => emblaApi?.scrollTo(i),
     [emblaApi]
   );
@@ -185,7 +187,7 @@ export function Carousel({
   );
 }
 
-export function CarouselItem({ children }: PropsWithChildren) {
+export function CarouselItem({ children }: React.PropsWithChildren) {
   return <div className="p-2">{children}</div>;
 }
 

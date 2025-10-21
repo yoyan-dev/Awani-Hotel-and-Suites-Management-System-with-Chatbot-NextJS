@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Room } from "@/types/room";
 import { uploadRoomImage } from "@/lib/upload-room-image";
@@ -25,17 +25,17 @@ export default function Page() {
     fetchRoomTypes,
   } = useRoomTypes();
 
-  const [formData, setFormData] = useState<Room>({});
-  const [images, setImages] = useState<any[]>([]);
-  const [beds, setBeds] = useState<string[]>([]);
-  const [facilities, setFacilities] = useState<string[]>([]);
+  const [formData, setFormData] = React.useState<Room>({});
+  const [images, setImages] = React.useState<any[]>([]);
+  const [beds, setBeds] = React.useState<string[]>([]);
+  const [facilities, setFacilities] = React.useState<string[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (id) fetchRoom(id as string);
     fetchRoomTypes();
   }, [error, id]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (room) {
       setFormData(room);
       setImages([

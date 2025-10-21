@@ -127,7 +127,43 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       ...formObj,
       special_requests: specialRequests,
       total_add_ons: totalAddOnsPrice,
-    };
+    } as Booking;
+
+    const guestId = formObj.guest_id;
+    const newCheckIn = new Date(newData.check_in);
+    const newCheckOut = new Date(newData.check_out);
+
+    // Check existing bookings for this guest
+    const { data: existingBookings, error: checkError } = await supabase
+      .from("bookings")
+      .select("id, check_in, check_out, status")
+      .eq("guest_id", guestId)
+      .not("status", "in", "(cancelled, completed)");
+
+    if (checkError) throw checkError;
+
+    const hasOverlap = existingBookings?.some((booking) => {
+      const existingIn = new Date(booking.check_in);
+      const existingOut = new Date(booking.check_out);
+
+      return newCheckIn <= existingOut && newCheckOut >= existingIn;
+    });
+
+    if (hasOverlap) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: {
+            title: "Booking Restricted",
+            description:
+              "Guest already has an active booking during this period.",
+            color: "warning",
+          },
+        },
+        { status: 400 }
+      );
+    }
+
     const { data, error } = await supabase
       .from("bookings")
       .insert([newData])

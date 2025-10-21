@@ -36,22 +36,10 @@ export const siteConfig = {
       icon: Bed,
     },
     {
-      label: "Inventory",
-      href: "/admin/inventory",
-      isExpandable: false,
-      icon: ShoppingCart,
-    },
-    {
       label: "Bookings",
       href: "/admin/booking",
       isExpandable: false,
       icon: Notebook,
-    },
-    {
-      label: "Housekeeping",
-      href: "/admin/housekeeping",
-      isExpandable: false,
-      icon: BrushCleaning,
     },
     {
       label: "Guest",
@@ -124,7 +112,7 @@ export const siteConfig = {
     //   icon: Paintbrush,
     // },
     {
-      label: "Room List",
+      label: "Room Status",
       href: "/housekeeping/rooms",
       icon: Bed,
     },
@@ -137,6 +125,11 @@ export const siteConfig = {
       label: "Guest Requests",
       href: "/housekeeping/requests",
       icon: Inbox,
+    },
+    {
+      label: "Inventory",
+      href: "/housekeeping/inventory",
+      icon: ShoppingCart,
     },
     {
       label: "Settings",

@@ -10,19 +10,18 @@ import {
 } from "@heroui/react";
 import { RenderCell } from "./render-cell";
 import { TableBottomContent } from "./bottom-content";
+import {
+  Booking,
+  BookingPagination,
+  FetchBookingParams,
+} from "@/types/booking";
 import { ColumnType } from "@/types/column";
-import { FetchHousekeepingParams } from "@/types/housekeeping";
-import { Booking, BookingPagination } from "@/types/booking";
 
 interface GuestTableProps {
   bookings: Booking[];
   pagination: BookingPagination | null;
-  query: FetchHousekeepingParams;
-  setQuery: React.Dispatch<React.SetStateAction<FetchHousekeepingParams>>;
-  selectedKeys: any;
-  setSelectedKeys: React.Dispatch<React.SetStateAction<any>>;
-  visibleColumns: any;
-  setVisibleColumns: React.Dispatch<React.SetStateAction<any>>;
+  query: FetchBookingParams;
+  setQuery: React.Dispatch<React.SetStateAction<FetchBookingParams>>;
   headerColumns: ColumnType[];
   isLoading: boolean;
 }
@@ -32,10 +31,6 @@ export default function TaskTable({
   pagination,
   query,
   setQuery,
-  selectedKeys,
-  setSelectedKeys,
-  visibleColumns,
-  setVisibleColumns,
   headerColumns,
   isLoading,
 }: GuestTableProps) {
@@ -54,12 +49,9 @@ export default function TaskTable({
           query={query}
           setQuery={setQuery}
           pages={pagination?.totalPages ?? 0}
-          selectedKeys={selectedKeys}
-          tasksCount={pagination?.total}
         />
       }
       bottomContentPlacement="outside"
-      selectedKeys={selectedKeys}
       // topContent={
       //   <TableTopContent
       //     query={query}
@@ -70,8 +62,7 @@ export default function TaskTable({
       //     selectedKeys={selectedKeys}
       //   />
       // }
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
+      // topContentPlacement="outside"
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -87,7 +78,7 @@ export default function TaskTable({
       <TableBody
         isLoading={isLoading}
         loadingContent={<Spinner label="Loading..." />}
-        emptyContent="No tasks found"
+        emptyContent="No booking found"
         items={bookings}
         className="overflow-x-auto"
       >

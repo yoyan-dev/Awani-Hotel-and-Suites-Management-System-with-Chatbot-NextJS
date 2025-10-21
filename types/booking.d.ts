@@ -43,7 +43,7 @@ export interface FetchBookingParams {
   guest_id?: string;
   check_in?: any;
   check_out?: any;
-  date_range?: { start: string; end: string };
+  date_range?: { start: any; end: any };
   roomTypeID?: string;
   room_id?: string;
   status?: string | undefined;

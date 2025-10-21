@@ -13,10 +13,6 @@ export const fetchRooms = createAsyncThunk<
     if (params?.roomTypeID)
       searchParams.append("roomTypeID", params.roomTypeID);
     if (params?.status) searchParams.append("status", params.status);
-    if (params?.minPrice !== undefined)
-      searchParams.append("minPrice", String(params.minPrice));
-    if (params?.maxPrice !== undefined)
-      searchParams.append("maxPrice", String(params.maxPrice));
 
     const res = await fetch(`/api/rooms?${searchParams.toString()}`);
     const data = await res.json();
@@ -59,6 +55,34 @@ export const fetchRoom = createAsyncThunk<Room, string>(
     }
   }
 );
+
+export const fetchAvailableRooms = createAsyncThunk<
+  { data: Room[] },
+  FetchRoomsParams | undefined
+>("room/fetchAvailableRooms", async (params, { rejectWithValue }) => {
+  try {
+    const searchParams = new URLSearchParams();
+    if (params?.roomTypeID)
+      searchParams.append("roomTypeID", params.roomTypeID);
+    if (params?.status) searchParams.append("status", params.status);
+    if (params?.checkIn) searchParams.append("checkIn", params.checkIn);
+    if (params?.checkOut) searchParams.append("checkOut", params.checkOut);
+
+    const res = await fetch(
+      `/api/rooms/available-rooms?${searchParams.toString()}`
+    );
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      addToast(data.message ?? "Failed to fetch rooms");
+      return rejectWithValue(data.message ?? "Failed to fetch rooms");
+    }
+
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
 
 export const addRoom = createAsyncThunk<Room, FormData>(
   "room/addRoom",

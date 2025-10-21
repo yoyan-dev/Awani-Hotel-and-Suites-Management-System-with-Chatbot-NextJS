@@ -6,12 +6,16 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Select,
+  SelectItem,
+  DateRangePicker,
 } from "@heroui/react";
 import { Search, ChevronDown } from "lucide-react";
 import { columns, bookingStatusOptions } from "@/app/constants/booking";
 import { capitalize } from "@/app/utils/capitalize";
-import AddModal from "../modals/add-modal/index";
+import AddModal from "../../../_components/modals/add-modal";
 import { FetchBookingParams } from "@/types/booking";
+import { CalendarDate } from "@heroui/system/dist/types";
 
 interface Props {
   query: FetchBookingParams;
@@ -27,7 +31,7 @@ export const TableTopContent: React.FC<Props> = ({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between gap-3 items-end">
-        <Input
+        {/* <Input
           isClearable
           classNames={{
             base: "w-full sm:max-w-[44%]",
@@ -40,37 +44,45 @@ export const TableTopContent: React.FC<Props> = ({
           variant="bordered"
           onClear={() => setQuery({ ...query, query: "" })}
           onValueChange={(value) => setQuery({ ...query, query: value })}
+        /> */}
+        <DateRangePicker
+          variant="bordered"
+          size="sm"
+          radius="sm"
+          className="max-w-xs"
+          label="Stay duration"
+          onChange={(e) => {
+            const toDateString = (date: CalendarDate | null) =>
+              date
+                ? `${date.year}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`
+                : null;
+
+            setQuery({
+              ...query,
+              date_range: {
+                start: toDateString(e?.start ?? null),
+                end: toDateString(e?.end ?? null),
+              },
+            });
+          }}
         />
+
         <div className="flex gap-3">
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
-              <Button
-                endContent={<ChevronDown className="text-small" />}
-                size="sm"
-                variant="flat"
-              >
-                Status
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              disallowEmptySelection
-              aria-label="Table Columns"
-              closeOnSelect={false}
-              selectedKeys={query.status}
-              selectionMode="single"
-            >
-              {bookingStatusOptions.map((status) => (
-                <DropdownItem key={status.uid} className="capitalize">
-                  {capitalize(status.name)}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-          <AddModal />
+          <Select
+            size="sm"
+            radius="sm"
+            items={bookingStatusOptions}
+            className="min-w-32"
+            placeholder="Select Status"
+            onChange={(e) => setQuery({ ...query, status: e.target.value })}
+          >
+            {(item) => <SelectItem key={item.uid}>{item.name}</SelectItem>}
+          </Select>
+          <AddModal query={query} />
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-default-400 text-small">
+        <span className="text-default-600 dark:text-default-300 text-small">
           Total {bookingsCount} bookings
         </span>
         <label className="flex items-center text-default-400 text-small">

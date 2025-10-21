@@ -7,17 +7,17 @@ export const columns: ColumnType[] = [
   { name: "ROOM TYPE", uid: "room_type" },
   { name: "AREA", uid: "area" },
   { name: "DESCRIPTION", uid: "description" },
+  { name: "REMARKS", uid: "remarks" },
   { name: "STATUS", uid: "status" },
   { name: "ACTIONS", uid: "actions" },
 ];
 
 export const statusOptions = [
-  { name: "Available", uid: "available" },
-  { name: "Cleaning", uid: "cleaning" },
-  { name: "Reserved", uid: "reserved" },
-  { name: "Occupied", uid: "occupied" },
+  { name: "Stock Room", uid: "stock-room" },
+  { name: "VC", uid: "vaccant" },
+  { name: "OS", uid: "out_of_service" },
+  { name: "OCC", uid: "occupied" },
   { name: "Maintenance", uid: "maintenance" },
-  { name: "Out of Service", uid: "out_of_service" },
 ];
 
 export const statusColorMap: Record<
@@ -39,6 +39,15 @@ export const INITIAL_VISIBLE_COLUMNS = [
   "area",
   "max_guest",
   "base_price",
+  "status",
+  "actions",
+];
+
+export const HOUSEKEEPING_INITIAL_VISIBLE_COLUMNS = [
+  "room_id",
+  "room_number",
+  "room_type",
+  "remarks",
   "status",
   "actions",
 ];

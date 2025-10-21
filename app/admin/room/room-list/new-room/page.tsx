@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import RoomForm from "./_components/room-form";
 import Header from "./_components/header";
 import { useRooms } from "@/hooks/use-rooms";
@@ -14,9 +14,9 @@ export default function Page() {
   } = useRoomTypes();
   const { isLoading: roomLoading, addRoom } = useRooms();
 
-  const [images, setImages] = useState<any[]>([]);
+  const [images, setImages] = React.useState<any[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchRoomTypes();
   }, [error]);
 

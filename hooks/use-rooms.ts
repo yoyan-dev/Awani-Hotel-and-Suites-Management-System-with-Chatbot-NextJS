@@ -3,6 +3,7 @@ import {
   addRoom,
   deleteRoom,
   deleteRooms,
+  fetchAvailableRooms,
   fetchRoom,
   fetchRooms,
   updateRoom,
@@ -25,6 +26,8 @@ export function useRooms() {
     fetchRooms: (payload: FetchRoomsParams | null) =>
       dispatch(fetchRooms(payload || {})),
     fetchRoom: (id: string) => dispatch(fetchRoom(id)),
+    fetchAvailableRooms: (payload: FetchRoomsParams) =>
+      dispatch(fetchAvailableRooms(payload)),
     addRoom: (payload: FormData) => dispatch(addRoom(payload)),
     updateRoom: (payload: Room) => dispatch(updateRoom(payload)),
     deleteRoom: (id: string) => dispatch(deleteRoom(id)),
