@@ -81,7 +81,7 @@ export default function UserPopover({ collapsed }: { collapsed: boolean }) {
             src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
           }}
           className="transition-transform"
-          description={!collapsed ? "Product Designer" : ""}
+          description={!collapsed ? "Admin" : ""}
           name={!collapsed ? "Zoe Lang" : ""}
         />
       </PopoverTrigger>
