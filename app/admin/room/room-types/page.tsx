@@ -51,7 +51,7 @@ export default function RoomTypes() {
   };
 
   React.useEffect(() => {
-    fetchRoomTypes();
+    fetchRoomTypes({});
   }, [error]);
   return (
     <>

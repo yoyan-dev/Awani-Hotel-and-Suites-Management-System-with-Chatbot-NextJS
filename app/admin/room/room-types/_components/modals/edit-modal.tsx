@@ -27,9 +27,9 @@ interface UpdateModalProps {
 const UpdateModal: React.FC<UpdateModalProps> = ({ room, isOpen, onClose }) => {
   const { isLoading, updateRoomType } = useRoomTypes();
   const [formData, setFormData] = useState<RoomType>(room);
-  const [addOns, setAddOns] = useState<{ name: string; price: string }[]>(
-    room.add_ons ?? []
-  );
+  const [addOns, setAddOns] = useState<
+    { item_id: string; name: string; price: string; max_quantity: number }[]
+  >(room.add_ons ?? []);
   const [preview, setPreview] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
