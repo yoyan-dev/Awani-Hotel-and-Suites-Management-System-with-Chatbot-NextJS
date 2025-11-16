@@ -25,6 +25,7 @@ export interface Booking {
   status: BookingStatus;
   total_add_ons: string;
   total: string;
+  request_messages?: string;
   room?: any;
   user?: any;
   room_type?: any;

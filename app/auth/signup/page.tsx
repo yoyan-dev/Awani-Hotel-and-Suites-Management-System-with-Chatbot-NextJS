@@ -22,6 +22,7 @@ import {
   Transgender,
   Eye,
   EyeOff,
+  CloudDownloadIcon,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase-client";
 import { handleFileChange } from "@/app/utils/image-file-handler";
@@ -47,12 +48,11 @@ export default function Auth() {
 
       const fullName = formData.get("full_name");
       const image = formData.get("image");
-      const imageUrl = image ? await uploadUserImage(image as File) : "";
 
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { image: imageUrl, full_name: fullName } },
+        options: { data: { full_name: fullName } },
       });
 
       if (signUpError) {
@@ -66,7 +66,6 @@ export default function Auth() {
 
       if (data.user) {
         formData.append("id", data.user.id);
-        formData.append("image", imageUrl);
         console.log(formData);
         await addGuest(formData);
         if (error) {
@@ -90,7 +89,7 @@ export default function Auth() {
     <div className="min-h-screen w-full flex flex-col justify-center items-center p-4 sm:p-6 bg-primary dark:bg-primary-700">
       <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl bg-white dark:bg-gray-800 rounded-lg shadow p-6 sm:p-8 space-y-5">
         <h2 className="text-xl font-semibold text-center text-gray-800 dark:text-gray-100">
-          Sign Up
+          Create your Account
         </h2>
 
         <Form onSubmit={handleSignUp} className="flex flex-col gap-4">
@@ -197,6 +196,81 @@ export default function Auth() {
               <SelectItem key="male">Male</SelectItem>
               <SelectItem key="female">Female</SelectItem>
             </Select>
+          </div>
+
+          <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300">
+            Upload your valid ID
+          </h3>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            We respect your privacy. Your ID will be used only for identity
+            verification, stored securely, and will not be shared without your
+            consent.
+          </p>
+
+          {/*Front */}
+          <div className="w-full">
+            <span>Front</span>
+            <label
+              htmlFor="image-upload"
+              className="p-2 w-full min-h-40 sm:h-32 rounded-md border-2 border-dashed border-gray-300 flex justify-center items-center bg-gray-50 cursor-pointer hover:border-primary transition"
+            >
+              {preview ? (
+                <Image
+                  src={preview}
+                  radius="none"
+                  className="h-40 sm:h-32 object-cover"
+                />
+              ) : (
+                <div className="flex flex-col items-center">
+                  <CloudDownloadIcon size={28} className="text-gray-400" />
+                  <span className="text-xs text-gray-500">
+                    Click or drag to upload photo
+                  </span>
+                </div>
+              )}
+            </label>
+
+            <input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              name="image"
+              onChange={(e) => setPreview(handleFileChange(e))}
+            />
+          </div>
+
+          {/*Back */}
+          <div className="w-full">
+            <span>Back</span>
+            <label
+              htmlFor="image-upload"
+              className="p-2 w-full min-h-40 sm:h-32 rounded-md border-2 border-dashed border-gray-300 flex justify-center items-center bg-gray-50 cursor-pointer hover:border-primary transition"
+            >
+              {preview ? (
+                <Image
+                  src={preview}
+                  radius="none"
+                  className="h-40 sm:h-32 object-cover"
+                />
+              ) : (
+                <div className="flex flex-col items-center">
+                  <CloudDownloadIcon size={28} className="text-gray-400" />
+                  <span className="text-xs text-gray-500">
+                    Click or drag to upload photo
+                  </span>
+                </div>
+              )}
+            </label>
+
+            <input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              name="image"
+              onChange={(e) => setPreview(handleFileChange(e))}
+            />
           </div>
 
           <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300">

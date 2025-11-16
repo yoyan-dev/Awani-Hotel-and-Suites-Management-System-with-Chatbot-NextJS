@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { RoomType } from "@/types/room";
+import { FetchRoomTypesParams, RoomType } from "@/types/room";
 import {
   addRoomType,
   deleteRoomType,
@@ -18,7 +18,8 @@ export function useRoomTypes() {
     room_type,
     isLoading,
     error,
-    fetchRoomTypes: () => dispatch(fetchRoomTypes()),
+    fetchRoomTypes: (payload: FetchRoomTypesParams) =>
+      dispatch(fetchRoomTypes(payload)),
     fetchRoomTType: (id: string) => dispatch(fetchRoomType(id)),
     addRoomType: (payload: FormData) => dispatch(addRoomType(payload)),
     updateRoomType: (payload: RoomType) => dispatch(updateRoomType(payload)),

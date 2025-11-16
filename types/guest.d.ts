@@ -8,6 +8,7 @@ export interface Guest {
   contact_number?: string;
   address?: string;
   nationality?: string;
+  valid_id?: { front: string; back: string };
   created_at: string;
   bookings?: string[];
 }

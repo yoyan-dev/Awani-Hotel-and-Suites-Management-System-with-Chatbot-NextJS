@@ -1,6 +1,22 @@
+import { FetchRoomsParams, FetchRoomTypesParams } from "@/types/room";
+import { Input } from "@heroui/input";
+import { Button, DatePicker } from "@heroui/react";
+import { User } from "lucide-react";
 import React from "react";
 
-export default function Header() {
+export default function Header({
+  roomQuery,
+  setRoomQuery,
+  desiredGuest,
+  setDesiredGuest,
+  checkAvailability,
+}: {
+  roomQuery: FetchRoomsParams;
+  setRoomQuery: React.Dispatch<React.SetStateAction<FetchRoomsParams>>;
+  desiredGuest: string | undefined;
+  setDesiredGuest: React.Dispatch<React.SetStateAction<string | undefined>>;
+  checkAvailability: () => void;
+}) {
   return (
     <div>
       <h1 className="font-semibold">
@@ -10,6 +26,43 @@ export default function Header() {
         Browse our selection of stylish rooms and spacious suites. Enjoy modern
         amenities, cozy comfort, and great value for your next getaway.
       </p>
+      <div className="pt-4">
+        <div className="flex w-full items-end flex-wrap md:flex-nowrap gap-4">
+          <DatePicker
+            label="Check in"
+            radius="none"
+            variant="bordered"
+            labelPlacement="outside"
+            value={roomQuery.checkIn}
+            onChange={(e) => setRoomQuery({ ...roomQuery, checkIn: e })}
+          />
+          <DatePicker
+            label="Check out"
+            radius="none"
+            variant="bordered"
+            labelPlacement="outside"
+            value={roomQuery.checkOut}
+            onChange={(e) => setRoomQuery({ ...roomQuery, checkOut: e })}
+          />
+          <Input
+            type="number"
+            variant="bordered"
+            width={20}
+            startContent={<User />}
+            radius="none"
+            value={desiredGuest}
+            onChange={(e) => setDesiredGuest(e.target.value)}
+          />
+          <Button
+            radius="none"
+            color="primary"
+            fullWidth
+            onPress={checkAvailability}
+          >
+            Check Availability
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

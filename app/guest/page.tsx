@@ -28,11 +28,11 @@ export default function page() {
     }
 
     getCurrentUser();
-    fetchRoomTypes();
+    fetchRoomTypes({});
   }, []);
   return (
     <div>
-      <HeroBanner user={state.user} isLoading={state.isLoading} />
+      <HeroBanner />
       <About />
       <Stats />
       <RoomsCarousel rooms={room_types} isLoading={isLoading} />

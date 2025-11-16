@@ -18,12 +18,7 @@ import { User as UserType } from "@/types/users";
 import { AvatarPopover } from "./avatar";
 import React from "react";
 
-interface NavbarProps {
-  user: UserType | null;
-  isLoading: boolean;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
+export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = React.useState(false);
   return (
@@ -51,7 +46,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent className="hidden sm:flex gap-4" justify="end">
         {siteConfig.guestNavMenuItems.map((item) => (
           <NavbarItem key={item.href}>
             <Link
@@ -62,15 +57,15 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
             </Link>
           </NavbarItem>
         ))}
+        <ThemeSwitch />
       </NavbarContent>
 
-      <NavbarContent
+      {/* <NavbarContent
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-2">
-          <ThemeSwitch />
-          {isLoading ? (
+        <NavbarItem className="hidden sm:flex gap-2"> */}
+      {/* {isLoading ? (
             <div className="max-w-[300px] w-full flex items-center gap-3">
               <div>
                 <Skeleton className="flex rounded-full w-10 h-10" />
@@ -86,14 +81,14 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
             <Button as={Link} href="/auth" color="primary" variant="bordered">
               Sign Up
             </Button>
-          )}
-        </NavbarItem>
-      </NavbarContent>
+          )} */}
+      {/* </NavbarItem>
+      </NavbarContent> */}
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <ThemeSwitch />
 
-        {isLoading ? (
+        {/* {isLoading ? (
           <Skeleton className="flex rounded-full w-10 h-10" />
         ) : user?.id ? (
           <AvatarPopover user={user} />
@@ -101,7 +96,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
           <Button as={Link} href="/auth" color="primary" variant="bordered">
             Sign Up
           </Button>
-        )}
+        )} */}
       </NavbarContent>
 
       <NavbarMenu>
@@ -121,6 +116,4 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
       </NavbarMenu>
     </HeroUINavbar>
   );
-};
-
-export default Navbar;
+}

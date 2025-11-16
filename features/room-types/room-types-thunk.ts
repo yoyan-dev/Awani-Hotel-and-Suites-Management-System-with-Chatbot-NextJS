@@ -1,28 +1,31 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { RoomType } from "@/types/room";
+import { FetchRoomTypesParams, RoomType } from "@/types/room";
 import { addToast } from "@heroui/react";
 
 const apiUrl = "/api/room-types";
 
-export const fetchRoomTypes = createAsyncThunk<RoomType[]>(
-  "roomTypes/fetchRoomTypes",
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await fetch(apiUrl);
-      const data = await res.json();
+export const fetchRoomTypes = createAsyncThunk<
+  RoomType[],
+  FetchRoomTypesParams | undefined
+>("roomTypes/fetchRoomTypes", async (params, { rejectWithValue }) => {
+  try {
+    const searchParams = new URLSearchParams();
+    if (params?.query) searchParams.append("q", params.query);
+    if (params?.max_guest) searchParams.append("max_guest", params.max_guest);
+    const res = await fetch(`${apiUrl}?${searchParams}`);
+    const data = await res.json();
 
-      if (!res.ok || !data.success) {
-        addToast(data.message);
-        return rejectWithValue(
-          data.message?.description ?? "Failed to fetch room types"
-        );
-      }
-      return data.data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    if (!res.ok || !data.success) {
+      addToast(data.message);
+      return rejectWithValue(
+        data.message?.description ?? "Failed to fetch room types"
+      );
     }
+    return data.data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
   }
-);
+});
 
 export const fetchRoomType = createAsyncThunk<RoomType, string>(
   "roomTypes/fetchRoomType",

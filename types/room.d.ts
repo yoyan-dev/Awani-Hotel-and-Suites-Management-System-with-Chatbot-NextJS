@@ -29,6 +29,11 @@ export interface RoomTypeState {
   error?: string;
 }
 
+export interface FetchRoomTypesParams {
+  query?: string;
+  max_guest?: string;
+}
+
 export interface Room {
   id?: string;
   room_id?: string;
