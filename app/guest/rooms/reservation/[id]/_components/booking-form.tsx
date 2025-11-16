@@ -205,7 +205,7 @@ export default function BookingForm({
                 >
                   <div className="flex items-center gap-4 ">
                     <span className="text-tiny text-default-700 dark:text-default-400">
-                      {request.name}
+                      {request.name} (max {request.max_quantity})
                     </span>
                     <Chip color="success" size="sm" variant="flat">
                       {formatPHP(Number(request.price || 0))}
@@ -232,6 +232,9 @@ export default function BookingForm({
                     <Button
                       size="sm"
                       isIconOnly
+                      isDisabled={
+                        request.quantity === Number(request?.max_quantity)
+                      }
                       onPress={() =>
                         setSpecialRequests((prev) =>
                           prev.map((req) =>
@@ -324,6 +327,7 @@ export default function BookingForm({
             Difficulty of Breathing
           </Checkbox>
           <Checkbox value="severe diarhea">Severe Diarhea</Checkbox>
+          <Checkbox value="severe diarhea">None</Checkbox>
         </CheckboxGroup>
       </div>
       <div className="space-y-4">

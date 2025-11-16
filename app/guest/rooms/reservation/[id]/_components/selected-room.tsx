@@ -20,7 +20,9 @@ const SelectedRoom: React.FC<SelectedRoomProps> = ({ room, isLoading }) => {
     <div className="flex-1 hidden md:block">
       <div className="flex flex-col items-start gap-2">
         <div className="flex gap-2 overflow-x-auto">
-          <Image src={room.image} alt="room image" width="100%" />
+          {room.image ? (
+            <Image src={room.image} alt="room image" width="100%" />
+          ) : null}
         </div>
         <div className="flex justify-between items-center flex-wrap  w-full">
           <div className="flex gap-2">

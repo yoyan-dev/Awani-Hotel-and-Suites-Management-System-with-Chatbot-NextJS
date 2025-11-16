@@ -57,6 +57,7 @@ export default function Page() {
         room.add_ons.map((item: any) => ({
           name: item.name,
           price: item.price,
+          max_quantity: item.max_quantity,
           quantity: 0,
         }))
       );
