@@ -15,12 +15,17 @@ import { Copyright, Plus, Upload } from "lucide-react";
 import AddOnsInput from "../add-ons-input";
 import { useRoomTypes } from "@/hooks/use-room-types";
 
+interface AddOn {
+  item_id: string;
+  name: string;
+  price: number;
+  max_quantity: number;
+}
+
 export default function AddModal() {
   const { isLoading, error, addRoomType } = useRoomTypes();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-  const [addOns, setAddOns] = useState<
-    { item_id: string; name: string; price: string; max_quantity: number }[]
-  >([]);
+  const [addOns, setAddOns] = useState<AddOn[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {

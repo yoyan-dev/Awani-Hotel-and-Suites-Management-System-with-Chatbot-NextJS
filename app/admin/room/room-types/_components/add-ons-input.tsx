@@ -8,7 +8,7 @@ import { useInventory } from "@/hooks/use-inventory";
 interface AddOn {
   item_id: string;
   name: string;
-  price: string;
+  price: number;
   max_quantity: number;
 }
 
@@ -33,8 +33,8 @@ export default function AddOns({ addOns, setAddOns }: AddOnsProps) {
       ...addOns,
       {
         item_id: itemID,
-        name: item?.name,
-        price: item?.price,
+        name: item?.name ?? "",
+        price: item?.price ?? 0,
         max_quantity: Number(maxQuantity) || 0,
       },
     ]);
@@ -86,7 +86,7 @@ export default function AddOns({ addOns, setAddOns }: AddOnsProps) {
             key={index}
             onClose={() => setAddOns(addOns.filter((_, i) => i !== index))}
           >
-            {row.name} {formatPHP(Number(row.price) ?? 0)}
+            {row.name} {formatPHP(row.price ?? 0)}
             {row.max_quantity ? ` (x${row.max_quantity})` : null}
           </Chip>
         ))}
