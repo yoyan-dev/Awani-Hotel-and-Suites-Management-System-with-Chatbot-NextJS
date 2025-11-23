@@ -58,11 +58,16 @@ export default function AdminNavbar() {
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
+            <NavbarMenuItem key={`${item.href}-${index}`}>
               <Link
                 as={NextLink}
                 href={item.href}
-                color={pathname === item.href ? "primary" : "foreground"}
+                color={
+                  pathname === item.href &&
+                  siteConfig.navMenuItems[index].href === item.href
+                    ? "primary"
+                    : "foreground"
+                }
                 size="lg"
                 onPress={() => setMenuOpen(false)}
               >

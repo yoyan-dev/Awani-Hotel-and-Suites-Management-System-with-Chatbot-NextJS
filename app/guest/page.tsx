@@ -10,6 +10,7 @@ import Testimonials from "./_components/sections/review-section";
 import { User } from "@/types/users";
 import { supabase } from "@/lib/supabase/supabase-client";
 import { useRoomTypes } from "@/hooks/use-room-types";
+import PeakSeasonDate from "./_components/sections/peak-season.date";
 
 export default function page() {
   const { room_types, isLoading, fetchRoomTypes } = useRoomTypes();
@@ -32,10 +33,11 @@ export default function page() {
   }, []);
   return (
     <div>
-      <HeroBanner />
+      <HeroBanner user={state.user} isLoading={state.isLoading} />
       <About />
       <Stats />
       <RoomsCarousel rooms={room_types} isLoading={isLoading} />
+      {/* <PeakSeasonDate rooms={room_types} isLoading={isLoading} /> */}
       <HotelPoolSection />
       {/* <RoomsAndSuites rooms={room_types} isLoading={isLoading} /> */}
       <Testimonials />

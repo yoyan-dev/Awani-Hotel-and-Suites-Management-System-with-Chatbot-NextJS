@@ -96,6 +96,8 @@ export const RoomsCarousel: React.FC<RoomProps> = ({ rooms, isLoading }) => {
                     </Card> */}
                 <Card
                   isFooterBlurred
+                  as={Link}
+                  href={`/guest/rooms/reservation/${room.id}`}
                   className="w-full h-[300px] col-span-12 sm:col-span-7 dark:bg-gray-900"
                 >
                   <CardHeader className="absolute z-10 top-1 flex-col items-start">
@@ -105,6 +107,9 @@ export const RoomsCarousel: React.FC<RoomProps> = ({ rooms, isLoading }) => {
                     <h4 className="text-white/90 font-medium text-xl">
                       Discover your perfect stay with us
                     </h4>
+                    <span className="px-2 text-white bg-primary">
+                      {formatPHP(Number(room.price))}/night
+                    </span>
                   </CardHeader>
                   <Image
                     removeWrapper
@@ -112,13 +117,13 @@ export const RoomsCarousel: React.FC<RoomProps> = ({ rooms, isLoading }) => {
                     className="z-0 w-full h-full object-cover"
                     src={room.image || "/bg.jpg"}
                   />
-                  <CardFooter className="absolute flex gap-2 bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
+                  <CardFooter className="absolute flex gap-2 bg-black/20 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
                     <div className="flex grow gap-2 items-center">
-                      <Image
+                      {/* <Image
                         alt="Breathing app icon"
                         className="rounded-full w-10 h-10 bg-black"
                         src={room.image || "/bg.jpg"}
-                      />
+                      /> */}
                       <div className="flex flex-col">
                         <p className="text-tiny text-white/60 capitalize">
                           {room.name}
@@ -128,9 +133,6 @@ export const RoomsCarousel: React.FC<RoomProps> = ({ rooms, isLoading }) => {
                         </p>
                       </div>
                     </div>
-                    <span className="px-2 bg-white dark:bg-gray-800 dark:text-white">
-                      {formatPHP(Number(room.price))}
-                    </span>
                   </CardFooter>
                 </Card>
               </CarouselItem>
