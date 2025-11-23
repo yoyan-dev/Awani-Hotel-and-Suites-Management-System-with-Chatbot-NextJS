@@ -11,7 +11,7 @@ export const HeroBanner: React.FC<Props> = ({ user, isLoading }) => {
   return (
     <section
       className="h-[500px] flex flex-col items-center justify-center text-center text-white bg-cover bg-center"
-      style={{ backgroundImage: "url('/bg.png')" }}
+      style={{ backgroundImage: "url('/bg.jpg')" }}
     >
       <h1 className="text-4xl font-bold">
         Welcome to Our Luxurious Hotel & Suites

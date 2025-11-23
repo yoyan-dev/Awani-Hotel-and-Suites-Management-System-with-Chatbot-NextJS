@@ -107,12 +107,11 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.guestNavMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={item.href === pathname ? "primary" : "foreground"}
-                href={item.href}
-                onPress={() => setMenuOpen(false)}
-              >
+            <NavbarMenuItem
+              key={`${item}-${index}`}
+              isActive={item.href === pathname ? true : false}
+            >
+              <Link href={item.href} onPress={() => setMenuOpen(false)}>
                 {item.label}
               </Link>
             </NavbarMenuItem>

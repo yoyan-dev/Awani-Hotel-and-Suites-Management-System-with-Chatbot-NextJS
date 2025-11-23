@@ -17,7 +17,7 @@ export default function Page() {
   const [images, setImages] = React.useState<any[]>([]);
 
   React.useEffect(() => {
-    fetchRoomTypes();
+    fetchRoomTypes({});
   }, [error]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

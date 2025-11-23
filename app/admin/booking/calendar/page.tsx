@@ -21,7 +21,7 @@ export default function Calendar() {
   const [delayed, setDelayed] = React.useState(false);
 
   React.useEffect(() => {
-    fetchRoomTypes();
+    fetchRoomTypes({});
   }, []);
 
   React.useEffect(() => {
