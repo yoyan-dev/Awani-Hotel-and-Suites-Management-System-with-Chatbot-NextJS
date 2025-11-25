@@ -41,7 +41,7 @@ export default function AddModal({ query }: { query: FetchBookingParams }) {
   >([]);
 
   React.useEffect(() => {
-    fetchRoomTypes();
+    fetchRoomTypes({});
     fetchGuests();
   }, []);
 

@@ -32,7 +32,7 @@ export default function Page() {
 
   React.useEffect(() => {
     if (id) fetchRoom(id as string);
-    fetchRoomTypes();
+    fetchRoomTypes({});
   }, [error, id]);
 
   React.useEffect(() => {

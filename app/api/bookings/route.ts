@@ -71,7 +71,7 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     data: bookingData,
     error,
     count,
-  } = await q.order("created_at", { ascending: true }).range(from, to);
+  } = await q.order("created_at", { ascending: false }).range(from, to);
 
   if (error) {
     console.error("Error fetching bookings:", error.message);

@@ -1,12 +1,15 @@
 "use client";
-import React, { useState } from "react";
-import { Input, Button, Chip } from "@heroui/react";
+import React, { useEffect, useState } from "react";
+import { Input, Button, Chip, Select, SelectItem } from "@heroui/react";
 import { Plus } from "lucide-react";
 import { formatPHP } from "@/lib/format-php";
+import { useInventory } from "@/hooks/use-inventory";
 
 interface AddOn {
+  item_id: string;
   name: string;
-  price: string;
+  price: number;
+  max_quantity: number;
 }
 
 interface AddOnsProps {
@@ -15,15 +18,28 @@ interface AddOnsProps {
 }
 
 export default function AddOns({ addOns, setAddOns }: AddOnsProps) {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+  const { inventory, isLoading, error, fetchInventory } = useInventory();
+  const [itemID, setItemID] = useState("");
+  const [maxQuantity, setMaxQuantity] = useState("");
+
+  useEffect(() => {
+    fetchInventory();
+  }, [error]);
 
   const addItem = () => {
-    if (name.trim()) {
-      setAddOns([...addOns, { name: name.trim(), price: price.trim() }]);
-      setName("");
-      setPrice("");
-    }
+    if (!itemID) return;
+    const item = inventory.find((inv) => inv.id === itemID);
+    setAddOns([
+      ...addOns,
+      {
+        item_id: itemID,
+        name: item?.name ?? "",
+        price: item?.price ?? 0,
+        max_quantity: Number(maxQuantity) || 0,
+      },
+    ]);
+    setItemID("");
+    setMaxQuantity("");
   };
 
   return (
@@ -35,19 +51,27 @@ export default function AddOns({ addOns, setAddOns }: AddOnsProps) {
       </p>
 
       <div className="flex gap-2">
-        <Input
-          placeholder="Add-on item"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          variant="bordered"
+        <Select
+          isLoading={isLoading}
           radius="none"
-        />
+          labelPlacement="outside"
+          placeholder="Select Item"
+          variant="bordered"
+          value={itemID}
+          onChange={(e) => setItemID(e.target.value)}
+        >
+          {inventory.map((inv) => (
+            <SelectItem key={inv.id} textValue={inv.name}>
+              <span className="text-small">{inv.name}</span>
+            </SelectItem>
+          ))}
+        </Select>
+
         <Input
-          placeholder="Price 00.00"
-          value={price}
-          startContent="₱"
+          placeholder="Item Max quantity"
+          value={maxQuantity}
           type="number"
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e) => setMaxQuantity(e.target.value)}
           variant="bordered"
           radius="none"
         />
@@ -62,7 +86,8 @@ export default function AddOns({ addOns, setAddOns }: AddOnsProps) {
             key={index}
             onClose={() => setAddOns(addOns.filter((_, i) => i !== index))}
           >
-            {row.name} {row.price && formatPHP(Number(row.price))}
+            {row.name} {formatPHP(row.price ?? 0)}
+            {row.max_quantity ? ` (x${row.max_quantity})` : null}
           </Chip>
         ))}
       </div>

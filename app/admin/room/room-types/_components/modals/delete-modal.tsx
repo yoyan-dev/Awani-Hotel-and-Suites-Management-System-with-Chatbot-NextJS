@@ -23,7 +23,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ room, isOpen, onClose }) => {
   async function handleDelete() {
     await deleteRoomType(room.id || "");
     if (!error) {
-      fetchRoomTypes();
+      fetchRoomTypes({});
     }
   }
 

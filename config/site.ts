@@ -152,6 +152,10 @@ export const siteConfig = {
       href: "/guest/rooms",
     },
     {
+      label: "Your Stay",
+      href: "/guest/booking",
+    },
+    {
       label: "About Us",
       href: "/guest/about",
     },

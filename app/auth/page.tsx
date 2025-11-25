@@ -18,22 +18,31 @@ export default function Auth() {
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+      if (error) {
+        setMessage({ error: true, message: error.message });
+        return;
+      } else {
+        setMessage({ error: false, message: "Logged in successfully!" });
+        console.log(data);
+      }
 
-    if (error) setMessage({ error: true, message: error.message });
-    else setMessage({ error: false, message: "Logged in successfully!" });
-    console.log(data);
-
-    const roles = data?.user?.app_metadata?.roles || [];
-    if (roles.includes("admin")) router.push("/admin");
-    else if (roles?.includes("front-office")) router?.push("/front-office");
-    else if (roles?.includes("housekeeping")) router?.push("/housekeeping");
-    else router.push("/guest");
-    setIsLoading(false);
+      const roles = data?.user?.app_metadata?.roles || [];
+      if (roles.includes("admin")) router.push("/admin");
+      else if (roles?.includes("front-office")) router?.push("/front-office");
+      else if (roles?.includes("housekeeping")) router?.push("/housekeeping");
+      else router.push("/guest");
+      setIsLoading(false);
+    } catch (e) {
+      setMessage({ error: true, message: "Unknow Error!" });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (

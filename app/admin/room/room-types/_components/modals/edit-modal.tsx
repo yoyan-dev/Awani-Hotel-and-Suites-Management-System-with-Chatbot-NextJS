@@ -23,13 +23,17 @@ interface UpdateModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+interface AddOn {
+  item_id: string;
+  name: string;
+  price: number;
+  max_quantity: number;
+}
 
 const UpdateModal: React.FC<UpdateModalProps> = ({ room, isOpen, onClose }) => {
   const { isLoading, updateRoomType } = useRoomTypes();
   const [formData, setFormData] = useState<RoomType>(room);
-  const [addOns, setAddOns] = useState<{ name: string; price: string }[]>(
-    room.add_ons ?? []
-  );
+  const [addOns, setAddOns] = useState<AddOn[]>(room.add_ons ?? []);
   const [preview, setPreview] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {

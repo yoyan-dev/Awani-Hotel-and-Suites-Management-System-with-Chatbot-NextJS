@@ -16,21 +16,13 @@ import {
 import React from "react";
 import SkeletonLoader from "../../_components/skeleton-loader";
 import { User } from "@/types/users";
-import LoginPromptModal from "../../_components/modals/login-prompt-modal";
 
 interface RoomProps {
   rooms: RoomType[];
-  user: User | null;
   typesLoading: boolean;
-  userLoading: boolean;
 }
 
-export const RoomsList: React.FC<RoomProps> = ({
-  rooms,
-  user,
-  typesLoading,
-  userLoading,
-}) => {
+export const RoomsList: React.FC<RoomProps> = ({ rooms, typesLoading }) => {
   return (
     <div className="md:p-4">
       {typesLoading ? (
@@ -74,18 +66,14 @@ export const RoomsList: React.FC<RoomProps> = ({
                         {formatPHP(Number(room.price))} / night
                       </p>
                     </div>
-                    {user?.id && !userLoading ? (
-                      <Button
-                        as={Link}
-                        href={`/guest/rooms/reservation/${room.id}`}
-                        fullWidth
-                        color="primary"
-                      >
-                        Book Now
-                      </Button>
-                    ) : (
-                      <LoginPromptModal name="Book Now" />
-                    )}
+                    <Button
+                      as={Link}
+                      href={`/guest/rooms/reservation/${room.id}`}
+                      fullWidth
+                      color="primary"
+                    >
+                      Book Now
+                    </Button>
                   </div>
                 </CardFooter>
               </Card>
@@ -95,7 +83,7 @@ export const RoomsList: React.FC<RoomProps> = ({
       ) : (
         <div className="flex justify-center items-center h-64">
           <span className="text-gray-600 dark:text-gray-300">
-            No rooms found.
+            No available rooms found.
           </span>
         </div>
       )}

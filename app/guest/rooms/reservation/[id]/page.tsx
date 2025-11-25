@@ -32,7 +32,7 @@ export default function Page() {
       data: { user },
       error,
     } = await supabase.auth.getUser();
-
+    console.log(user);
     if (user?.id) {
       await fetchGuest(user.id);
       return;
@@ -40,7 +40,7 @@ export default function Page() {
   }
 
   React.useEffect(() => {
-    fetchRoomTypes();
+    fetchRoomTypes({});
     getCurrentUser();
   }, []);
 
@@ -57,6 +57,7 @@ export default function Page() {
         room.add_ons.map((item: any) => ({
           name: item.name,
           price: item.price,
+          max_quantity: item.max_quantity,
           quantity: 0,
         }))
       );

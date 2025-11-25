@@ -3,7 +3,7 @@
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Listbox, ListboxItem, cn } from "@heroui/react";
+import { Image, Listbox, ListboxItem, cn } from "@heroui/react";
 import { siteConfig } from "@/config/site";
 import { useState } from "react";
 import UserPopover from "./user-popover";
@@ -30,18 +30,28 @@ export default function AdminSidebar() {
       <ListboxWrapper collapsed={collapsed}>
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-6 z-10 bg-primary-500 text-white p-1.5 rounded-full shadow-md hover:scale-105 hover:shadow-lg transition-transform"
+          className="absolute -right-3 top-6 z-10 bg-primary-400 text-white p-1.5 rounded-full shadow-md hover:scale-105 hover:shadow-lg transition-transform"
         >
           {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
 
-        <div
+        {/* <div
           className={cn(
             "flex items-center gap-2 bg-gradient-to-r from-primary-100/60 to-primary-50/60 dark:from-gray-800 dark:to-gray-700 p-3 rounded-lg shadow-sm m-3 transition-all duration-300",
             collapsed && "justify-center"
           )}
         >
           <UserPopover collapsed={collapsed} />
+        </div> */}
+        <div className="flex flex-col justify-center items-center  bg-primary py-4 text-white transition">
+          <Image
+            alt="Awani logo"
+            src="/awani-logo.png"
+            width={collapsed ? 40 : 100}
+            className="bg-black/80 p-2"
+            radius="full"
+          />
+          {!collapsed ? "Ma AWANI" : ""}
         </div>
 
         <nav className="flex-1 overflow-y-auto scrollbar-hide px-2 mt-3">
@@ -59,12 +69,12 @@ export default function AdminSidebar() {
                   as={NextLink}
                   href={item.href}
                   className={cn(
-                    "group flex items-center gap-3 py-3 px-3 rounded-md transition-all duration-200",
+                    "group flex items-center gap-3 py-3 px-3 rounded-lg transition-all duration-200 ",
                     isActive
-                      ? "text-primary-500 font-semibold border-l-4 border-primary-500 bg-primary-50/40 dark:bg-primary-900/10"
+                      ? "text-primary-600 font-semibold"
                       : item.label === "Logout"
-                        ? "text-red-500 hover:text-red-600"
-                        : "text-gray-600 dark:text-gray-300 hover:text-primary-500"
+                        ? "text-red-500 hover:text-red-600 border-transparent"
+                        : "text-gray-600 dark:text-gray-300 hover:text-primary-500 border-transparent hover:bg-gray-100 dark:hover:bg-gray-800"
                   )}
                   startContent={
                     <item.icon

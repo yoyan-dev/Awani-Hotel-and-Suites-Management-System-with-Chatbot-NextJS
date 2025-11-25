@@ -6,9 +6,7 @@ import BookingTable from "./_components/table/booking-table";
 import { Booking } from "@/types/booking";
 import CenterRow from "./_components/center-row";
 import { useBookings } from "@/hooks/use-bookings";
-import { useHousekeeping } from "@/hooks/use-housekeeping";
 import { columns, INITIAL_VISIBLE_COLUMNS } from "@/app/constants/booking";
-import { HousekeepingTask } from "@/types/housekeeping";
 
 export default function Overview() {
   const {
@@ -18,8 +16,6 @@ export default function Overview() {
     fetchBookings,
     updateBooking,
   } = useBookings();
-
-  const { addHousekeepingTask } = useHousekeeping();
 
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<any>(new Set([]));
@@ -90,6 +86,14 @@ export default function Overview() {
     return { totalRevenue, upcoming, occupied };
   }, [bookings]);
 
+  const filteredBookings = React.useMemo(() => {
+    const statusToFilter = ["confirmed", "check-in"];
+    return (
+      bookings.filter((booking) => statusToFilter.includes(booking.status)) ||
+      ([] as Booking[])
+    );
+  }, [bookings]);
+
   return (
     <div className="min-h-screen p-4 bg-gradient-to-b from-slate-50 to-white dark:from-gray-900 dark:to-gray-900">
       <div className="max-w-7xl mx-auto spcae-y-4">
@@ -99,7 +103,7 @@ export default function Overview() {
 
         <BookingTable
           items={items}
-          bookings={bookings}
+          bookings={filteredBookings}
           headerColumns={headerColumns}
           hasSearchFilter={hasSearchFilter}
           page={page}

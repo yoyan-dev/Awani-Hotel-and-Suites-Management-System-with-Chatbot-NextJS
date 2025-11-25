@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
 import { Guest } from "@/types/guest";
+import { uploadUserImage } from "../../../lib/upload-user-image";
+import { uploadValidIDImage } from "@/lib/upload-valid-id";
 
 export async function GET(): Promise<NextResponse<ApiResponse>> {
   const { data: guest, error } = await supabase.from("guest").select("*");
@@ -49,8 +51,30 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       nationality,
       gender,
       email,
-      image,
     } = Object.fromEntries(formData.entries());
+
+    const imageFile = (formData.get("image") as File) || null;
+    const frontImageFile = (formData.get("front") as File) || null;
+    const backImageFIle = (formData.get("back") as File) || null;
+
+    if (!frontImageFile || !backImageFIle) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: {
+            title: "Error",
+            description: "Please provide a valid ID.",
+            color: "danger",
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    const validIdImage = await uploadValidIDImage(
+      frontImageFile,
+      backImageFIle
+    );
 
     const newData = {
       id,
@@ -60,7 +84,8 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       nationality,
       gender,
       email,
-      image,
+      image: await uploadUserImage(imageFile),
+      valid_id: { front: validIdImage.front, back: validIdImage.back },
     };
     const { data, error } = await supabase
       .from("guest")

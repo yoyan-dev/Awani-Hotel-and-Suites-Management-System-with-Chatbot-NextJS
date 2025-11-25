@@ -50,7 +50,16 @@ export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
     case "status":
       return (
         <div>
-          <Select
+          <Chip
+            size="sm"
+            color={
+              statusColorMap[room.status as keyof typeof statusColorMap] ||
+              "default"
+            }
+          >
+            {room.status}
+          </Chip>
+          {/* <Select
             isLoading={isLoading}
             size="sm"
             defaultSelectedKeys={[room.status || ""]}
@@ -66,7 +75,7 @@ export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
             <SelectItem key="reserved">Reserved</SelectItem>
             <SelectItem key="occupied">Occupied</SelectItem>
             <SelectItem key="maintenance">Maintenance</SelectItem>
-          </Select>
+          </Select> */}
         </div>
       );
     case "actions":

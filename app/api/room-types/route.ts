@@ -6,8 +6,23 @@ import { uploadRoomImage } from "@/lib/upload-room-image";
 
 let roomTypes: RoomType[];
 
-export async function GET(): Promise<NextResponse<ApiResponse>> {
-  const { data: item, error } = await supabase.from("room_types").select("*");
+export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
+  const { searchParams } = new URL(req.url);
+
+  const query = searchParams.get("q") || "";
+  const max_guest = searchParams.get("max_guest") || "";
+  let q = supabase.from("room_types").select("*");
+
+  if (query) {
+    q = q.or(`
+    name.ilike.%${query}%,
+  `);
+  }
+
+  if (max_guest) {
+    q = q.eq("max_guest", Number(max_guest));
+  }
+  const { data: item, error } = await q;
 
   if (error) {
     console.error("Error fetching room types:", error.message);
