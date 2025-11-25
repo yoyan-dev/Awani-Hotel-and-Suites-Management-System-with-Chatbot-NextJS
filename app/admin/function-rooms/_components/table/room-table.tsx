@@ -11,7 +11,7 @@ import {
 import {
   columns,
   INITIAL_VISIBLE_COLUMNS,
-} from "../../../../../constants/rooms";
+} from "../../../../constants/rooms";
 import { RenderCell } from "./render-cell";
 import { TableTopContent } from "./top-content";
 import { TableBottomContent } from "./bottom-content";
