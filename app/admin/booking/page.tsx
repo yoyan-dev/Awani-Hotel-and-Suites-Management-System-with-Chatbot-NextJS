@@ -66,7 +66,7 @@ export default function Overview() {
 
   React.useEffect(() => {
     fetchBookings(undefined);
-  }, [bookingError]);
+  }, []);
 
   async function handleSubmit(payload: Booking) {
     console.log(payload);

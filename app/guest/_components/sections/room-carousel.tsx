@@ -4,14 +4,11 @@ import { RoomType } from "@/types/room";
 import {
   Button,
   Card,
-  CardBody,
   CardFooter,
   CardHeader,
   Image,
   Link,
-  Spinner,
 } from "@heroui/react";
-import { ArrowUpRight, Bed, Tv, UserCircle, Wifi } from "lucide-react";
 import { formatPHP } from "@/lib/format-php";
 import { Carousel, CarouselItem } from "@/components/ui/carousel";
 import SkeletonLoader from "../skeleton-loader";
@@ -20,6 +17,7 @@ interface RoomProps {
   rooms: RoomType[];
   isLoading: boolean;
 }
+
 export const RoomsCarousel: React.FC<RoomProps> = ({ rooms, isLoading }) => {
   function shuffle<T>(array: T[]): T[] {
     const copy = [...array];
@@ -35,103 +33,65 @@ export const RoomsCarousel: React.FC<RoomProps> = ({ rooms, isLoading }) => {
   return (
     <div>
       {!isLoading ? (
-        <section className="space-y-4 py-8 border-b border-gray-300">
-          <div className="space-y-4 text-center">
-            <h3>Rooms & Suites</h3>
-            <h1 className="text-2xl">Our Exquisite Rooms Collection</h1>
+        <section className="space-y-8 py-16 bg-gray-50">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <h3 className="text-primary font-semibold tracking-wide uppercase">
+              Rooms & Suites
+            </h3>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
+              Explore Our Exquisite Room Collection
+            </h1>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Enjoy comfort, luxury, and modern amenities crafted for your
+              perfect stay.
+            </p>
           </div>
+
+          {/* Carousel */}
           <Carousel
             autoScroll
             autoScrollInterval={2500}
             itemsPerView={1}
             dotType="image"
             responsive={{ sm: 1, md: 2, lg: 3, xl: 3 }}
+            className="max-w-7xl mx-auto"
           >
             {randomRooms.map((room) => (
               <CarouselItem key={room.id}>
-                {/* <Card
-                    isHoverable
-                    
-                    className="w-full sm:w-72 md:w-80 lg:w-96 h-full flex flex-col"
-                    >
-                    <CardBody className="flex flex-col h-full">
-                        <Image
-                        src="/bg.jpg"
-                        alt={room.room_type}
-                        className="rounded-lg w-full h-48 object-cover"
-                        />
-                        <div className="mt-4 flex flex-col flex-1 justify-between gap-4">
-                        <div>
-                            <div className="flex justify-between items-center gap-4">
-                            <p className="font-semibold capitalize">
-                                {room.room_type}
-                            </p>
-                            {formatPHP(Number(room.base_price))}
-                            </div>
-                            <p className="font-light text-gray-500">
-                            {room.description}
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-medium mb-2">
-                            Room Features
-                            </h3>
-                            <div className="flex gap-4 text-gray-700 flex-wrap">
-                            <div className="flex items-center gap-2">
-                                <UserCircle size={20} /> 2 Guests
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Bed size={20} /> 1 Queen Bed
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Wifi size={20} /> Free WiFi
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Tv size={20} /> Smart TV
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-                    </CardBody>
-                    </Card> */}
                 <Card
                   isFooterBlurred
                   as={Link}
                   href={`/guest/rooms/reservation/${room.id}`}
-                  className="w-full h-[300px] col-span-12 sm:col-span-7 dark:bg-gray-900"
+                  className="w-full h-[320px] rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all bg-gray-900/40"
                 >
-                  <CardHeader className="absolute z-10 top-1 flex-col items-start">
-                    <p className="text-tiny text-white/60 uppercase font-bold">
-                      Comfort & Relaxation
-                    </p>
-                    <h4 className="text-white/90 font-medium text-xl">
-                      Discover your perfect stay with us
+                  {/* Header Overlay */}
+                  <CardHeader className="absolute z-10 top-3 left-3 flex-col items-start bg-black/40 px-4 py-2 rounded-xl backdrop-blur-md">
+                    <span className="uppercase text-xs text-white/70 font-semibold">
+                      Comfort & Luxury
+                    </span>
+                    <h4 className="text-white font-semibold text-lg leading-tight">
+                      {room.name}
                     </h4>
-                    <span className="px-2 text-white bg-primary">
+                    <span className="mt-1 px-2 py-1 bg-primary text-white text-xs font-medium rounded">
                       {formatPHP(Number(room.price))}/night
                     </span>
                   </CardHeader>
+
+                  {/* Room Image */}
                   <Image
                     removeWrapper
-                    alt="Relaxing app background"
+                    alt={room.name}
                     className="z-0 w-full h-full object-cover"
                     src={room.image || "/bg.jpg"}
                   />
-                  <CardFooter className="absolute flex gap-2 bg-black/20 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
-                    <div className="flex grow gap-2 items-center">
-                      {/* <Image
-                        alt="Breathing app icon"
-                        className="rounded-full w-10 h-10 bg-black"
-                        src={room.image || "/bg.jpg"}
-                      /> */}
-                      <div className="flex flex-col">
-                        <p className="text-tiny text-white/60 capitalize">
-                          {room.name}
-                        </p>
-                        <p className="text-tiny text-white/60">
-                          {room.description}
-                        </p>
-                      </div>
+
+                  {/* Footer Overlay */}
+                  <CardFooter className="absolute bottom-0 w-full bg-black/30 backdrop-blur-md border-t border-white/10 px-4 py-3">
+                    <div className="flex flex-col">
+                      <p className="text-sm text-white/80 line-clamp-1">
+                        {room.description}
+                      </p>
                     </div>
                   </CardFooter>
                 </Card>

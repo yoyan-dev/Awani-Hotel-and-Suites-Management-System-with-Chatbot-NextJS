@@ -21,6 +21,7 @@ import CheckInButton from "./mark-check-in";
 import MarkCancelled from "./mark-cancelled";
 import React from "react";
 import ExtendModal from "../../../_components/modals/extend-modal";
+import EditModal from "../../../_components/modals/edit-modal";
 
 export default function BookingActionsDropdown({
   booking,
@@ -28,12 +29,18 @@ export default function BookingActionsDropdown({
   booking: Booking;
 }) {
   const [extendOpen, setExtendOpen] = React.useState(false);
+  const [editModalOpen, setEditModalOpen] = React.useState(false);
   return (
     <>
       <ExtendModal
         booking={booking}
         isOpen={extendOpen}
         onClose={() => setExtendOpen(false)}
+      />
+      <EditModal
+        booking={booking}
+        isOpen={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
       />
       <Dropdown>
         <DropdownTrigger>
@@ -54,6 +61,7 @@ export default function BookingActionsDropdown({
           <DropdownItem
             key="edit"
             startContent={<Pencil className="w-4 h-4" />}
+            onClick={() => setEditModalOpen(true)}
           >
             Edit Booking
           </DropdownItem>

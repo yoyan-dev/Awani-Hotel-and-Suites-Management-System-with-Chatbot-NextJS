@@ -11,6 +11,7 @@ import { User } from "@/types/users";
 import { supabase } from "@/lib/supabase/supabase-client";
 import { useRoomTypes } from "@/hooks/use-room-types";
 import PeakSeasonDate from "./_components/sections/peak-season.date";
+import BanquetSection from "./_components/sections/banquet-section";
 
 export default function page() {
   const { room_types, isLoading, fetchRoomTypes } = useRoomTypes();
@@ -37,6 +38,7 @@ export default function page() {
       <About />
       <Stats />
       <RoomsCarousel rooms={room_types} isLoading={isLoading} />
+      <BanquetSection />
       {/* <PeakSeasonDate rooms={room_types} isLoading={isLoading} /> */}
       <HotelPoolSection />
       {/* <RoomsAndSuites rooms={room_types} isLoading={isLoading} /> */}
