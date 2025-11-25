@@ -9,11 +9,11 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex gap-4 h-screen  bg-slate-50 dark:bg-gray-800">
+    <div className="flex  h-screen  bg-slate-50 dark:bg-gray-800">
       <Sidebar />
       <main className="w-full min-h-screen max-h-screen overflow-y-auto space-y-4">
         <AdminNavbar />
-        <div className=" rounded">{children}</div>
+        <div className=" rounded ml-4">{children}</div>
       </main>
     </div>
   );

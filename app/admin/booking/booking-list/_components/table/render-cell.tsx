@@ -76,48 +76,7 @@ export const RenderCell = ({ booking, columnKey }: RenderCellProps) => {
         </Chip>
       );
     case "actions":
-      return (
-        <BookingActionsDropdown booking={booking} />
-        // <div className="flex gap-2">
-        //   {booking.status === "pending" ? (
-        //     <MarkCancelled id={booking.id} />
-        //   ) : null}
-        //   <div className="relative flex justify-end items-center gap-2">
-        //     {booking.status === "confirmed" ? (
-        //       <CheckInButton booking={booking} />
-        //     ) : booking.status === "check-in" ? (
-        //       <CheckOutButton booking={booking} />
-        //     ) : null}
-        //     <Dropdown className="bg-background border-1 border-default-200">
-        //       <DropdownTrigger>
-        //         <Button isIconOnly radius="full" size="sm" variant="light">
-        //           <EllipsisVertical className="text-default-400" />
-        //         </Button>
-        //       </DropdownTrigger>
-        //       {booking.status !== "cancelled" ? (
-        //         <DropdownMenu>
-        //           <DropdownItem
-        //             key="view"
-        //             as={Link}
-        //             href={`booking/${booking.id}`}
-        //             color="primary"
-        //           >
-        //             <div className="flex items-center gap-2">
-        //               <Eye size={15} /> View
-        //             </div>
-        //           </DropdownItem>
-        //           <DropdownItem key="edit">Edit</DropdownItem>
-        //           <DropdownItem key="delete">Delete</DropdownItem>
-        //         </DropdownMenu>
-        //       ) : (
-        //         <DropdownMenu>
-        //           <DropdownItem key="delete">Delete</DropdownItem>
-        //         </DropdownMenu>
-        //       )}
-        //     </Dropdown>
-        //   </div>
-        // </div>
-      );
+      return <BookingActionsDropdown booking={booking} />;
     default:
       return cellValue;
   }

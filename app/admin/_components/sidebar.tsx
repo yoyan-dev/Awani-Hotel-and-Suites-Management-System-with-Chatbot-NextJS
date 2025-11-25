@@ -3,9 +3,9 @@
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Image, Listbox, ListboxItem, cn } from "@heroui/react";
+import { Image, Link, Listbox, ListboxItem, cn } from "@heroui/react";
 import { siteConfig } from "@/config/site";
-import { useState } from "react";
+import React from "react";
 import UserPopover from "./user-popover";
 
 export const ListboxWrapper = ({ children, collapsed }: any) => {
@@ -23,17 +23,20 @@ export const ListboxWrapper = ({ children, collapsed }: any) => {
 
 export default function AdminSidebar() {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = React.useState(false);
 
   return (
     <aside className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl hidden lg:flex shadow-xl">
       <ListboxWrapper collapsed={collapsed}>
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-6 z-10 bg-primary-400 text-white p-1.5 rounded-full shadow-md hover:scale-105 hover:shadow-lg transition-transform"
+          className="absolute -right-3 top-40 z-10 bg-primary-400 text-white p-1.5 rounded-full shadow-md hover:scale-105 hover:shadow-lg transition-transform"
         >
           {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
+        {/* <div className="space-y-1 absolute -right-10 top-40 z-10 bg-white">
+          <Link>sample</Link>
+        </div> */}
 
         {/* <div
           className={cn(

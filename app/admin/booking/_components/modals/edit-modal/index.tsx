@@ -20,29 +20,34 @@ import GuestInfoSection from "./guest-info-section";
 import { useBookings } from "@/hooks/use-bookings";
 import { useRoomTypes } from "@/hooks/use-room-types";
 import { useRooms } from "@/hooks/use-rooms";
-import { FetchBookingParams } from "@/types/booking";
-import { useGuests } from "@/hooks/use-guests";
+import { Booking } from "@/types/booking";
 
-export default function AddModal({ query }: { query: FetchBookingParams }) {
-  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+export default function EditModal({
+  booking,
+  isOpen,
+  onClose,
+}: {
+  booking: Booking;
+  isOpen: boolean;
+  onClose: () => void;
+}) {
   const {
     room_types,
     isLoading: typesLoading,
     fetchRoomTypes,
   } = useRoomTypes();
-  const { isLoading: bookingIsLoading, error, addBooking } = useBookings();
+  const { isLoading: bookingIsLoading, error, updateBooking } = useBookings();
   const { rooms, isLoading: roomLoading, fetchRooms } = useRooms();
-  const { guests, isLoading: guestLoading, fetchGuests } = useGuests();
-  const [selectedGuest, setSelectedGuest] = React.useState<string>();
   const [selectedPurpose, setSelectedPurpose] = React.useState<string>();
-  const [selectedRoomType, setSelectedRoomType] = React.useState<string>();
+  const [selectedRoomType, setSelectedRoomType] = React.useState<string>(
+    booking.room_type_id
+  );
   const [specialRequests, setSpecialRequests] = React.useState<
     { name: string; price: string; quantity: number }[]
-  >([]);
+  >(booking.special_requests);
 
   React.useEffect(() => {
     fetchRoomTypes({});
-    fetchGuests();
   }, []);
 
   React.useEffect(() => {
@@ -50,13 +55,6 @@ export default function AddModal({ query }: { query: FetchBookingParams }) {
       fetchRooms({ roomTypeID: selectedRoomType, status: "available" });
     }
   }, [selectedRoomType]);
-
-  const filteredGuest = React.useMemo(
-    () =>
-      guests.find((guest) => guest.id === selectedGuest) ||
-      ({ full_name: "", contact_number: "", address: "" } as Guest),
-    [selectedGuest]
-  );
 
   React.useEffect(() => {
     const room = room_types.find((room) => room.id === selectedRoomType);
@@ -75,51 +73,33 @@ export default function AddModal({ query }: { query: FetchBookingParams }) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    if (!selectedGuest) {
-      addToast({
-        title: "Error",
-        description: "Please select or register guest.",
-        color: "warning",
-      });
-      return;
-    }
-    formData.append("guest_id", selectedGuest);
-    console.log(formData);
-    formData.append("special_requests", JSON.stringify([]));
-    await addBooking(formData);
-    if (error === undefined) {
-      onClose();
-    }
+    // const formData = new FormData(e.currentTarget);
+    // console.log(formData);
+    // formData.append("special_requests", JSON.stringify([]));
+    // await addBooking(formData);
+    // if (error === undefined) {
+    //   onClose();
+    // }
   }
 
   return (
     <>
-      <Button color="primary" size="sm" fullWidth onPress={onOpen}>
-        Booking <Plus />
-      </Button>
       <Modal
         isOpen={isOpen}
+        onOpenChange={(open) => !open && onClose()}
         size="3xl"
         scrollBehavior="outside"
         placement="top-center"
-        onOpenChange={onOpenChange}
       >
         <ModalContent>
           {() => (
             <>
               <ModalHeader className="flex flex-col gap-1 bg-primary text-white w-full">
-                Add New Booking
+                Update Booking
               </ModalHeader>
               <ModalBody>
                 <div className="flex-1 px-4 w-full space-y-4 py-4">
-                  <GuestInfoSection
-                    guests={guests}
-                    selectedGuest={selectedGuest}
-                    setSelectedGuest={setSelectedGuest}
-                    filteredGuest={filteredGuest}
-                    loading={guestLoading}
-                  />
+                  <GuestInfoSection guest={booking.user} />
                   <Form onSubmit={handleSubmit}>
                     <BookingDetailsSection
                       room_types={room_types}

@@ -81,7 +81,17 @@ const Navbar: React.FC<NavbarProps> = ({ user, isLoading }) => {
               </div>
             </div>
           ) : user?.id ? (
-            <AvatarPopover user={user} />
+            <User
+              as="button"
+              avatarProps={{
+                src:
+                  user.user_metadata.image ??
+                  "https://i.pravatar.cc/150?u=a04258114e29026702d",
+              }}
+              className="transition-transform"
+              description=""
+              name=""
+            />
           ) : (
             <Button as={Link} href="/auth" color="primary" variant="bordered">
               Sign Up

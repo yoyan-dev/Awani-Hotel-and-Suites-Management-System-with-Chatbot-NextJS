@@ -233,7 +233,7 @@ export default function BookingForm({
                       size="sm"
                       isIconOnly
                       isDisabled={
-                        request.quantity === Number(request?.max_quantity)
+                        request.quantity >= Number(request?.max_quantity)
                       }
                       onPress={() =>
                         setSpecialRequests((prev) =>

@@ -15,6 +15,7 @@ import {
   User,
   Users,
   ArrowRightLeft,
+  House,
 } from "lucide-react";
 
 export type SiteConfig = typeof siteConfig;
@@ -34,6 +35,12 @@ export const siteConfig = {
       href: "/admin/room",
       isExpandable: true,
       icon: Bed,
+    },
+    {
+      label: "Function Room",
+      href: "/admin/function-rooms",
+      isExpandable: true,
+      icon: House,
     },
     {
       label: "Bookings",
