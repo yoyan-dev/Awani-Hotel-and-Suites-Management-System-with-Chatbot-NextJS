@@ -9,23 +9,43 @@ import {
   Select,
   SelectItem,
   DateRangePicker,
+  Selection,
 } from "@heroui/react";
 import { Search, ChevronDown } from "lucide-react";
-import { columns, bookingStatusOptions } from "@/app/constants/booking";
+import { bookingStatusOptions } from "@/app/constants/booking";
 import { capitalize } from "@/app/utils/capitalize";
 import AddModal from "../modals/add-modal";
-import { FetchBookingParams } from "@/types/booking";
+import {
+  Booking,
+  BookingPagination,
+  FetchBookingParams,
+} from "@/types/booking";
 import { CalendarDate } from "@heroui/system/dist/types";
+import ExpandedBookingTable from "../modals/expanded-table-modal";
+import { ColumnType } from "@/types/column";
+import { Room } from "@/types/room";
 
 interface Props {
+  bookings: Booking[];
+  pagination: BookingPagination;
   query: FetchBookingParams;
   setQuery: React.Dispatch<React.SetStateAction<FetchBookingParams>>;
+  selectedKeys: Selection;
+  setSelectedKeys: React.Dispatch<React.SetStateAction<Selection>>;
+  bookingLoading: boolean;
+  handleSubmit: (booking: Booking, room: Room) => void;
   bookingsCount: number;
 }
 
 export const TableTopContent: React.FC<Props> = ({
+  bookings,
+  pagination,
   query,
   setQuery,
+  selectedKeys,
+  setSelectedKeys,
+  bookingLoading,
+  handleSubmit,
   bookingsCount,
 }) => {
   return (
@@ -79,6 +99,16 @@ export const TableTopContent: React.FC<Props> = ({
             {(item) => <SelectItem key={item.uid}>{item.name}</SelectItem>}
           </Select>
           <AddModal query={query} />
+          <ExpandedBookingTable
+            bookings={bookings}
+            pagination={pagination}
+            query={query}
+            setQuery={setQuery}
+            selectedKeys={selectedKeys}
+            setSelectedKeys={setSelectedKeys}
+            bookingLoading={bookingLoading}
+            handleSubmit={handleSubmit}
+          />
         </div>
       </div>
       <div className="flex justify-between items-center">

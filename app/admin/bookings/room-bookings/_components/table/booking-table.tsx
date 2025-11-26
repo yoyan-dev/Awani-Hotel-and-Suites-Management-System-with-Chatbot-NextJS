@@ -71,8 +71,14 @@ export default function BookingTable({
       selectionMode="multiple"
       topContent={
         <TableTopContent
+          bookings={bookings}
+          pagination={pagination}
           query={query}
           setQuery={setQuery}
+          selectedKeys={selectedKeys}
+          setSelectedKeys={setSelectedKeys}
+          bookingLoading={bookingLoading}
+          handleSubmit={handleSubmit}
           bookingsCount={pagination.total}
         />
       }

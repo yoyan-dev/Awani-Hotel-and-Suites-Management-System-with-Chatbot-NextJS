@@ -74,6 +74,22 @@ export default function BookingDetailsSection({
         <Select
           isRequired
           fullWidth
+          radius="none"
+          className="flex-1 w-full min-w-40"
+          name="booking_source"
+          label="Booking Source"
+          labelPlacement="outside"
+          placeholder="Select booking source"
+          variant="bordered"
+        >
+          <SelectItem key="walk-in">Walk In</SelectItem>
+          <SelectItem key="online">Online</SelectItem>
+        </Select>
+      </div>
+      <div className="pt-2">
+        <Select
+          isRequired
+          fullWidth
           isLoading={typesLoading}
           radius="none"
           className="flex-1 w-full min-w-40"
@@ -174,76 +190,77 @@ export default function BookingDetailsSection({
         </div>
       ) : null}
 
-      <div>
-        <label>Special requests</label>
-        <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">
-          Select optional add-ons for this room. Use the plus/minus buttons to
-          adjust the quantity.
-        </p>
+      {specialRequests ? (
+        <div>
+          <label>Special requests</label>
+          <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">
+            Select optional add-ons for this room. Use the plus/minus buttons to
+            adjust the quantity.
+          </p>
 
-        <div className="flex gap-4 flex-wrap py-4">
-          {specialRequests
-            ? specialRequests.map((request: any) => (
-                <div
-                  className="flex flex-col gap-2 items-center"
-                  key={request.name}
-                >
-                  <div className="flex items-center gap-4 ">
-                    <span className="text-tiny text-default-700 dark:text-default-400">
-                      {request.name}
-                    </span>
-                    <Chip color="success" size="sm" variant="flat">
-                      {formatPHP(Number(request.price || 0))}
-                    </Chip>
-                  </div>
-                  <div className="flex justify-center gap-2">
-                    <Button
-                      size="sm"
-                      isIconOnly
-                      isDisabled={request.quantity === 0}
-                      onPress={() =>
-                        setSpecialRequests((prev) =>
-                          prev.map((req) =>
-                            req.name === request.name
-                              ? {
-                                  ...req,
-                                  quantity: req.quantity - 1,
-                                }
-                              : req
-                          )
-                        )
-                      }
-                    >
-                      <Minus size={8} />
-                    </Button>
-                    {request.quantity}
-                    <Button
-                      size="sm"
-                      isIconOnly
-                      isDisabled={
-                        request.quantity >= Number(request?.max_quantity)
-                      }
-                      onPress={() =>
-                        setSpecialRequests((prev) =>
-                          prev.map((req) =>
-                            req.name === request.name
-                              ? {
-                                  ...req,
-                                  quantity: req.quantity + 1,
-                                }
-                              : req
-                          )
-                        )
-                      }
-                    >
-                      <Plus size={8} />
-                    </Button>
-                  </div>
+          <div className="flex gap-4 flex-wrap py-4">
+            {specialRequests.map((request: any) => (
+              <div
+                className="flex flex-col gap-2 items-center"
+                key={request.name}
+              >
+                <div className="flex items-center gap-4 ">
+                  <span className="text-tiny text-default-700 dark:text-default-400">
+                    {request.name}
+                  </span>
+                  <Chip color="success" size="sm" variant="flat">
+                    {formatPHP(Number(request.price || 0))}
+                  </Chip>
                 </div>
-              ))
-            : null}
+                <div className="flex justify-center gap-2">
+                  <Button
+                    size="sm"
+                    isIconOnly
+                    isDisabled={request.quantity === 0}
+                    onPress={() =>
+                      setSpecialRequests((prev) =>
+                        prev.map((req) =>
+                          req.name === request.name
+                            ? {
+                                ...req,
+                                quantity: req.quantity - 1,
+                              }
+                            : req
+                        )
+                      )
+                    }
+                  >
+                    <Minus size={8} />
+                  </Button>
+                  {request.quantity}
+                  <Button
+                    size="sm"
+                    isIconOnly
+                    isDisabled={
+                      request.quantity >= Number(request?.max_quantity)
+                    }
+                    onPress={() =>
+                      setSpecialRequests((prev) =>
+                        prev.map((req) =>
+                          req.name === request.name
+                            ? {
+                                ...req,
+                                quantity: req.quantity + 1,
+                              }
+                            : req
+                        )
+                      )
+                    }
+                  >
+                    <Plus size={8} />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
+
       <Input
         isRequired
         variant="bordered"

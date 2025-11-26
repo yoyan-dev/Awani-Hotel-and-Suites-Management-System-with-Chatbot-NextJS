@@ -11,6 +11,7 @@ export type BookingStatus =
 
 export interface Booking {
   id: string;
+  booking_number?: string;
   guest_id: string;
   room_id: string;
   room_type_id: string;
@@ -22,10 +23,14 @@ export interface Booking {
   purpose?: string;
   number_of_guests?: number;
   recent_sickness?: string[];
-  status: BookingStatus;
   total_add_ons: string;
   total: string;
   request_messages?: string;
+  payment_status?: string;
+  payment_method?: "cash" | "gcash" | "card";
+  booking_source?: "walk-in" | "online";
+  amount_paid?: number;
+  status: BookingStatus;
   room?: any;
   user?: any;
   room_type?: any;

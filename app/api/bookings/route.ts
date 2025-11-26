@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase-client";
 import { ApiResponse } from "@/types/response";
 import { Booking } from "@/types/booking";
+import { GenerateBookingNumber } from "@/lib/generate-booking-number";
 
 let bookings: Booking[];
 
@@ -25,16 +26,23 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
   let q = supabase.from("bookings").select(
     `
     id,
+    booking_number,
     room_id,
     guest_id,
     room_type_id,
     check_in,
     check_out,
-    special_requests,
-    number_of_guests,
-    status,
     total_add_ons,
     total,
+    company,
+    special_requests,
+    number_of_guests,
+    recent_sickness,
+    payment_status,
+    payment_method,
+    booking_source,
+    amount_paid,
+    status,
     created_at,
     room_type:room_type_id(*),
     room:room_id (
@@ -123,8 +131,24 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       0
     );
 
+    const bookingNumber = await GenerateBookingNumber();
+
+    if (!bookingNumber) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: {
+            title: "Unknown Error!",
+            description: "Unknow Error, Please try again",
+            color: "warning",
+          },
+        },
+        { status: 400 }
+      );
+    }
     const newData = {
       ...formObj,
+      booking_number: bookingNumber,
       special_requests: specialRequests,
       total_add_ons: totalAddOnsPrice,
     } as Booking;
@@ -138,7 +162,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       .from("bookings")
       .select("id, check_in, check_out, status")
       .eq("guest_id", guestId)
-      .not("status", "in", "(cancelled, completed)");
+      .not("status", "in", "(cancelled, completed, check-out)");
 
     if (checkError) throw checkError;
 

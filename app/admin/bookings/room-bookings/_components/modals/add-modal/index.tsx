@@ -22,6 +22,7 @@ import { useRoomTypes } from "@/hooks/use-room-types";
 import { useRooms } from "@/hooks/use-rooms";
 import { FetchBookingParams } from "@/types/booking";
 import { useGuests } from "@/hooks/use-guests";
+import PaymentSection from "./payment-section";
 
 export default function AddModal({ query }: { query: FetchBookingParams }) {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -30,7 +31,12 @@ export default function AddModal({ query }: { query: FetchBookingParams }) {
     isLoading: typesLoading,
     fetchRoomTypes,
   } = useRoomTypes();
-  const { isLoading: bookingIsLoading, error, addBooking } = useBookings();
+  const {
+    isLoading: bookingIsLoading,
+    error,
+    addBooking,
+    fetchBookings,
+  } = useBookings();
   const { rooms, isLoading: roomLoading, fetchRooms } = useRooms();
   const { guests, isLoading: guestLoading, fetchGuests } = useGuests();
   const [selectedGuest, setSelectedGuest] = React.useState<string>();
@@ -84,11 +90,14 @@ export default function AddModal({ query }: { query: FetchBookingParams }) {
       });
       return;
     }
+
+    formData.append("status", "confirmed");
     formData.append("guest_id", selectedGuest);
     console.log(formData);
     formData.append("special_requests", JSON.stringify([]));
     await addBooking(formData);
     if (error === undefined) {
+      fetchBookings(query);
       onClose();
     }
   }
@@ -135,6 +144,7 @@ export default function AddModal({ query }: { query: FetchBookingParams }) {
                       selectedPurpose={selectedPurpose}
                       setSelectedPurpose={setSelectedPurpose}
                     />
+                    {/* <PaymentSection /> */}
                     <div className="flex gap-4 justify-end w-full pb-4">
                       <Button
                         onPress={onClose}

@@ -1,16 +1,41 @@
 import { ColumnType } from "@/types/column";
 
 export const columns: ColumnType[] = [
-  { name: "ID", uid: "id" },
-  { name: "ROOM", uid: "room" },
+  // --- Booking Details ---
+  { name: "BOOKING #", uid: "booking_number" },
+
+  // --- Guest Info ---
   { name: "GUEST NAME", uid: "guest_name" },
+  { name: "NUMBER OF GUESTS", uid: "number_of_guests" },
+  { name: "RECENT SICKNESS", uid: "recent_sickness" },
+
+  // --- Room Info ---
+  { name: "ROOM", uid: "room" },
   { name: "ROOM TYPE", uid: "room_type" },
+
+  // --- Stay Info ---
   { name: "NIGHTS", uid: "nights" },
   { name: "CHECK IN / OUT", uid: "check_in_out" },
   { name: "ARRIVAL", uid: "check_in" },
   { name: "DEPARTURE", uid: "check_out" },
+
+  // --- Additional Info ---
+  { name: "COMPANY", uid: "company" },
+  { name: "PLACED LAST VISITED", uid: "places_last_visited" },
+  { name: "PURPOSE OF STAY", uid: "purpose" },
+  { name: "SPECIAL REQUESTS", uid: "request_messages" },
+
+  // --- Payment Info ---
+  { name: "PAYMENT STATUS", uid: "payment_status" },
+  { name: "PAYMENT METHOD", uid: "payment_method" },
+  { name: "BOOKING SOURCE", uid: "booking_source" },
+  { name: "AMOUNT PAID", uid: "amount_paid" },
   { name: "TOTAL PRICE", uid: "total_price" },
+
+  // --- Status ---
   { name: "STATUS", uid: "status", sortable: true },
+
+  // --- Actions ---
   { name: "ACTIONS", uid: "actions" },
 ];
 
@@ -44,12 +69,33 @@ export const bookingStatusHexColorMap: Record<string, string> = {
 };
 
 export const INITIAL_VISIBLE_COLUMNS = [
-  "booking_id",
+  "booking_number",
   "room",
   "guest_name",
   "room_type",
   "nights",
   "total_price",
+  "status",
+  "actions",
+];
+
+export const VISIBLE_COLUMNS = [
+  "booking_number",
+  "room",
+  "guest_name",
+  "room_type",
+  "nights",
+  "company",
+  "total_price",
+  "places_last_visited",
+  "purpose",
+  "number_of_guests",
+  "recent_sickness",
+  "request_messages",
+  "payment_status",
+  "payment_method",
+  "booking_source",
+  "amount_paid",
   "status",
   "actions",
 ];
