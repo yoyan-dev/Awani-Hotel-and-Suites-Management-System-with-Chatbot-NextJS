@@ -19,6 +19,7 @@ export default function Page() {
   const {
     bookings,
     isLoading: bookingIsLoading,
+    error,
     fetchBookings,
     addBooking,
   } = useBookings();
@@ -92,6 +93,14 @@ export default function Page() {
     );
     console.log(formData);
     await addBooking(formData);
+    if (!error) {
+      addToast({
+        title: "Booking Successful",
+        description:
+          "Your reservation has been submitted successfully. Our team will review your request and contact you shortly for confirmation. Thank you for choosing our hotel!",
+        color: "success",
+      });
+    }
   }
 
   return (

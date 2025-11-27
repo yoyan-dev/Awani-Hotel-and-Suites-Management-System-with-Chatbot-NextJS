@@ -142,7 +142,7 @@ export default function BookingForm({
             name="room_type_id"
             label="Room type"
             value={selectedRoom}
-            defaultSelectedKeys={[selectedRoom || ""]}
+            defaultSelectedKeys={[selectedRoom]}
             onChange={(e) => setSelectedRoom(e.target.value)}
             labelPlacement="outside"
             placeholder="Select Room Type"
@@ -257,8 +257,11 @@ export default function BookingForm({
         <Input
           variant="bordered"
           isRequired
+          labelPlacement="outside"
+          defaultValue="1"
           radius="none"
-          placeholder="e.g (1 adult, 1 child)"
+          type="number"
+          placeholder="0"
           label="Number of Guests"
           name="number_of_guests"
         />
@@ -317,6 +320,7 @@ export default function BookingForm({
           color="primary"
           label="Please check if you have any of the following at the present or during the past 30 days."
           orientation="horizontal"
+          name="recent_sickness"
           size="sm"
         >
           <Checkbox value="fever">Fever</Checkbox>
@@ -327,7 +331,7 @@ export default function BookingForm({
             Difficulty of Breathing
           </Checkbox>
           <Checkbox value="severe diarhea">Severe Diarhea</Checkbox>
-          <Checkbox value="severe diarhea">None</Checkbox>
+          <Checkbox value="none">None</Checkbox>
         </CheckboxGroup>
       </div>
       <div className="space-y-4">

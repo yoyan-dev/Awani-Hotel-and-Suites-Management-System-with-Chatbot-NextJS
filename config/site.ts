@@ -32,21 +32,30 @@ export const siteConfig = {
     },
     {
       label: "Room Management",
-      href: "/admin/room",
+      href: "/admin/rooms",
       isExpandable: true,
+      isExpand: false,
       icon: Bed,
-    },
-    {
-      label: "Function Room",
-      href: "/admin/function-rooms",
-      isExpandable: true,
-      icon: House,
+      Children: [
+        { label: "Hotel Rooms", href: "/admin/rooms/hotel-rooms" },
+        { label: "Hotel Rooms Types", href: "/admin/rooms/room-types" },
+        { label: "Function Rooms", href: "/admin/rooms/function-rooms" },
+      ],
     },
     {
       label: "Bookings",
-      href: "/admin/booking",
-      isExpandable: false,
+      href: "/admin/bookings",
+      isExpandable: true,
       icon: Notebook,
+      Children: [
+        { label: "Overview", href: "/admin/bookings/overview" },
+        { label: "Calendar", href: "/admin/bookings/calendar" },
+        { label: "Room Bookings", href: "/admin/bookings/room-bookings" },
+        {
+          label: "Function Room Reservation",
+          href: "/admin/bookings/function-reservation",
+        },
+      ],
     },
     {
       label: "Guest",
