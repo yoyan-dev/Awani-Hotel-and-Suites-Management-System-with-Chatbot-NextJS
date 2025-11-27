@@ -38,10 +38,10 @@ export const RenderCell = ({ booking, columnKey }: RenderCellProps) => {
     case "nights":
       return nights;
 
+    case "amount_paid":
+      return formatPHP(Number(booking.amount_paid));
     case "total_price":
-      return formatPHP(
-        calculateBookingPrice(booking) + Number(booking.total_add_ons || 0)
-      );
+      return formatPHP(Number(booking.total));
     case "status":
       return (
         <Chip

@@ -1,6 +1,6 @@
 import { Select, SelectItem } from "@heroui/react";
-import GuestForm from "../guest/guest-form";
-import SelectedGuest from "../../selected-guest";
+import GuestForm from "@/app/admin/bookings/room-bookings/_components/modals/guest/guest-form";
+import SelectedGuest from "@/app/admin/bookings/room-bookings/_components/selected-guest";
 import { Guest } from "@/types/guest";
 
 export default function GuestInfoSection({ guest }: { guest: Guest }) {

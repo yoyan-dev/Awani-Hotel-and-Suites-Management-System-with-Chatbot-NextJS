@@ -21,7 +21,8 @@ import CheckInButton from "./mark-check-in";
 import MarkCancelled from "./mark-cancelled";
 import React from "react";
 import ExtendModal from "../modals/extend-modal";
-import EditModal from "../modals/edit-modal";
+import { generateSummary } from "@/utils/generate-summary";
+import ViewSummary from "../modals/view-summary-modal";
 
 export default function BookingActionsDropdown({
   booking,
@@ -29,7 +30,11 @@ export default function BookingActionsDropdown({
   booking: Booking;
 }) {
   const [extendOpen, setExtendOpen] = React.useState(false);
-  const [editModalOpen, setEditModalOpen] = React.useState(false);
+  const [isViewSummaryOpen, setIsViewSummaryOpen] = React.useState(false);
+
+  const summary = React.useMemo(() => {
+    return generateSummary(booking, booking.special_requests);
+  }, [booking, isViewSummaryOpen]);
   return (
     <>
       <ExtendModal
@@ -37,10 +42,10 @@ export default function BookingActionsDropdown({
         isOpen={extendOpen}
         onClose={() => setExtendOpen(false)}
       />
-      <EditModal
-        booking={booking}
-        isOpen={editModalOpen}
-        onClose={() => setEditModalOpen(false)}
+      <ViewSummary
+        isOpen={isViewSummaryOpen}
+        onClose={() => setIsViewSummaryOpen(false)}
+        summary={summary}
       />
       <Dropdown>
         <DropdownTrigger>
@@ -61,7 +66,7 @@ export default function BookingActionsDropdown({
           <DropdownItem
             key="edit"
             startContent={<Pencil className="w-4 h-4" />}
-            onClick={() => setEditModalOpen(true)}
+            href={`/admin/bookings/room-bookings/edit-booking/${booking.id}`}
           >
             Edit Booking
           </DropdownItem>
@@ -119,6 +124,7 @@ export default function BookingActionsDropdown({
           <DropdownItem
             key="invoice"
             startContent={<FileText className="w-4 h-4 text-gray-700" />}
+            onClick={() => setIsViewSummaryOpen(true)}
           >
             Download Invoice
           </DropdownItem>

@@ -36,6 +36,8 @@ export async function GET(req: Request): Promise<NextResponse<ApiResponse>> {
     total,
     company,
     special_requests,
+    places_last_visited,
+    purpose,
     number_of_guests,
     recent_sickness,
     payment_status,
@@ -125,12 +127,6 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     const formObj = Object.fromEntries(formData.entries());
     const specialRequests = JSON.parse(formObj.special_requests as string);
 
-    const totalAddOnsPrice = specialRequests.reduce(
-      (acc: number, item: { price: string; quantity: number }) =>
-        acc + Number(item.price) * (item.quantity || 0),
-      0
-    );
-
     const bookingNumber = await GenerateBookingNumber();
 
     if (!bookingNumber) {
@@ -150,7 +146,6 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       ...formObj,
       booking_number: bookingNumber,
       special_requests: specialRequests,
-      total_add_ons: totalAddOnsPrice,
     } as Booking;
 
     const guestId = formObj.guest_id;

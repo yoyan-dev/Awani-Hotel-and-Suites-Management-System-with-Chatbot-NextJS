@@ -23,14 +23,14 @@ export const columns: ColumnType[] = [
   { name: "COMPANY", uid: "company" },
   { name: "PLACED LAST VISITED", uid: "places_last_visited" },
   { name: "PURPOSE OF STAY", uid: "purpose" },
-  { name: "SPECIAL REQUESTS", uid: "request_messages" },
+  { name: "REQUEST MESSAGE", uid: "request_messages" },
 
   // --- Payment Info ---
-  { name: "PAYMENT STATUS", uid: "payment_status" },
   { name: "PAYMENT METHOD", uid: "payment_method" },
   { name: "BOOKING SOURCE", uid: "booking_source" },
   { name: "AMOUNT PAID", uid: "amount_paid" },
   { name: "TOTAL PRICE", uid: "total_price" },
+  { name: "PAYMENT STATUS", uid: "payment_status" },
 
   // --- Status ---
   { name: "STATUS", uid: "status", sortable: true },

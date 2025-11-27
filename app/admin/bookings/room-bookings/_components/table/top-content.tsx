@@ -11,10 +11,8 @@ import {
   DateRangePicker,
   Selection,
 } from "@heroui/react";
-import { Search, ChevronDown } from "lucide-react";
+import { Search, ChevronDown, Plus, RefreshCw } from "lucide-react";
 import { bookingStatusOptions } from "@/app/constants/booking";
-import { capitalize } from "@/app/utils/capitalize";
-import AddModal from "../modals/add-modal";
 import {
   Booking,
   BookingPagination,
@@ -24,6 +22,8 @@ import { CalendarDate } from "@heroui/system/dist/types";
 import ExpandedBookingTable from "../modals/expanded-table-modal";
 import { ColumnType } from "@/types/column";
 import { Room } from "@/types/room";
+import Link from "next/link";
+import { useBookings } from "@/hooks/use-bookings";
 
 interface Props {
   bookings: Booking[];
@@ -48,6 +48,7 @@ export const TableTopContent: React.FC<Props> = ({
   handleSubmit,
   bookingsCount,
 }) => {
+  const { fetchBookings } = useBookings();
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between gap-3 items-end">
@@ -98,7 +99,15 @@ export const TableTopContent: React.FC<Props> = ({
           >
             {(item) => <SelectItem key={item.uid}>{item.name}</SelectItem>}
           </Select>
-          <AddModal query={query} />
+          <Button
+            as={Link}
+            href="/admin/bookings/room-bookings/add-booking"
+            color="primary"
+            size="sm"
+            fullWidth
+          >
+            Booking <Plus />
+          </Button>
           <ExpandedBookingTable
             bookings={bookings}
             pagination={pagination}
@@ -115,8 +124,11 @@ export const TableTopContent: React.FC<Props> = ({
         <span className="text-default-600 dark:text-default-300 text-small">
           Total {bookingsCount} bookings
         </span>
-        <label className="flex items-center text-default-400 text-small">
-          Rows per page: 10
+        <label className="flex items-center gap-4 text-default-600 dark:text-default-300 text-small">
+          <div>Rows per page: 10</div>
+          <Button isIconOnly size="sm" onPress={() => fetchBookings(query)}>
+            <RefreshCw />
+          </Button>
         </label>
       </div>
     </div>
