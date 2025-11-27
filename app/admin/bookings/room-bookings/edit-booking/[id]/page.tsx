@@ -36,9 +36,12 @@ export default function EditBookingPage() {
       fetchBooking(id as string);
       fetchRoomTypes({});
     }
-    setFormData(booking);
-    setSpecialRequests(booking.special_requests);
   }, [id, bookingError]);
+
+  React.useEffect(() => {
+    setFormData({ ...booking });
+    setSpecialRequests(booking.special_requests);
+  }, [booking]);
 
   React.useEffect(() => {
     if (formData?.room_type_id) {
@@ -77,7 +80,7 @@ export default function EditBookingPage() {
   return (
     <>
       <Header />
-      {bookingIsLoading ? (
+      {bookingIsLoading && formData ? (
         <div>Loading...</div>
       ) : (
         <div className="flex-1 px-4 w-full space-y-4 py-4">

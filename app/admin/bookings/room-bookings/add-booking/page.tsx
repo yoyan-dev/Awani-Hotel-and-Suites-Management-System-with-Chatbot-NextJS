@@ -14,7 +14,7 @@ import PaymentSection from "./_components/payment-section";
 import { RoomType } from "@/types/room";
 import { generateSummary } from "@/utils/generate-summary";
 import { Booking } from "@/types/booking";
-import ViewSummary from "../_components/modals/view-summary-modal";
+import ViewSummary from "../_components/modals/payment/view-summary-modal";
 import { formatPHP } from "@/lib/format-php";
 
 export default function AddBookingPage() {

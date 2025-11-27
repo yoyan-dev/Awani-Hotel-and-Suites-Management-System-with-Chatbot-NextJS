@@ -27,7 +27,7 @@ export interface Booking {
   total: string;
   request_messages?: string;
   payment_status?: string;
-  payment_method?: "cash" | "gcash" | "card";
+  payment_method?: string;
   booking_source?: "walk-in" | "online";
   amount_paid?: number;
   status: BookingStatus;

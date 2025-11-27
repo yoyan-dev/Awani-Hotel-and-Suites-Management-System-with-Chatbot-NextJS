@@ -15,6 +15,7 @@ import {
   BrushCleaning,
   MessageSquare,
   EllipsisVertical,
+  Wallet,
 } from "lucide-react";
 import CheckOutButton from "./mark-check-out";
 import CheckInButton from "./mark-check-in";
@@ -22,7 +23,8 @@ import MarkCancelled from "./mark-cancelled";
 import React from "react";
 import ExtendModal from "../modals/extend-modal";
 import { generateSummary } from "@/utils/generate-summary";
-import ViewSummary from "../modals/view-summary-modal";
+import ViewSummary from "../modals/payment/view-summary-modal";
+import AddPaymentModal from "../modals/payment/add-payment-modal";
 
 export default function BookingActionsDropdown({
   booking,
@@ -31,6 +33,7 @@ export default function BookingActionsDropdown({
 }) {
   const [extendOpen, setExtendOpen] = React.useState(false);
   const [isViewSummaryOpen, setIsViewSummaryOpen] = React.useState(false);
+  const [addPaymentOpen, setAddPaymentOpen] = React.useState(false);
 
   const summary = React.useMemo(() => {
     return generateSummary(booking, booking.special_requests);
@@ -46,6 +49,12 @@ export default function BookingActionsDropdown({
         isOpen={isViewSummaryOpen}
         onClose={() => setIsViewSummaryOpen(false)}
         summary={summary}
+      />
+      <AddPaymentModal
+        isOpen={addPaymentOpen}
+        onClose={() => setAddPaymentOpen(false)}
+        summary={summary}
+        id={booking.id}
       />
       <Dropdown>
         <DropdownTrigger>
@@ -63,13 +72,15 @@ export default function BookingActionsDropdown({
           >
             View Details
           </DropdownItem>
-          <DropdownItem
-            key="edit"
-            startContent={<Pencil className="w-4 h-4" />}
-            href={`/admin/bookings/room-bookings/edit-booking/${booking.id}`}
-          >
-            Edit Booking
-          </DropdownItem>
+          {booking.status === "pending" ? (
+            <DropdownItem
+              key="edit"
+              startContent={<Pencil className="w-4 h-4" />}
+              href={`/admin/bookings/room-bookings/edit-booking/${booking.id}`}
+            >
+              Edit Booking
+            </DropdownItem>
+          ) : null}
 
           <DropdownItem
             key="message"
@@ -128,6 +139,15 @@ export default function BookingActionsDropdown({
           >
             Download Invoice
           </DropdownItem>
+          {booking.payment_status !== "paid" ? (
+            <DropdownItem
+              key="payment"
+              startContent={<Wallet className="w-4 h-4 text-gray-700" />}
+              onClick={() => setAddPaymentOpen(true)}
+            >
+              Add Payment
+            </DropdownItem>
+          ) : null}
           <DropdownItem
             key="clean"
             startContent={<BrushCleaning className="w-4 h-4 text-purple-600" />}

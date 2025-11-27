@@ -41,42 +41,52 @@ export default function ViewSummary({
               <ModalBody>
                 <div className="space-y-6">
                   {/* Add-Ons / Special Requests */}
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-semibold">Special Requests</h3>
+                  {summary.totalAddOnsPrice > 0 ? (
+                    <>
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-semibold">
+                          Special Requests
+                        </h3>
 
-                    <div className="space-y-2">
-                      {summary?.specialRequests.map(
-                        (
-                          req: {
-                            name: string;
-                            price: string;
-                            quantity: number;
-                          },
-                          index: number
-                        ) =>
-                          req.quantity > 0 && (
-                            <div
-                              key={index}
-                              className="w-full px-4 py-2 flex justify-between items-center"
-                            >
-                              <div className="flex flex-col">
-                                <span className="font-medium">{req.name}</span>
-                                <span className="text-xs opacity-80">
-                                  Price: {formatPHP(Number(req.price))} ×{" "}
-                                  {req.quantity}
-                                </span>
-                              </div>
+                        <div className="space-y-2">
+                          {summary?.specialRequests.map(
+                            (
+                              req: {
+                                name: string;
+                                price: string;
+                                quantity: number;
+                              },
+                              index: number
+                            ) =>
+                              req.quantity > 0 && (
+                                <div
+                                  key={index}
+                                  className="w-full px-4 py-2 flex justify-between items-center"
+                                >
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">
+                                      {req.name}
+                                    </span>
+                                    <span className="text-xs opacity-80">
+                                      Price: {formatPHP(Number(req.price))} ×{" "}
+                                      {req.quantity}
+                                    </span>
+                                  </div>
 
-                              <span className="font-bold">
-                                {formatPHP(Number(req.price) * req.quantity)}
-                              </span>
-                            </div>
-                          )
-                      )}
-                    </div>
-                  </div>
+                                  <span className="font-bold">
+                                    {formatPHP(
+                                      Number(req.price) * req.quantity
+                                    )}
+                                  </span>
+                                </div>
+                              )
+                          )}
+                        </div>
+                      </div>
 
-                  <Divider className="my-2" />
+                      <Divider className="my-2" />
+                    </>
+                  ) : null}
 
                   {/* Summary Section */}
                   <div className="space-y-3">
@@ -155,7 +165,7 @@ export default function ViewSummary({
                     <div className="flex justify-between text-base">
                       <span className="font-semibold">Balance</span>
                       <span className="font-bold">
-                        {formatPHP(summary.balance)}
+                        {formatPHP(summary.balance > 0 ? summary.balance : 0)}
                       </span>
                     </div>
                   </div>
