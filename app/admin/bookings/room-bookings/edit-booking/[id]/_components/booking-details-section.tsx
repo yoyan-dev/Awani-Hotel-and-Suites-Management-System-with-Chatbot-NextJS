@@ -9,9 +9,16 @@ interface Props {
   setFormData: React.Dispatch<React.SetStateAction<Booking>>;
   room_types: any[];
   rooms: any[];
-  specialRequests: { name: string; price: string; quantity: number }[];
+  specialRequests: {
+    name: string;
+    price: string;
+    quantity: number;
+    max_quantity: number;
+  }[];
   setSpecialRequests: React.Dispatch<
-    React.SetStateAction<{ name: string; price: string; quantity: number }[]>
+    React.SetStateAction<
+      { name: string; price: string; quantity: number; max_quantity: number }[]
+    >
   >;
   typesLoading?: boolean;
   roomLoading?: boolean;
@@ -119,7 +126,7 @@ export default function BookingDetailsSection({
           type="date"
           label="Check-in Date"
           name="check_in"
-          value={checkInDate}
+          value={checkInDate || formData.check_in}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setCheckInDate(e.target.value)
           }
@@ -134,7 +141,7 @@ export default function BookingDetailsSection({
           type="date"
           label="Check-out Date"
           name="check_out"
-          value={checkOutDate}
+          value={checkOutDate || formData.check_out}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setCheckOutDate(e.target.value)
           }
@@ -143,7 +150,7 @@ export default function BookingDetailsSection({
         />
       </div>
 
-      {formData.room_type_id && checkInDate ? (
+      {formData.room_type_id && (checkInDate || formData.check_in) ? (
         <div className="pt-4">
           <Select
             fullWidth
@@ -194,76 +201,85 @@ export default function BookingDetailsSection({
         </div>
       ) : null}
 
-      {specialRequests ? (
-        <div>
-          <label>Special requests</label>
-          <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">
-            Select optional add-ons for this room. Use the plus/minus buttons to
-            adjust the quantity.
-          </p>
+      <div>
+        <label>Special requests</label>
+        {specialRequests.length > 0 ? (
+          <>
+            <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">
+              Select optional add-ons for this room. Use the plus/minus buttons
+              to adjust the quantity.
+            </p>
 
-          <div className="flex gap-4 flex-wrap py-4">
-            {specialRequests.map((request: any) => (
-              <div
-                className="flex flex-col gap-2 items-center"
-                key={request.name}
-              >
-                <div className="flex items-center gap-4 ">
-                  <span className="text-tiny text-default-700 dark:text-default-400">
-                    {request.name}
-                  </span>
-                  <Chip color="success" size="sm" variant="flat">
-                    {formatPHP(Number(request.price || 0))}
-                  </Chip>
-                </div>
-                <div className="flex justify-center gap-2">
-                  <Button
-                    size="sm"
-                    isIconOnly
-                    isDisabled={request.quantity === 0}
-                    onPress={() =>
-                      setSpecialRequests((prev) =>
-                        prev.map((req) =>
-                          req.name === request.name
-                            ? {
-                                ...req,
-                                quantity: req.quantity - 1,
-                              }
-                            : req
+            <div className="flex gap-4 flex-wrap py-4">
+              {specialRequests.map((request: any) => (
+                <div
+                  className="flex flex-col gap-2 items-center"
+                  key={request.name}
+                >
+                  <div className="flex items-center gap-4 ">
+                    <span className="text-tiny text-default-700 dark:text-default-400">
+                      {request.name}
+                    </span>
+                    <Chip color="success" size="sm" variant="flat">
+                      {formatPHP(Number(request.price || 0))}
+                    </Chip>
+                  </div>
+                  <div className="flex justify-center gap-2">
+                    <Button
+                      size="sm"
+                      isIconOnly
+                      isDisabled={request.quantity === 0}
+                      onPress={() =>
+                        setSpecialRequests((prev) =>
+                          prev.map((req) =>
+                            req.name === request.name
+                              ? {
+                                  ...req,
+                                  quantity: req.quantity - 1,
+                                }
+                              : req
+                          )
                         )
-                      )
-                    }
-                  >
-                    <Minus size={8} />
-                  </Button>
-                  {request.quantity}
-                  <Button
-                    size="sm"
-                    isIconOnly
-                    isDisabled={
-                      request.quantity >= Number(request?.max_quantity)
-                    }
-                    onPress={() =>
-                      setSpecialRequests((prev) =>
-                        prev.map((req) =>
-                          req.name === request.name
-                            ? {
-                                ...req,
-                                quantity: req.quantity + 1,
-                              }
-                            : req
+                      }
+                    >
+                      <Minus size={8} />
+                    </Button>
+                    {request.quantity}
+                    <Button
+                      size="sm"
+                      isIconOnly
+                      isDisabled={
+                        request.quantity >= Number(request?.max_quantity)
+                      }
+                      onPress={() =>
+                        setSpecialRequests((prev) =>
+                          prev.map((req) =>
+                            req.name === request.name
+                              ? {
+                                  ...req,
+                                  quantity: req.quantity + 1,
+                                }
+                              : req
+                          )
                         )
-                      )
-                    }
-                  >
-                    <Plus size={8} />
-                  </Button>
+                      }
+                    >
+                      <Plus size={8} />
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          </>
+        ) : (
+          <div>
+            <span>No special requests</span>{" "}
+            <Button size="sm" variant="flat" color="primary">
+              Add special requests
+            </Button>
           </div>
-        </div>
-      ) : null}
+        )}
+      </div>
       <Input
         isRequired
         variant="bordered"
