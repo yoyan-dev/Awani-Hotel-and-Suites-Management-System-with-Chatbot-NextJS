@@ -10,7 +10,6 @@ import {
   SelectItem,
   Link,
 } from "@heroui/react";
-import type { Room } from "@/types/room";
 import { statusColorMap } from "@/app/constants/rooms";
 import { Edit, EllipsisVertical, Eye, Trash } from "lucide-react";
 import RoomDetails from "../modals/view-modal";
@@ -19,14 +18,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { updateRoom } from "@/features/room/room-thunk";
 import React from "react";
+import { FunctionRoom } from "@/types/function-room";
 
 interface RenderCellProps {
-  room: Room;
+  room: FunctionRoom;
   columnKey: string;
 }
 
 export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
-  const cellValue = room[columnKey as keyof Room];
+  const cellValue = room[columnKey as keyof FunctionRoom];
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, error } = useSelector((state: RootState) => state.room);
   const [viewOpen, setViewOpen] = React.useState(false);
@@ -37,16 +37,16 @@ export const RenderCell: React.FC<RenderCellProps> = ({ room, columnKey }) => {
   }
 
   switch (columnKey) {
-    case "images":
+    case "image":
       return (
         <Image
           alt="HeroUI hero Image"
-          src={room.images?.[0] || "/bg.jpg"}
+          src={room.image || "/bg.jpg"}
           width={100}
         />
       );
-    case "room_type":
-      return <Chip>{room.room_type?.name}</Chip>;
+    case "type":
+      return <Chip>{room.type}</Chip>;
     case "status":
       return (
         <div>

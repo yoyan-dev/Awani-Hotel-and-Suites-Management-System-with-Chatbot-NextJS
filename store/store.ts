@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import counterReducer from "@/features/counter/counter-slice";
 import roomReducer from "@/features/room/room-slice";
+import functionRoomReducer from "@/features/function-room/function-room-slice";
 import roomTypeReducer from "@/features/room-types/room-types.slice";
 import inventoryReducer from "@/features/inventory/inventory-slice";
 import bookingReducer from "@/features/booking/booking-slice";
@@ -14,6 +15,7 @@ export const store = configureStore({
   reducer: {
     counter: counterReducer,
     room: roomReducer,
+    function_room: functionRoomReducer,
     room_type: roomTypeReducer,
     inventory: inventoryReducer,
     booking: bookingReducer,

@@ -12,11 +12,12 @@ import { Search, ChevronDown, Plus } from "lucide-react";
 import { columns, statusOptions } from "@/app/constants/rooms";
 import { capitalize } from "@/app/utils/capitalize";
 import DeleteSelectedModal from "../modals/delete-selected-modal";
-import { FetchRoomsParams } from "@/types/room";
+import { FetchFunctionRoomParams } from "@/types/function-room";
+import AddModal from "../modals/add-modal";
 
 interface Props {
-  query: FetchRoomsParams;
-  setQuery: React.Dispatch<React.SetStateAction<FetchRoomsParams>>;
+  query: FetchFunctionRoomParams;
+  setQuery: React.Dispatch<React.SetStateAction<FetchFunctionRoomParams>>;
   visibleColumns: any;
   setVisibleColumns: (val: any) => void;
   roomsCount: any;
@@ -99,15 +100,7 @@ export const TableTopContent: React.FC<Props> = ({
               ))}
             </DropdownMenu>
           </Dropdown>
-          <Button
-            size="sm"
-            as={Link}
-            color="primary"
-            href="room/new-room"
-            variant="solid"
-          >
-            Add New <Plus />
-          </Button>
+          <AddModal />
           {(selectedKeys instanceof Set && selectedKeys.size > 0) ||
           selectedKeys === "all" ? (
             <DeleteSelectedModal selectedKeys={selectedKeys} />
